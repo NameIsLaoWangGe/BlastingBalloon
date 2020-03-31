@@ -1,0 +1,6 @@
+{
+  "code": "import { WXDataManager } from \"./Template/WXDataManager\";\r\nexport default class Login extends Laya.Script {\r\n    constructor() {\r\n        super();\r\n        this.intType = 1000;\r\n        this.numType = 1000;\r\n        this.strType = \"hello laya\";\r\n    }\r\n    onEnable() {\r\n        console.log('开始登陆');\r\n        this.loderBackground();\r\n        WXDataManager.WXLogin();\r\n    }\r\n    loderBackground() {\r\n        let self = this;\r\n        let url = 'https://7265-release-lwg-1301725130.tcb.qcloud.la/background/%E8%83%8C%E6%99%AF%E5%9B%BE.png?sign=df6e8c6c287f2a1bdf1dbab26fa1d884&t=1585665019';\r\n        Laya.loader.load(url, Laya.Handler.create(this, function () {\r\n            self.background.loadImage(url);\r\n        }));\r\n    }\r\n    onDisable() {\r\n    }\r\n}\r\n",
+  "references": [
+    "F:/Work/Game/03_BlastingBalloon/project/BlastingBalloon/src/Script/Template/WXDataManager.ts"
+  ]
+}

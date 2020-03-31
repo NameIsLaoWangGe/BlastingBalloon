@@ -3,14 +3,3 @@ import View=Laya.View;
 import Dialog=Laya.Dialog;
 import Scene=Laya.Scene;
 var REG: Function = Laya.ClassUtils.regClass;
-export module ui.Scenes {
-    export class MainSceneUI extends Laya.Scene {
-        public static  uiView:any ={"type":"Scene","props":{"y":0,"x":0,"width":750,"height":1334},"compId":2,"child":[{"type":"Sprite","props":{"y":715,"x":375,"width":380,"texture":"UI/任务.png","pivotY":65,"pivotX":190,"height":130},"compId":3},{"type":"Sprite","props":{"y":479,"x":140,"texture":"UI/分数图标.png"},"compId":5}],"loadList":["UI/任务.png","UI/分数图标.png"],"loadList3D":[]};
-        constructor(){ super()}
-        createChildren():void {
-            super.createChildren();
-            this.createView(MainSceneUI.uiView);
-        }
-    }
-    REG("ui.Scenes.MainSceneUI",MainSceneUI);
-}
