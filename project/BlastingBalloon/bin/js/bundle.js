@@ -3,20 +3,34 @@
 
     var WXDataManager;
     (function (WXDataManager) {
+        WXDataManager.wx = Laya.Browser.window.wx;
+        function WXcheckSession() {
+            if (Laya.Browser.onMiniGame) {
+                WXDataManager.wx.checkSession({
+                    success() {
+                        console.log('已经登录过了！');
+                    },
+                    fail() {
+                        WXLogin();
+                        console.log('重新登录');
+                    }
+                });
+            }
+        }
+        WXDataManager.WXcheckSession = WXcheckSession;
         function WXLogin() {
             if (Laya.Browser.onMiniGame) {
-                let wx = Laya.Browser.window.wx;
-                wx.login({
+                WXDataManager.wx.login({
                     success: function (res) {
                         if (res.code) {
                             console.log("登录成功，获取到code", res.code);
                         }
-                        var button = wx.createUserInfoButton({
+                        var button = WXDataManager.wx.createUserInfoButton({
                             type: 'text',
                             text: '开始游戏',
                             style: {
-                                left: wx.getSystemInfoSync().screenWidth / 2 - 60,
-                                bottom: wx.getSystemInfoSync().screenHeight / 2 - 60,
+                                left: WXDataManager.wx.getSystemInfoSync().screenWidth / 2 - 60,
+                                bottom: WXDataManager.wx.getSystemInfoSync().screenHeight / 2 - 60,
                                 width: 120,
                                 height: 40,
                                 lineHeight: 40,
@@ -33,6 +47,7 @@
                             if (res.errMsg === "getUserInfo:ok") {
                                 console.log("已经授权");
                                 button.destroy();
+                                onRegisterUser(res.userInfo);
                             }
                             else {
                                 console.log("没有授权");
@@ -43,19 +58,32 @@
             }
         }
         WXDataManager.WXLogin = WXLogin;
+        function onRegisterUser(_userinfo) {
+            WXDataManager.wx.cloud.init({
+                env: 'release-lwg'
+            });
+            WXDataManager.wx.cloud.callFunction({
+                name: "login",
+                data: {
+                    userinfo: _userinfo,
+                },
+                success(res) {
+                    console.log("登录成功回调", res);
+                    WXDataManager.WXuserinfo = res.result.event.userinfo;
+                    console.log(WXDataManager.WXuserinfo);
+                },
+                fail: console.error()
+            });
+        }
+        WXDataManager.onRegisterUser = onRegisterUser;
     })(WXDataManager || (WXDataManager = {}));
 
     class Login extends Laya.Script {
-        constructor() {
-            super();
-            this.intType = 1000;
-            this.numType = 1000;
-            this.strType = "hello laya";
-        }
+        constructor() { super(); }
         onEnable() {
             console.log('开始登陆');
             this.loderBackground();
-            WXDataManager.WXLogin();
+            WXDataManager.WXcheckSession();
         }
         loderBackground() {
             let self = this;

@@ -1,9 +1,10 @@
 /**
- * 1.这里导出的是模块不是类，没有this，所以此模块的回调函数要写成func=>{}这种箭头函数，箭头函数会把{}里面的this指向
-原来的this。
+ * 1.这里导出的是模块不是类，没有this，所以此模块的回调函数要写成func=>{}这种箭头函数，箭头函数会把{}里面的this指向原来的this。
  * 2.点击事件模块
  */
 export module Clicks {
+    /**全局音乐的url*/
+    export let audioUrl;
     /**
      * 点击事件注册
      * @param effect 效果类型
@@ -16,8 +17,9 @@ export module Clicks {
      * @param out 出屏幕函数
      * 以上4个只是函数名，不可传递函数，如果没有特殊执行，那么就用此模块定义的4个函数，包括通用效果。
      */
-    export function clicksOn(effect, target, caller, down, move, up, out): void {
+    export function clicksOn(effect, audioUrl, target, caller, down, move, up, out): void {
         let btnEffect;
+        Clicks.audioUrl = audioUrl;
         switch (effect) {
             case 'largen':
                 btnEffect = new Btn_LargenEffect();
@@ -69,7 +71,7 @@ export class Btn_LargenEffect {
     /**按下*/
     down(event): void {
         event.currentTarget.scale(1.1, 1.1);
-        Laya.SoundManager.playSound('音效/按钮点击.mp3', 1, Laya.Handler.create(this, function () { }));
+        Laya.SoundManager.playSound(Clicks.audioUrl, 1, Laya.Handler.create(this, function () { }));
     }
     /**按下*/
     up(event): void {
