@@ -69,8 +69,6 @@
                 },
                 success(res) {
                     console.log("登录成功回调", res);
-                    WXDataManager.WXuserinfo = res.result.event.userinfo;
-                    console.log(WXDataManager.WXuserinfo);
                 },
                 fail: console.error()
             });

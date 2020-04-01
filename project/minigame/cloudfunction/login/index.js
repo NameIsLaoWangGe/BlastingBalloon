@@ -23,15 +23,37 @@ exports.main = (event, context) => {
   console.log(event)
   console.log(context)
   const wxContext = cloud.getWXContext()
+  //直接上传用户信息字段，如果有了就不会再上传了
+  // 特殊情况特殊对待
+  let addData = {
+    _id: 'userData',
+    _openid: wxContext.OPENID,
+    _userinfo: event,
+    due: new Date('2010-04-01'),
+  }
+  userinfo.add({
+    data: addData
+  })
+  return {
+    event,
+  };
+
+  // return {
+  //   event,
+  //   openid: wxContext.OPENID,
+  //   appid: wxContext.APPID,
+  //   unionid: wxContext.UNIONID,
+  //   env: wxContext.ENV,
+  // }
 
   // 增删该查最好加上 wxContext.OPENID
   // 增 ,批量增加正在修复，暂时只能一个一个增加
-  // 如果重复，那么不会另外添加
+  // 如果重复，那么不会添加，也不会覆盖
   // userinfo.add({
   //   data: {
   //     _id: 'wf_111',
   //     _openid: wxContext.OPENID,
-  //     name: "老大哥"
+  //     name: "1老哥"
   //   }
   // });
 
@@ -39,7 +61,7 @@ exports.main = (event, context) => {
   //   data: {
   //     _id: 'wf_222',
   //     _openid: wxContext.OPENID,
-  //     name: "老二哥"
+  //     name: "2老哥"
   //   }
   // });
 
@@ -47,7 +69,7 @@ exports.main = (event, context) => {
   //   data: {
   //     _id: 'wf_555',
   //     _openid: wxContext.OPENID,
-  //     name: "老五哥"
+  //     name: "5老哥"
   //   }
   // });
 
@@ -55,7 +77,7 @@ exports.main = (event, context) => {
   //   data: {
   //     _id: 'wf_444',
   //     _openid: wxContext.OPENID,
-  //     name: "老四哥"
+  //     name: "4老哥"
   //   }
   // });
 
@@ -63,7 +85,7 @@ exports.main = (event, context) => {
   //   data: {
   //     _id: 'wf_666',
   //     _openid: wxContext.OPENID,
-  //     name: "老六哥"
+  //     name: "6老哥"
   //   }
   // });
 
@@ -72,19 +94,17 @@ exports.main = (event, context) => {
   //   data: {
   //     _id: 'wf_333',
   //     _openid: wxContext.OPENID,
-  //     name: "老三哥"
+  //     name: "3老哥"
   //   }
   // });
 
   // userinfo.add({
   //   data: {
-  //     _id: 'wf_7777',
+  //     _id: 'wf_777',
   //     _openid: wxContext.OPENID,
-  //     name: "老七哥"
+  //     name: "7老哥"
   //   }
   // });
-
-
 
   // 查
   // 一起查询
@@ -122,13 +142,43 @@ exports.main = (event, context) => {
   // 删除多条记录
   // try {
   //   return userinfo.where({
-  //     done: true,
+  //     'wf_333': true,
+  //     'wf_222': true,
+  //     'wf_555': true,
   //   }).remove()
   // } catch (e) {
   //   console.error(e)
   // }
 
   // 改
+  // 改一个
+  // try {
+  //   return userinfo.doc('wf_444').update({
+  //     // data 传入需要局部更新的数据
+  //     data: {
+  //       // 表示将 name 字段置为 '重新更新的3老哥'
+  //       name: '重新更新的3老哥'
+  //     }
+  //   })
+  // } catch (e) {
+  //   console.error(e)
+  // }
+
+  // 修改多条记录
+  // try {
+  //   return userinfo.where({
+  //     done: false
+  //   })
+  //     .update({
+  //       data: {
+  //         progress: _.inc(10)
+  //       },
+  //     })
+  // } catch (e) {
+  //   console.error(e)
+  // }
+
+
 
 
 
@@ -137,11 +187,5 @@ exports.main = (event, context) => {
   // console.log 的内容可以在云开发云函数调用日志查看
 
   // 获取 WX Context (微信调用上下文)，包括 OPENID、APPID、及 UNIONID（需满足 UNIONID 获取条件）等信息
-  return {
-    event,
-    // openid: wxContext.OPENID,
-    // appid: wxContext.APPID,
-    // unionid: wxContext.UNIONID,
-    // env: wxContext.ENV,
-  }
+
 }

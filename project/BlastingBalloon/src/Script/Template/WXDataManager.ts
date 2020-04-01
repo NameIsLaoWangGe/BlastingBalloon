@@ -6,7 +6,6 @@ export module WXDataManager {
     export let userinfo;//用户信息的全变量
     /**Laya中的微信引用，在当前模块可以直接使用，在其他模块需要加上模块名*/
     export let wx = Laya.Browser.window.wx;
-
     export function WXcheckSession() {
         if (Laya.Browser.onMiniGame) {
             wx.checkSession({
@@ -89,6 +88,7 @@ export module WXDataManager {
             success(res) {
                 console.log("登录成功回调", res);
                 userinfo = res.result.event.userinfo;
+                console.log(userinfo);
             },
             fail: console.error()
         })

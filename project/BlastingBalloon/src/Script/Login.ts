@@ -1,5 +1,4 @@
 import { WXDataManager } from "./Template/WXDataManager";
-
 export default class Login extends Laya.Script {
     /** @prop {name:background, tips:"背景图节点", type:Node}*/
     public background: Laya.Sprite;
