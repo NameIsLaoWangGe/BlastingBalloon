@@ -12,9 +12,8 @@ export default class Login extends Laya.Script {
     constructor() { super(); }
 
     onEnable(): void {
-        console.log('开始登陆');
         this.loderBackground();
-        WXDataManager.WXcheckSession();
+        WXDataManager.normalWXLogin();
     }
 
     /**加载背景图*/

@@ -6,8 +6,8 @@ export module Clicks {
     /**全局音乐的url*/
     export let audioUrl;
     /**
-     * 点击事件注册
-     * @param effect 效果类型
+     * 点击事件注册,传函数名的时候不要用func=>因为这是传函数不是函数名
+     * @param effect 效果类型 1.'largen'
      * @param soundUrl 音效的地址
      * @param target 节点
      * @param caller 指向脚本（this）引用
@@ -36,6 +36,7 @@ export module Clicks {
 
     /**
      * 点击事件的关闭
+    * @param effect 效果类型 1.'largen'
      * @param target 节点
      * @param caller 指向脚本（this）引用
      * @param down 按下函数
