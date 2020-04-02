@@ -22,7 +22,7 @@
 		}
 	},
 	"compileType": "game",
-	"libVersion": "2.8.3",
+	"libVersion": "2.10.3",
 	"appid": "wx0b937ff489b03740",
 	"projectname": "BlastingBalloon_clude",
 	"miniprogramRoot": "miniprogram/",

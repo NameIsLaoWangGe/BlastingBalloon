@@ -16,14 +16,14 @@ export default class AddLevels extends Laya.Script {
 
     onEnable(): void {
         console.log('新测试');
-        WXDataManager.uploadLevels();
         Clicks.clicksOn('largen', '音效/按钮点击.mp3', this.owner, this, this.down, null, null, null);
     }
     down(event) {
         (this.owner as Laya.Sprite).scale(1.1, 1.1);
-        WXDataManager.Levels++;
-        console.log(WXDataManager.Levels);
-        WXDataManager.updateLevels();
+        console.log('上次的分数为' + WXDataManager._lastlevels);
+        WXDataManager._thislevels++;
+        console.log('这次新的的分数为：' + WXDataManager._lastlevels);
+        WXDataManager.update_Levels();
     }
     onDisable(): void {
     }

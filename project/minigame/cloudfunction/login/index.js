@@ -21,45 +21,12 @@ exports.main = (event, context) => {
   console.log(event)
   console.log(context)
   const wxContext = cloud.getWXContext()
-
-  // 创建玩家的一个基本数据集合,用来记录我们的基础数据
-
-  try {
-    db.createCollection('user_info')
-    db.collection('user_info').add({
-      // data 字段表示需新增的 JSON 数据
-      data: {
-        // _id: 'todo-identifiant-aleatoire', // 可选自定义 _id，在此处场景下用数据库自动分配的就可以了
-        _id: 'userLevels',
-        levels: 0,
-        _openid: wxContext.OPENID,
-        due: new Date("2018-09-01"),
-        // 为待办事项添加一个地理位置（113°E，23°N）
-        location: new db.Geo.Point(113, 23),
-        done: false
-      }
-    })
-  } catch (e) {
-    console.error(e)
-  }
-
-  // db.createCollection('user_info')
-
-  // db.collection('user_info').add({
-  //   // data 字段表示需新增的 JSON 数据
-  //   data: {
-  //     _id: 'userLevels',
-  //     levels: 0,
-  //   }
-  // })
-
-
   return {
-    event,
+    // event,
     openid: wxContext.OPENID,
-    appid: wxContext.APPID,
-    unionid: wxContext.UNIONID,
-    env: wxContext.ENV,
+    // appid: wxContext.APPID,
+    // unionid: wxContext.UNIONID,
+    // env: wxContext.ENV,
   }
 }
 

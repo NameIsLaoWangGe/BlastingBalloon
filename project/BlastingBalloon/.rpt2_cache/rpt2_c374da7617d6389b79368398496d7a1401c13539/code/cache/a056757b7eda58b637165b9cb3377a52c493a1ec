@@ -1,0 +1,7 @@
+{
+  "code": "import { Clicks } from \"./Template/Clicks\";\r\nimport { WXDataManager } from \"./Template/WXDataManager\";\r\nexport default class AddLevels extends Laya.Script {\r\n    constructor() {\r\n        super();\r\n        this.intType = 1000;\r\n        this.numType = 1000;\r\n        this.strType = \"hello laya\";\r\n        this.boolType = true;\r\n    }\r\n    onEnable() {\r\n        console.log('新测试');\r\n        Clicks.clicksOn('largen', '音效/按钮点击.mp3', this.owner, this, this.down, null, null, null);\r\n    }\r\n    down(event) {\r\n        this.owner.scale(1.1, 1.1);\r\n        console.log('上次的分数为' + WXDataManager._lastlevels);\r\n        WXDataManager._thislevels++;\r\n        console.log('这次新的的分数为：' + WXDataManager._lastlevels);\r\n        WXDataManager.update_Levels();\r\n    }\r\n    onDisable() {\r\n    }\r\n}\r\n",
+  "references": [
+    "F:/Work/Game/03_BlastingBalloon/project/BlastingBalloon/src/Script/Template/Clicks.ts",
+    "F:/Work/Game/03_BlastingBalloon/project/BlastingBalloon/src/Script/Template/WXDataManager.ts"
+  ]
+}
