@@ -1,0 +1,7 @@
+{
+  "code": "import { Clicks } from \"../Template/Clicks\";\r\nexport default class Balloon extends Laya.Script {\r\n    constructor() {\r\n        super();\r\n    }\r\n    onEnable() {\r\n        this.self = this.owner;\r\n        this.gameControl = this.self.scene['GameControl'];\r\n        this.self['Balloon'] = this;\r\n        this.cardClicksOn();\r\n        this.self.width = 300;\r\n        this.self.height = 320;\r\n        this.self.pivotX = this.self.width / 2;\r\n        this.self.pivotY = this.self.height / 2;\r\n        this.img.scale(1, 1);\r\n    }\r\n    cardClicksOn() {\r\n        Clicks.clicksOn('largen', '音效/按钮点击.mp3', this.self, this, null, null, null, null);\r\n    }\r\n    cardClicksOff() {\r\n        Clicks.clicksOff('largen', this.self, this, null, null, null, null);\r\n    }\r\n    down(event) {\r\n        event.currentTarget.scale(1.1, 1.1);\r\n    }\r\n    up(event) {\r\n        event.currentTarget.scale(1, 1);\r\n    }\r\n    onDisable() {\r\n    }\r\n    onUpdate() {\r\n    }\r\n}\r\n",
+  "references": [
+    "F:/Work/Game/03_BlastingBalloon/project/BlastingBalloon/src/Script/Project/GameControl.ts",
+    "F:/Work/Game/03_BlastingBalloon/project/BlastingBalloon/src/Script/Template/Clicks.ts"
+  ]
+}

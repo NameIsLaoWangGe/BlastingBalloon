@@ -62,7 +62,6 @@ export default class GameControl extends Laya.Script {
         this.slef['GameControl'] = this;
         this.levelsParameter();
         this.createBalloonCollection();
-
     }
 
     /**
@@ -92,7 +91,6 @@ export default class GameControl extends Laya.Script {
                 // 缩放大小,目前取决spacing
                 let scale = (widthP / this.row - this.spacing * 2) / balloon.width;
                 balloon.scale(scale, scale);
-
             }
         }
         this.taskPromptSet();
@@ -140,8 +138,8 @@ export default class GameControl extends Laya.Script {
             let y = heightP / 2;
             let name = arr2[j];
             // 通过Enum.ColorName[name]名称索引对应Enum.Color_iconSkin图片地址
-            let colorName = Enum.Color_iconSkin[Enum.ColorName[name]];
-            this.createBallon_Icon(x, y, colorName);
+            let colorSkin = Enum.Color_iconSkin[Enum.ColorName[name]];
+            this.createBallon_Icon(x, y, colorSkin);
         }
         // 然后把TaskPrompt位置移到中间位置
         this.TaskPrompt.pivotX = this.TaskPrompt.width / 2;
@@ -157,15 +155,13 @@ export default class GameControl extends Laya.Script {
             for (let i = 0; i < this.BalloonParent._children.length; i++) {
                 let balloon = this.BalloonParent._children[i];
                 let name = balloon.name;
-                if (Enum.Color_iconSkin[taskName] === Enum.ColorName[name]) {
+                if (taskName === name) {
                     let num = taskBallon['Balloon_Icon'].num as Laya.FontClip;
                     num.value = (Number(num.value) + 1).toString();
                 }
             }
         }
     }
-
-
 
     /**
      * 创建任务位置的气球图标

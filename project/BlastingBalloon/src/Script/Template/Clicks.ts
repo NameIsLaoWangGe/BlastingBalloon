@@ -6,6 +6,10 @@ export module Clicks {
     /**全局音乐的url*/
     export let audioUrl;
     /**
+     * 当前按钮被缩放的比例
+     * */
+    export let scale;
+    /**
      * 点击事件注册,传函数名的时候不要用func=>因为这是传函数不是函数名
      * @param effect 效果类型 1.'largen'
      * @param soundUrl 音效的地址
@@ -71,19 +75,44 @@ export class Btn_LargenEffect {
     }
     /**按下*/
     down(event): void {
-        event.currentTarget.scale(1.1, 1.1);
+        // event.currentTarget.scale(1.1, 1.1);
+        Laya.SoundManager.playSound(Clicks.audioUrl, 1, Laya.Handler.create(this, function () { }));
+    }
+    /**抬起*/
+    up(event): void {
+        // event.currentTarget.scale(1, 1);
+    }
+    /**移动*/
+    move(event): void {
+        // event.currentTarget.scale(1.1, 1.1);
+    }
+    /**出屏幕*/
+    out(event): void {
+        // event.currentTarget.scale(1, 1);
+    }
+}
+
+/**
+ * 点击向上位移
+ */
+export class Btn_MoveUp {
+    constructor() {
+    }
+    /**按下*/
+    down(event): void {
+        event.currentTarget.y - 10;
         Laya.SoundManager.playSound(Clicks.audioUrl, 1, Laya.Handler.create(this, function () { }));
     }
     /**按下*/
     up(event): void {
-        event.currentTarget.scale(1, 1);
+        event.currentTarget.y + 10;
     }
     /**移动*/
     move(event): void {
-        event.currentTarget.scale(1.1, 1.1);
+
     }
     /**出屏幕*/
     out(event): void {
-        event.currentTarget.scale(1, 1);
+        event.currentTarget.y + 10;
     }
 }

@@ -1,6 +1,0 @@
-{
-  "code": "export default class Balloon extends Laya.Script {\r\n    constructor() {\r\n        super();\r\n    }\r\n    onEnable() {\r\n        this.self = this.owner;\r\n        this.gameControl = this.self.scene['GameControl'];\r\n        this.self['Balloon'] = this;\r\n    }\r\n    onDisable() {\r\n    }\r\n    onUpdate() {\r\n    }\r\n}\r\n",
-  "references": [
-    "F:/Work/Game/03_BlastingBalloon/project/BlastingBalloon/src/Script/Project/GameControl.ts"
-  ]
-}
