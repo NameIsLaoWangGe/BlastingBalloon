@@ -11,7 +11,7 @@ export module WXDataManager {
     /**用户在某个数据库集合下的记录上的_id，在数据库任何集合下都是个id*/
     export let user_id;
 
-    /**玩家在游戏中的关卡数,关卡数暂时不会降低，所以上传最高的关卡*/
+    /**玩家上次的关卡，从服务器拿取*/
     export let _lastlevels;
 
     /**这次的关卡*/
@@ -148,11 +148,14 @@ export module WXDataManager {
                     try {
                         add_Levels();
                     } catch (error) {
-                        console.log('虽然登录过期了，但是记录还在，我们还会获取原来的记录')
-                        get_Levels();
+                        console.log(error)
                     }
                 } else if (type === 'haveLogin') {
-                    get_Levels();
+                    try {
+                        get_Levels();
+                    } catch (error) {
+                        console.log(error)
+                    }
                 }
             })
         }
@@ -207,8 +210,9 @@ export module WXDataManager {
             let user_info = db.collection('user_info');
             user_info.doc(user_id).get().then(res => {
                 console.log(res.data)
-                _thislevels = res.data._levels
-                console.log('目前的关卡数为：' + _thislevels)
+                _lastlevels = res.data._levels
+                console.log('上次的关卡数为：' + _lastlevels)
+                _thislevels = _lastlevels;
             })
         }
 
@@ -220,11 +224,10 @@ export module WXDataManager {
     export function update_Levels() {
         // 可以尝试在上传一次，防止玩家数据被毁后，因为登录后不会继续添加了
         try {
-          
+
         } catch (error) {
 
         }
-
         if (Laya.Browser.onMiniGame) {
             // 云环境初始化
             wx.cloud.init({

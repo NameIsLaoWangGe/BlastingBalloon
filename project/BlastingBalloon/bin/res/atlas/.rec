@@ -39,30 +39,21 @@ P 5FD17798 vscroll.png
 P DDDDFB9E vslider$bar.png
 P 01BAE7F5 vslider.png
 D UI
-R 64407641 +0123456789ks.png
-P B36BB03A logo.png
-P 8F9E9F45 任务.png
-P EBAB3F34 关卡数.png
-P 0AACBC29 分享按钮.png
-R 35E71E07 分割线.png
-P D6C12F94 分数图标.png
-P 395A07AF 失败字体.png
-P B47B8633 广告按钮.png
-P A50BCAE9 开始游戏按钮.png
-P 1AFB5021 排行按钮.png
-R 844CFD5F 排行栏.png
-P BE36F251 排行榜.png
-R 04A7AE81 排行榜底板.png
-R 9BA56D18 效果图.png
-P D82D8608 数字底板.png
-P ED423070 时间.png
-P 8F9E9F45 正确底板.png
+P 570CD93F 0123456789.png
+P 9D26457C 淡黄色气球.png
+P AA8092A0 淡黄色气球图标.png
+P 1855A01E 粉色气球.png
+P E24C71DB 紫色气球.png
+P E390A14B 紫色气球图标 拷贝.png
+P 5905946F 紫色气球图标.png
+P 2F4382DC 红色气球图标.png
 R C380A45A 背景图.png
-P C9616C8F 返回按钮.png
-P 827BAC28 重来按钮.png
-P 7B72ED66 错误底板.png
-R 129BD0E2 防沉迷文字.png
-P 2668466B 黑色遮罩.png
+P 6712F80B 蓝色气球图标.png
+R 3422255E 进度条$bar.png
+R D077593C 进度条.png
+P 1AC4FB07 青色气球.png
+P 8D4152AC 黄色气球.png
+P 2F4382DC 黄色气球图标.png
 D 音效
 R 6D5BFA13 全体下落.mp3
 R A97C282E 单张发牌.mp3
