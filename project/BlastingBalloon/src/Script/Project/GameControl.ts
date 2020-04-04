@@ -40,19 +40,15 @@ export default class GameControl extends Laya.Script {
      * 气球之间的间隔
      */
     private spacing: number
-
     /**
-     * 气球的颜色集合
-     */
-    private colorArr: Array<string>
-    /**
-     * 气球icon的颜色集合
-     */
-    private colorArr_icon: Array<string>
-    /**
-     * 当前关卡的气球颜色种类,根据关卡手动操作
+     * 当前关卡的气球颜色种类数量,根据关卡手动操作
      */
     private colorCategory: number
+
+    /**
+     * 气球点击顺序集合
+     */
+    private clickOrderArr: Array<string>
 
     constructor() {
         super();
@@ -130,16 +126,15 @@ export default class GameControl extends Laya.Script {
         }
         // 名称去重
         let arr2 = Array.from(new Set(arr1));
-        // 排列
+        // 排列在任务栏上
         let len = arr2.length;
         let widthP = len * 120;
         this.TaskPrompt.width = widthP;//根据数量缩短提示界面
         let heightP = this.TaskPrompt.height;
         for (let j = 0; j < len; j++) {
-            const element = arr2[j];
+            let name = arr2[j];
             let x = widthP / len * (j + 1) - widthP / (len * 2);
             let y = heightP / 2;
-            let name = arr2[j];
             // 通过Enum.ColorName[name]名称索引对应Enum.Color_iconSkin图片地址
             let colorSkin = Enum.Color_iconSkin[Enum.ColorName[name]];
             this.createBallon_Icon(x, y, colorSkin);
@@ -148,13 +143,14 @@ export default class GameControl extends Laya.Script {
         this.TaskPrompt.pivotX = this.TaskPrompt.width / 2;
         this.TaskPrompt.x = 375;
         this.balloonCount();
-
+        this.balloonClickOrder();
     }
 
     /**
      * 气球上的数量，体现在任务气球上
      */
     balloonCount(): void {
+        this.clickOrderArr = [];
         for (let j = 0; j < this.TaskPrompt._children.length; j++) {
             let taskBallon = this.TaskPrompt._children[j];
             let taskName = taskBallon.name;
@@ -164,15 +160,29 @@ export default class GameControl extends Laya.Script {
                 if (taskName === name) {
                     let num = taskBallon['Balloon_Icon'].num as Laya.FontClip;
                     num.value = (Number(num.value) + 1).toString();
+                    this.clickOrderArr.push(name);//按顺序依次添加气球名称集合，既是点击顺序
                 }
             }
         }
     }
 
+    /**
+     * 点击指引提示现在应该点击哪个气球
+     * this.clickOrderArr[]是顺序数组，如果点击正确了，那么删除这个数组的第一个元素
+     * 所以每次都只需要匹配 this.clickOrderArr[0]就可以判断是否点击正确
+     * 并且通过this.clickOrderArr[0]放大当前需要点击的那个任务气球
+     */
     balloonClickOrder(): void {
-
+        for (let i = 0; i < this.TaskPrompt._children.length; i++) {
+            const taskBallon = this.TaskPrompt._children[i];
+            const name = taskBallon.name;
+            if (name === this.clickOrderArr[0]) {
+                taskBallon.scale(1, 1)
+            } else {
+                taskBallon.scale(0.9, 0.9);
+            }
+        }
     }
-
 
     /**
      * 创建任务位置的气球图标

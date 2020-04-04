@@ -1,7 +1,0 @@
-{
-  "code": "import { Clicks } from \"../Template/Clicks\";\r\nexport default class Balloon extends Laya.Script {\r\n    constructor() {\r\n        super();\r\n    }\r\n    onEnable() {\r\n        this.self = this.owner;\r\n        this.gameControl = this.self.scene['GameControl'];\r\n        this.self['Balloon'] = this;\r\n    }\r\n    cardClicksOn() {\r\n        Clicks.clicksOn('balloon', '音效/按钮点击.mp3', this.self, this, null, null, null, null);\r\n    }\r\n    cardClicksOff() {\r\n        Clicks.clicksOff('balloon', this.self, this, null, null, null, null);\r\n    }\r\n    down(event) {\r\n        event.currentTarget.scale(1.1, 1.1);\r\n    }\r\n    up(event) {\r\n        event.currentTarget.scale(1, 1);\r\n    }\r\n    onDisable() {\r\n    }\r\n    onUpdate() {\r\n    }\r\n}\r\n",
-  "references": [
-    "F:/Work/Game/03_BlastingBalloon/project/BlastingBalloon/src/Script/Project/GameControl.ts",
-    "F:/Work/Game/03_BlastingBalloon/project/BlastingBalloon/src/Script/Template/Clicks.ts"
-  ]
-}

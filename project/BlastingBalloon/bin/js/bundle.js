@@ -159,18 +159,19 @@
             this.TaskPrompt.width = widthP;
             let heightP = this.TaskPrompt.height;
             for (let j = 0; j < len; j++) {
-                const element = arr2[j];
+                let name = arr2[j];
                 let x = widthP / len * (j + 1) - widthP / (len * 2);
                 let y = heightP / 2;
-                let name = arr2[j];
                 let colorSkin = Enum.Color_iconSkin[Enum.ColorName[name]];
                 this.createBallon_Icon(x, y, colorSkin);
             }
             this.TaskPrompt.pivotX = this.TaskPrompt.width / 2;
             this.TaskPrompt.x = 375;
-            this.numer();
+            this.balloonCount();
+            this.balloonClickOrder();
         }
-        numer() {
+        balloonCount() {
+            this.clickOrderArr = [];
             for (let j = 0; j < this.TaskPrompt._children.length; j++) {
                 let taskBallon = this.TaskPrompt._children[j];
                 let taskName = taskBallon.name;
@@ -180,7 +181,20 @@
                     if (taskName === name) {
                         let num = taskBallon['Balloon_Icon'].num;
                         num.value = (Number(num.value) + 1).toString();
+                        this.clickOrderArr.push(name);
                     }
+                }
+            }
+        }
+        balloonClickOrder() {
+            for (let i = 0; i < this.TaskPrompt._children.length; i++) {
+                const taskBallon = this.TaskPrompt._children[i];
+                const name = taskBallon.name;
+                if (name === this.clickOrderArr[0]) {
+                    taskBallon.scale(1, 1);
+                }
+                else {
+                    taskBallon.scale(0.9, 0.9);
                 }
             }
         }
@@ -206,17 +220,33 @@
             this.gameControl = this.self.scene['GameControl'];
             this.self['Balloon'] = this;
         }
+        clickRight() {
+            this.self.removeSelf();
+            if (this.gameControl.clickOrderArr.length > 0) {
+                this.gameControl.clickOrderArr.shift();
+            }
+            this.gameControl.balloonClickOrder();
+        }
+        clickError() {
+        }
         cardClicksOn() {
-            Clicks.clicksOn('balloon', '音效/按钮点击.mp3', this.self, this, null, null, null, null);
+            Clicks.clicksOn('balloon', '音效/按钮点击.mp3', this.self, this, null, null, this.up, null);
         }
         cardClicksOff() {
-            Clicks.clicksOff('balloon', this.self, this, null, null, null, null);
+            Clicks.clicksOff('balloon', this.self, this, null, null, this.up, null);
         }
         down(event) {
-            event.currentTarget.scale(1.1, 1.1);
+            event.currentTarget.scale(Clicks.balloonScale + 0.1, Clicks.balloonScale + 0.1);
         }
         up(event) {
-            event.currentTarget.scale(1, 1);
+            event.currentTarget.scale(Clicks.balloonScale, Clicks.balloonScale);
+            if (this.self.name === this.gameControl.clickOrderArr[0]) {
+                console.log('点击正确1');
+                this.clickRight();
+            }
+            else {
+                console.log('点击错误！');
+            }
         }
         onDisable() {
         }
