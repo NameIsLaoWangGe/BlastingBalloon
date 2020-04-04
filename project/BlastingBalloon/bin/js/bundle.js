@@ -29,6 +29,82 @@
         })(Color_iconSkin = Enum.Color_iconSkin || (Enum.Color_iconSkin = {}));
     })(Enum || (Enum = {}));
 
+    var Clicks;
+    (function (Clicks) {
+        function clicksOn(effect, audioUrl, target, caller, down, move, up, out) {
+            let btnEffect;
+            Clicks.audioUrl = audioUrl;
+            switch (effect) {
+                case 'largen':
+                    btnEffect = new Btn_LargenEffect();
+                    break;
+                case 'balloon':
+                    btnEffect = new Btn_Balloon();
+                    break;
+                default:
+                    btnEffect = new Btn_LargenEffect();
+                    break;
+            }
+            target.on(Laya.Event.MOUSE_DOWN, caller, down === null ? btnEffect.down : down);
+            target.on(Laya.Event.MOUSE_MOVE, caller, move === null ? btnEffect.move : move);
+            target.on(Laya.Event.MOUSE_UP, caller, up === null ? btnEffect.up : up);
+            target.on(Laya.Event.MOUSE_OUT, caller, out === null ? btnEffect.out : out);
+        }
+        Clicks.clicksOn = clicksOn;
+        function clicksOff(effect, target, caller, down, move, up, out) {
+            let btnEffect;
+            switch (effect) {
+                case 'largen':
+                    btnEffect = new Btn_LargenEffect();
+                    break;
+                case 'balloon':
+                    btnEffect = new Btn_Balloon();
+                    break;
+                default:
+                    break;
+            }
+            target.off(Laya.Event.MOUSE_DOWN, caller, down === null ? btnEffect.down : down);
+            target.off(Laya.Event.MOUSE_MOVE, caller, move === null ? btnEffect.move : move);
+            target.off(Laya.Event.MOUSE_UP, caller, up === null ? btnEffect.up : up);
+            target.off(Laya.Event.MOUSE_OUT, caller, out === null ? btnEffect.out : out);
+        }
+        Clicks.clicksOff = clicksOff;
+    })(Clicks || (Clicks = {}));
+    class Btn_LargenEffect {
+        constructor() {
+        }
+        down(event) {
+            event.currentTarget.scale(1.1, 1.1);
+            Laya.SoundManager.playSound(Clicks.audioUrl, 1, Laya.Handler.create(this, function () { }));
+        }
+        up(event) {
+            event.currentTarget.scale(1, 1);
+        }
+        move(event) {
+            event.currentTarget.scale(1.1, 1.1);
+        }
+        out(event) {
+            event.currentTarget.scale(1, 1);
+        }
+    }
+    class Btn_Balloon {
+        constructor() {
+        }
+        down(event) {
+            event.currentTarget.scale(Clicks.balloonScale + 0.06, Clicks.balloonScale + 0.06);
+            Laya.SoundManager.playSound(Clicks.audioUrl, 1, Laya.Handler.create(this, function () { }));
+        }
+        up(event) {
+            event.currentTarget.scale(Clicks.balloonScale, Clicks.balloonScale);
+        }
+        move(event) {
+            event.currentTarget.scale(Clicks.balloonScale, Clicks.balloonScale);
+        }
+        out(event) {
+            event.currentTarget.scale(Clicks.balloonScale, Clicks.balloonScale);
+        }
+    }
+
     class GameControl extends Laya.Script {
         constructor() {
             super();
@@ -40,7 +116,7 @@
             this.createBalloonCollection();
         }
         levelsParameter() {
-            this.row = 5;
+            this.row = 4;
             this.line = 5;
             this.spacing = 5;
             this.colorCategory = 5;
@@ -55,6 +131,8 @@
                     let balloon = this.createBallon(x, y);
                     let scale = (widthP / this.row - this.spacing * 2) / balloon.width;
                     balloon.scale(scale, scale);
+                    Clicks.balloonScale = scale;
+                    balloon['Balloon'].cardClicksOn();
                 }
             }
             this.taskPromptSet();
@@ -119,55 +197,6 @@
         }
     }
 
-    var Clicks;
-    (function (Clicks) {
-        function clicksOn(effect, audioUrl, target, caller, down, move, up, out) {
-            let btnEffect;
-            Clicks.audioUrl = audioUrl;
-            switch (effect) {
-                case 'largen':
-                    btnEffect = new Btn_LargenEffect();
-                    break;
-                default:
-                    btnEffect = new Btn_LargenEffect();
-                    break;
-            }
-            target.on(Laya.Event.MOUSE_DOWN, caller, down === null ? btnEffect.down : down);
-            target.on(Laya.Event.MOUSE_MOVE, caller, move === null ? btnEffect.move : move);
-            target.on(Laya.Event.MOUSE_UP, caller, up === null ? btnEffect.up : up);
-            target.on(Laya.Event.MOUSE_OUT, caller, out === null ? btnEffect.out : out);
-        }
-        Clicks.clicksOn = clicksOn;
-        function clicksOff(effect, target, caller, down, move, up, out) {
-            let btnEffect;
-            switch (effect) {
-                case 'largen':
-                    btnEffect = new Btn_LargenEffect();
-                    break;
-                default:
-                    break;
-            }
-            target.off(Laya.Event.MOUSE_DOWN, caller, down === null ? btnEffect.down : down);
-            target.off(Laya.Event.MOUSE_MOVE, caller, move === null ? btnEffect.move : move);
-            target.off(Laya.Event.MOUSE_UP, caller, up === null ? btnEffect.up : up);
-            target.off(Laya.Event.MOUSE_OUT, caller, out === null ? btnEffect.out : out);
-        }
-        Clicks.clicksOff = clicksOff;
-    })(Clicks || (Clicks = {}));
-    class Btn_LargenEffect {
-        constructor() {
-        }
-        down(event) {
-            Laya.SoundManager.playSound(Clicks.audioUrl, 1, Laya.Handler.create(this, function () { }));
-        }
-        up(event) {
-        }
-        move(event) {
-        }
-        out(event) {
-        }
-    }
-
     class Balloon extends Laya.Script {
         constructor() {
             super();
@@ -176,18 +205,12 @@
             this.self = this.owner;
             this.gameControl = this.self.scene['GameControl'];
             this.self['Balloon'] = this;
-            this.cardClicksOn();
-            this.self.width = 300;
-            this.self.height = 320;
-            this.self.pivotX = this.self.width / 2;
-            this.self.pivotY = this.self.height / 2;
-            this.img.scale(1, 1);
         }
         cardClicksOn() {
-            Clicks.clicksOn('largen', '音效/按钮点击.mp3', this.self, this, null, null, null, null);
+            Clicks.clicksOn('balloon', '音效/按钮点击.mp3', this.self, this, null, null, null, null);
         }
         cardClicksOff() {
-            Clicks.clicksOff('largen', this.self, this, null, null, null, null);
+            Clicks.clicksOff('balloon', this.self, this, null, null, null, null);
         }
         down(event) {
             event.currentTarget.scale(1.1, 1.1);

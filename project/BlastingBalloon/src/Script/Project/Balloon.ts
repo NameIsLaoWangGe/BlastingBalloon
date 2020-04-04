@@ -20,22 +20,14 @@ export default class Balloon extends Laya.Script {
         this.self = this.owner as Laya.Sprite;
         this.gameControl = this.self.scene['GameControl'];
         this.self['Balloon'] = this;
-        this.cardClicksOn();
-
-        // 初始化最初状态，防止被修改
-        this.self.width = 300;
-        this.self.height = 320;
-        this.self.pivotX = this.self.width / 2;
-        this.self.pivotY = this.self.height / 2;
-        this.img.scale(1,1);
     }
     /**开启点击事件*/
     cardClicksOn(): void {
-        Clicks.clicksOn('largen', '音效/按钮点击.mp3', this.self, this, null, null, null, null);
+        Clicks.clicksOn('balloon', '音效/按钮点击.mp3', this.self, this, null, null, null, null);
     }
     /**关闭点击事件*/
     cardClicksOff(): void {
-        Clicks.clicksOff('largen', this.self, this, null, null, null, null);
+        Clicks.clicksOff('balloon', this.self, this, null, null, null, null);
     }
     /**按下*/
     down(event): void {

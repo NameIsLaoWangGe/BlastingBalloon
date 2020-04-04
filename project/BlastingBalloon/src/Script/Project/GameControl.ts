@@ -1,5 +1,6 @@
 import { WXDataManager } from "../Template/WXDataManager";
 import { Enum } from "../Template/Enum";
+import { Clicks } from "../Template/Clicks";
 
 export default class GameControl extends Laya.Script {
 
@@ -69,7 +70,7 @@ export default class GameControl extends Laya.Script {
      * 每个关卡会执行一次，参数每关不一样
      */
     levelsParameter(): void {
-        this.row = 5;
+        this.row = 4;
         this.line = 5;
         this.spacing = 5;
         this.colorCategory = 5;
@@ -91,12 +92,14 @@ export default class GameControl extends Laya.Script {
                 // 缩放大小,目前取决spacing
                 let scale = (widthP / this.row - this.spacing * 2) / balloon.width;
                 balloon.scale(scale, scale);
+                Clicks.balloonScale = scale;
+                balloon['Balloon'].cardClicksOn();
             }
         }
         this.taskPromptSet();
     }
 
-    /**
+    /**·
      * 构建单个气球
      * @param x 
      * @param y 
@@ -144,11 +147,14 @@ export default class GameControl extends Laya.Script {
         // 然后把TaskPrompt位置移到中间位置
         this.TaskPrompt.pivotX = this.TaskPrompt.width / 2;
         this.TaskPrompt.x = 375;
-        this.numer();
+        this.balloonCount();
 
     }
 
-    numer(): void {
+    /**
+     * 气球上的数量，体现在任务气球上
+     */
+    balloonCount(): void {
         for (let j = 0; j < this.TaskPrompt._children.length; j++) {
             let taskBallon = this.TaskPrompt._children[j];
             let taskName = taskBallon.name;
@@ -162,6 +168,11 @@ export default class GameControl extends Laya.Script {
             }
         }
     }
+
+    balloonClickOrder(): void {
+
+    }
+
 
     /**
      * 创建任务位置的气球图标

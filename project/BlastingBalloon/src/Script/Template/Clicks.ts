@@ -6,9 +6,9 @@ export module Clicks {
     /**全局音乐的url*/
     export let audioUrl;
     /**
-     * 当前按钮被缩放的比例
+     * 当前气球被缩放的比例
      * */
-    export let scale;
+    export let balloonScale;
     /**
      * 点击事件注册,传函数名的时候不要用func=>因为这是传函数不是函数名
      * @param effect 效果类型 1.'largen'
@@ -27,6 +27,9 @@ export module Clicks {
         switch (effect) {
             case 'largen':
                 btnEffect = new Btn_LargenEffect();
+                break;
+            case 'balloon':
+                btnEffect = new Btn_Balloon();
                 break;
             default:
                 btnEffect = new Btn_LargenEffect();
@@ -55,6 +58,9 @@ export module Clicks {
             case 'largen':
                 btnEffect = new Btn_LargenEffect();
                 break;
+            case 'balloon':
+                btnEffect = new Btn_Balloon();
+                break;
             default:
                 break;
         }
@@ -75,44 +81,44 @@ export class Btn_LargenEffect {
     }
     /**按下*/
     down(event): void {
-        // event.currentTarget.scale(1.1, 1.1);
+        event.currentTarget.scale(1.1, 1.1);
         Laya.SoundManager.playSound(Clicks.audioUrl, 1, Laya.Handler.create(this, function () { }));
     }
     /**抬起*/
     up(event): void {
-        // event.currentTarget.scale(1, 1);
+        event.currentTarget.scale(1, 1);
     }
     /**移动*/
     move(event): void {
-        // event.currentTarget.scale(1.1, 1.1);
+        event.currentTarget.scale(1.1, 1.1);
     }
     /**出屏幕*/
     out(event): void {
-        // event.currentTarget.scale(1, 1);
+        event.currentTarget.scale(1, 1);
     }
 }
 
 /**
  * 点击向上位移
  */
-export class Btn_MoveUp {
+export class Btn_Balloon {
     constructor() {
     }
     /**按下*/
     down(event): void {
-        event.currentTarget.y - 10;
+        event.currentTarget.scale(Clicks.balloonScale + 0.06, Clicks.balloonScale + 0.06);
         Laya.SoundManager.playSound(Clicks.audioUrl, 1, Laya.Handler.create(this, function () { }));
     }
-    /**按下*/
+    /**抬起*/
     up(event): void {
-        event.currentTarget.y + 10;
+        event.currentTarget.scale(Clicks.balloonScale, Clicks.balloonScale);
     }
     /**移动*/
     move(event): void {
-
+        event.currentTarget.scale(Clicks.balloonScale, Clicks.balloonScale);
     }
     /**出屏幕*/
     out(event): void {
-        event.currentTarget.y + 10;
+        event.currentTarget.scale(Clicks.balloonScale, Clicks.balloonScale);
     }
 }
