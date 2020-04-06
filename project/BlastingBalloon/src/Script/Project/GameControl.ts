@@ -4,12 +4,23 @@ import { Clicks } from "../Template/Clicks";
 
 export default class GameControl extends Laya.Script {
 
+    /** @prop {name:Background, tips:"背景图", type:Node}*/
+    public Background: Laya.Image;
+
+    /** @prop {name:Grass , tips:"前景草", type:Node}*/
+    public Grass: Laya.Sprite;
+
+    /** @prop {name: Tip , tips:"上面提示综合", type:Node}*/
+    public Tip: Laya.Sprite;
 
     /** @prop {name:TimeNode, tips:"时间节点", type:Node}*/
     public TimeNode: Laya.Sprite;
 
     /** @prop {name:TaskPrompt , tips:"任务节点", type:Node}*/
     public TaskPrompt: Laya.Sprite;
+
+    /** @prop {name:BalloonVessel , tips:"气球的父节点的父节点", type:Node}*/
+    public BalloonVessel: Laya.Sprite;
 
     /** @prop {name:BalloonParent , tips:"气球的父节点", type:Node}*/
     public BalloonParent: Laya.Sprite;
@@ -20,14 +31,17 @@ export default class GameControl extends Laya.Script {
     /** @prop {name:balloon_icon, tips:"提示气球信息图标", type:Prefab}*/
     public balloon_icon: Laya.Prefab;
 
+    /** @prop {name:LevelsNode, tips:"等级节点", type:Node}*/
+    public LevelsNode: Laya.Sprite;
+
+    /** @prop {name:Levels, tips:"当前等级", type:Node}*/
+    public Levels: Laya.FontClip;
+
     /**
      * 指代挂载当前脚本的节点
      */
     private slef: Laya.Scene
-    /**
-     * 当前等级
-     */
-    private levels: number
+
     /**
      *横向气球个数
      */
@@ -58,7 +72,44 @@ export default class GameControl extends Laya.Script {
         this.slef = this.owner as Laya.Scene;
         this.slef['GameControl'] = this;
         this.levelsParameter();
+        this.adaptive();
         this.createBalloonCollection();
+    }
+
+    /**自适应*/
+    adaptive(): void {
+        let stageH = Laya.stage.height;
+        // 场景
+        this.slef.height = stageH;
+        // 背景图
+        this.Background.height = stageH;
+        // 上方提示栏
+        this.Tip.y = stageH * 0.171;
+        // 中间容器
+        this.BalloonVessel.y = stageH * 0.266;
+        this.BalloonVessel.height = stageH * 0.697;
+        let parentBoard = this.BalloonVessel.getChildByName('parentBoard') as Laya.Image;
+        parentBoard.height = stageH * 0.697;
+        this.BalloonParent.height = parentBoard.height - 100;
+        // 前面草
+        this.Grass.y = stageH;
+    }
+
+    /**分数节点的自适应自适应*/
+    levelsNodeAdaptive(): void {
+        let len = this.Levels.value.length;
+        let guan = this.LevelsNode.getChildByName('guan') as Laya.Sprite;
+        switch (len) {
+            case 1:
+                guan.x = 64;
+                break;
+            case 2:
+                guan.x = 72;
+                break;
+            default:
+                guan.x = 72;
+                break;
+        }
     }
 
     /**
@@ -66,6 +117,8 @@ export default class GameControl extends Laya.Script {
      * 每个关卡会执行一次，参数每关不一样
      */
     levelsParameter(): void {
+        this.Levels.value = '88';
+        this.levelsNodeAdaptive();
         this.row = 4;
         this.line = 5;
         this.spacing = 5;
@@ -128,15 +181,15 @@ export default class GameControl extends Laya.Script {
         let arr2 = Array.from(new Set(arr1));
         // 排列在任务栏上
         let len = arr2.length;
-        let widthP = len * 120;
+        let widthP = len * 75;
         this.TaskPrompt.width = widthP;//根据数量缩短提示界面
         let heightP = this.TaskPrompt.height;
         for (let j = 0; j < len; j++) {
             let name = arr2[j];
             let x = widthP / len * (j + 1) - widthP / (len * 2);
             let y = heightP / 2;
-            // 通过Enum.ColorName[name]名称索引对应Enum.Color_iconSkin图片地址
-            let colorSkin = Enum.Color_iconSkin[Enum.ColorName[name]];
+            // 通过Enum.ColorName[name]名称索引对应Enum.IconSkin_01图片地址
+            let colorSkin = Enum.IconSkin_01[Enum.ColorName[name]];
             this.createBallon_Icon(x, y, colorSkin);
         }
         // 然后把TaskPrompt位置移到中间位置
@@ -176,10 +229,13 @@ export default class GameControl extends Laya.Script {
         for (let i = 0; i < this.TaskPrompt._children.length; i++) {
             const taskBallon = this.TaskPrompt._children[i];
             const name = taskBallon.name;
+            let img = taskBallon['Balloon_Icon'].img as Laya.Image;
             if (name === this.clickOrderArr[0]) {
-                taskBallon.scale(1, 1)
+                taskBallon.scale(1.1, 1.1)
+                img.skin = Enum.IconSkin_02[Enum.ColorName[name]];
             } else {
-                taskBallon.scale(0.9, 0.9);
+                taskBallon.scale(1, 1);
+                img.skin = Enum.IconSkin_01[Enum.ColorName[name]];
             }
         }
     }
@@ -197,7 +253,7 @@ export default class GameControl extends Laya.Script {
         // 根据关卡数随机给与颜色
         let img = balloon_icon['Balloon_Icon'].img as Laya.Image;
         img.skin = colorSkin;
-        balloon_icon.name = Enum.ColorName[Enum.Color_iconSkin[colorSkin]];
+        balloon_icon.name = Enum.ColorName[Enum.IconSkin_01[colorSkin]];
         return balloon_icon;
     }
 

@@ -1,6 +1,31 @@
 (function () {
     'use strict';
 
+    class Levels extends Laya.Script {
+        constructor() { super(); }
+        onEnable() {
+            this.self = this.owner;
+            this.self['LevelsNode'] = this;
+            this.gameControl = this.self.scene['GameControl'];
+        }
+        adaptive() {
+            let len = this.Levels.value.length;
+            switch (len) {
+                case 1:
+                    this.guan.x = 64;
+                    break;
+                case 2:
+                    this.guan.x = 72;
+                    break;
+                default:
+                    this.guan.x = 72;
+                    break;
+            }
+        }
+        onDisable() {
+        }
+    }
+
     var Enum;
     (function (Enum) {
         let ColorSkin;
@@ -19,14 +44,22 @@
             ColorName[ColorName["cyan"] = 3] = "cyan";
             ColorName[ColorName["purple"] = 4] = "purple";
         })(ColorName = Enum.ColorName || (Enum.ColorName = {}));
-        let Color_iconSkin;
-        (function (Color_iconSkin) {
-            Color_iconSkin[Color_iconSkin["UI/icon_\u6DE1\u9EC4.png"] = 0] = "UI/icon_\u6DE1\u9EC4.png";
-            Color_iconSkin[Color_iconSkin["UI/icon_\u7C89\u8272.png"] = 1] = "UI/icon_\u7C89\u8272.png";
-            Color_iconSkin[Color_iconSkin["UI/icon_\u9EC4\u8272.png"] = 2] = "UI/icon_\u9EC4\u8272.png";
-            Color_iconSkin[Color_iconSkin["UI/icon_\u9752\u8272.png"] = 3] = "UI/icon_\u9752\u8272.png";
-            Color_iconSkin[Color_iconSkin["UI/icon_\u7D2B\u8272.png"] = 4] = "UI/icon_\u7D2B\u8272.png";
-        })(Color_iconSkin = Enum.Color_iconSkin || (Enum.Color_iconSkin = {}));
+        let IconSkin_01;
+        (function (IconSkin_01) {
+            IconSkin_01[IconSkin_01["UI/icon_\u6DE1\u9EC4.png"] = 0] = "UI/icon_\u6DE1\u9EC4.png";
+            IconSkin_01[IconSkin_01["UI/icon_\u7C89\u8272.png"] = 1] = "UI/icon_\u7C89\u8272.png";
+            IconSkin_01[IconSkin_01["UI/icon_\u9EC4\u8272.png"] = 2] = "UI/icon_\u9EC4\u8272.png";
+            IconSkin_01[IconSkin_01["UI/icon_\u9752\u8272.png"] = 3] = "UI/icon_\u9752\u8272.png";
+            IconSkin_01[IconSkin_01["UI/icon_\u7D2B\u8272.png"] = 4] = "UI/icon_\u7D2B\u8272.png";
+        })(IconSkin_01 = Enum.IconSkin_01 || (Enum.IconSkin_01 = {}));
+        let IconSkin_02;
+        (function (IconSkin_02) {
+            IconSkin_02[IconSkin_02["UI/icon_\u6DE1\u9EC4_pitch.png"] = 0] = "UI/icon_\u6DE1\u9EC4_pitch.png";
+            IconSkin_02[IconSkin_02["UI/icon_\u7C89\u8272_pitch.png"] = 1] = "UI/icon_\u7C89\u8272_pitch.png";
+            IconSkin_02[IconSkin_02["UI/icon_\u9EC4\u8272_pitch.png"] = 2] = "UI/icon_\u9EC4\u8272_pitch.png";
+            IconSkin_02[IconSkin_02["UI/icon_\u9752\u8272_pitch.png"] = 3] = "UI/icon_\u9752\u8272_pitch.png";
+            IconSkin_02[IconSkin_02["UI/icon_\u7D2B\u8272_pitch.png"] = 4] = "UI/icon_\u7D2B\u8272_pitch.png";
+        })(IconSkin_02 = Enum.IconSkin_02 || (Enum.IconSkin_02 = {}));
     })(Enum || (Enum = {}));
 
     var Clicks;
@@ -113,9 +146,39 @@
             this.slef = this.owner;
             this.slef['GameControl'] = this;
             this.levelsParameter();
+            this.adaptive();
             this.createBalloonCollection();
         }
+        adaptive() {
+            let stageH = Laya.stage.height;
+            this.slef.height = stageH;
+            this.Background.height = stageH;
+            this.Tip.y = stageH * 0.171;
+            this.BalloonVessel.y = stageH * 0.266;
+            this.BalloonVessel.height = stageH * 0.697;
+            let parentBoard = this.BalloonVessel.getChildByName('parentBoard');
+            parentBoard.height = stageH * 0.697;
+            this.BalloonParent.height = parentBoard.height - 100;
+            this.Grass.y = stageH;
+        }
+        levelsNodeAdaptive() {
+            let len = this.Levels.value.length;
+            let guan = this.LevelsNode.getChildByName('guan');
+            switch (len) {
+                case 1:
+                    guan.x = 64;
+                    break;
+                case 2:
+                    guan.x = 72;
+                    break;
+                default:
+                    guan.x = 72;
+                    break;
+            }
+        }
         levelsParameter() {
+            this.Levels.value = '88';
+            this.levelsNodeAdaptive();
             this.row = 4;
             this.line = 5;
             this.spacing = 5;
@@ -155,14 +218,14 @@
             }
             let arr2 = Array.from(new Set(arr1));
             let len = arr2.length;
-            let widthP = len * 120;
+            let widthP = len * 75;
             this.TaskPrompt.width = widthP;
             let heightP = this.TaskPrompt.height;
             for (let j = 0; j < len; j++) {
                 let name = arr2[j];
                 let x = widthP / len * (j + 1) - widthP / (len * 2);
                 let y = heightP / 2;
-                let colorSkin = Enum.Color_iconSkin[Enum.ColorName[name]];
+                let colorSkin = Enum.IconSkin_01[Enum.ColorName[name]];
                 this.createBallon_Icon(x, y, colorSkin);
             }
             this.TaskPrompt.pivotX = this.TaskPrompt.width / 2;
@@ -190,11 +253,14 @@
             for (let i = 0; i < this.TaskPrompt._children.length; i++) {
                 const taskBallon = this.TaskPrompt._children[i];
                 const name = taskBallon.name;
+                let img = taskBallon['Balloon_Icon'].img;
                 if (name === this.clickOrderArr[0]) {
-                    taskBallon.scale(1, 1);
+                    taskBallon.scale(1.1, 1.1);
+                    img.skin = Enum.IconSkin_02[Enum.ColorName[name]];
                 }
                 else {
-                    taskBallon.scale(0.9, 0.9);
+                    taskBallon.scale(1, 1);
+                    img.skin = Enum.IconSkin_01[Enum.ColorName[name]];
                 }
             }
         }
@@ -204,7 +270,7 @@
             balloon_icon.pos(x, y);
             let img = balloon_icon['Balloon_Icon'].img;
             img.skin = colorSkin;
-            balloon_icon.name = Enum.ColorName[Enum.Color_iconSkin[colorSkin]];
+            balloon_icon.name = Enum.ColorName[Enum.IconSkin_01[colorSkin]];
             return balloon_icon;
         }
         onDisable() {
@@ -273,6 +339,7 @@
         constructor() { }
         static init() {
             var reg = Laya.ClassUtils.regClass;
+            reg("Script/Project/LevelsNode.ts", Levels);
             reg("Script/Project/GameControl.ts", GameControl);
             reg("Script/Project/Balloon.ts", Balloon);
             reg("Script/Project/Balloon_Icon.ts", Balloon_Icon);

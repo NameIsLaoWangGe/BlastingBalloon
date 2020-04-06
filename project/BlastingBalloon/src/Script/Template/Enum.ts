@@ -15,13 +15,21 @@ export module Enum {
         'purple',
     }
 
-    export enum Color_iconSkin {
+    export enum IconSkin_01 {
         'UI/icon_淡黄.png',
         'UI/icon_粉色.png',
         'UI/icon_黄色.png',
         'UI/icon_青色.png',
         'UI/icon_紫色.png',
     }
+    export enum IconSkin_02 {
+        'UI/icon_淡黄_pitch.png',
+        'UI/icon_粉色_pitch.png',
+        'UI/icon_黄色_pitch.png',
+        'UI/icon_青色_pitch.png',
+        'UI/icon_紫色_pitch.png',
+    }
+
 
 }
 

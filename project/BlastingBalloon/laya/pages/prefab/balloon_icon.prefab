@@ -2,11 +2,11 @@
     "x":0,
     "type":"Sprite",
     "selectedBox":21,
-    "selecteID":25,
+    "selecteID":29,
     "searchKey":"Sprite,balloon_icon",
-    "props":{"y":58,"x":50,"width":100,"presetID":1,"preset":"laya/pages/prefab/balloon_icon.prefab","pivotY":58,"pivotX":50,"name":"balloon_icon","isPresetRoot":true,"height":116},
+    "props":{"y":40,"x":40,"width":80,"presetID":1,"preset":"laya/pages/prefab/balloon_icon.prefab","pivotY":40,"pivotX":40,"name":"balloon_icon","isPresetRoot":true,"height":80},
     "nodeParent":-1,
-    "maxID":27,
+    "maxID":30,
     "label":"balloon_icon",
     "isOpen":true,
     "isDirectory":true,
@@ -16,23 +16,9 @@
     "child":[
         {
             "x":15,
-            "type":"Image",
-            "searchKey":"Image,img",
-            "props":{"y":58,"x":49,"width":97,"skin":"UI/balloon_淡黄.png","presetID":2,"preset":"laya/pages/prefab/balloon_icon.prefab","pivotY":58,"pivotX":49,"name":"img","height":115},
-            "nodeParent":21,
-            "label":"img",
-            "isDirectory":false,
-            "isAniNode":true,
-            "hasChild":false,
-            "compId":24,
-            "child":[
-                ]
-        },
-        {
-            "x":15,
             "type":"FontClip",
             "searchKey":"FontClip,num",
-            "props":{"y":53,"x":46,"width":97,"value":"0","spaceX":-10,"skin":"UI/font_提示.png","sheet":"0123456789","presetID":3,"preset":"laya/pages/prefab/balloon_icon.prefab","pivotY":21,"pivotX":49,"name":"num","height":41,"align":"center"},
+            "props":{"y":37,"x":38,"width":97,"value":"0","spaceX":-10,"skin":"UI/font_提示.png","sheet":"0123456789","presetID":3,"preset":"laya/pages/prefab/balloon_icon.prefab","pivotY":21,"pivotX":49,"name":"num","height":41,"align":"center"},
             "nodeParent":21,
             "label":"num",
             "isDirectory":false,
@@ -49,13 +35,27 @@
             "source":"src/Script/Project/Balloon_Icon.ts",
             "searchKey":"Script,Balloon_Icon",
             "removeAble":true,
-            "props":{"presetID":4,"preset":"laya/pages/prefab/balloon_icon.prefab","num":"@node:25","img":"@node:24"},
+            "props":{"presetID":4,"preset":"laya/pages/prefab/balloon_icon.prefab","num":"@node:25","img":"@node:29"},
             "nodeParent":21,
             "label":"Balloon_Icon",
             "isDirectory":false,
             "isAniNode":true,
             "hasChild":false,
             "compId":26,
+            "child":[
+                ]
+        },
+        {
+            "x":15,
+            "type":"Image",
+            "searchKey":"Image,img",
+            "props":{"y":40,"x":40,"width":75,"skin":"UI/icon_淡黄.png","presetID":5,"preset":"laya/pages/prefab/balloon_icon.prefab","pivotY":39,"pivotX":38,"name":"img","height":78},
+            "nodeParent":21,
+            "label":"img",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "compId":29,
             "child":[
                 ]
         }],
