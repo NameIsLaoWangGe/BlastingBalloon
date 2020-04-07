@@ -42,7 +42,7 @@ export default class Balloon extends Laya.Script {
      * 点击错误
      */
     clickError(): void {
-
+        this.gameControl.createGameOver('defeated');
     }
 
     /**开启点击事件*/
@@ -62,6 +62,7 @@ export default class Balloon extends Laya.Script {
             console.log('点击正确1');
             this.clickRight();
         } else {
+            this.clickError();
             console.log('点击错误！');
         }
     }

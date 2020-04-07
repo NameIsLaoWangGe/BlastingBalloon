@@ -94,8 +94,8 @@ export default class GameControl extends Laya.Script {
     onEnable(): void {
         this.self = this.owner as Laya.Scene;
         this.self['GameControl'] = this;
-
-        this.gameStart();
+        this.noStart();
+        this.createStartGame();
         this.adaptive();
     }
 
@@ -120,26 +120,34 @@ export default class GameControl extends Laya.Script {
 
     /**分数节点的自适应自适应*/
     levelsNodeAdaptive(): void {
-        let len = this.Levels.value.length;
         let guan = this.LevelsNode.getChildByName('guan') as Laya.Sprite;
-        switch (len) {
-            case 1:
-                guan.x = 64;
-                break;
-            case 2:
-                guan.x = 72;
-                break;
-            default:
-                guan.x = 72;
-                break;
+          console.log(Number(this.Levels.value));
+        if (Number(this.Levels.value) >= 10) {
+            console.log(Number(this.Levels.value));
+            guan.x = 72;
+        } else {
+            guan.x = 64;
         }
+    }
+
+    /**
+     * 为开场时候的设置
+     * 游戏内节点消失
+     * */
+    noStart(): void {
+        this.Tip.alpha = 0;
+        this.BalloonVessel.alpha = 0;
     }
 
     /**
      * 关卡参数
      * 每个关卡会执行一次，参数每关不一样
      */
-    gameStart(): void {
+    start(): void {
+        // 游戏内节点出现
+        this.Tip.alpha = 1;
+        this.BalloonVessel.alpha = 1;
+        // 其他参数设置
         this.time.value = 1;
         this.Levels.value = (Number(this.Levels.value) + 1).toString();
         this.levelsNodeAdaptive();
@@ -184,12 +192,10 @@ export default class GameControl extends Laya.Script {
         let scaleX3 = 0.85;
         let scaleY3 = 1.15;
         let plug_01 = this.Tip.getChildByName('plug_01') as Laya.Image;
-        let targetX_01 = plug_01.x;
-        Animation.deform_Move(plug_01, 1550, targetX_01, scaleX3, scaleY3, time, delayed, null);
+        Animation.deform_Move(plug_01, 1550, 555, scaleX3, scaleY3, time, delayed, null);
 
         let plug_02 = this.Tip.getChildByName('plug_02') as Laya.Image;
-        let targetX_02 = plug_02.x;
-        Animation.deform_Move(plug_02, -800, targetX_02, scaleX3, scaleY3, time, delayed, fun => {
+        Animation.deform_Move(plug_02, -800, 171, scaleX3, scaleY3, time, delayed, fun => {
             Animation.leftRight_Shake(this.Tip, 60, 15, 100, null);
             Animation.leftRight_Shake(this.PropsNode, 60, 15, 160, null);
             Animation.leftRight_Shake(this.LevelsNode, 60, 15, 160, null);
@@ -288,8 +294,8 @@ export default class GameControl extends Laya.Script {
         let time1 = 200;
         let time2 = 100;
         let delayed = 250;
-        Animation.swell_shrink(this.LevelsNode, 1, 1.3, time1 * 0.2, 0, f => {
-            Animation.swell_shrink(this.LevelsNode, 1, 1.3, time1 * 0.2, 0, f => {
+        Animation.swell_shrink(this.LevelsNode, 1, 1.3, time1 * 0.5, 0, f => {
+            Animation.swell_shrink(this.LevelsNode, 1, 1.3, time1 * 0.5, 0, f => {
             })
         })
 
@@ -504,7 +510,7 @@ export default class GameControl extends Laya.Script {
     onUpdate(): void {
         if (this.startSwicth) {
             if (this.time.value > 0) {
-                this.time.value -= 0.01;
+                this.time.value -= 0.0001;
             } else if (this.time.value <= 0) {
                 this.createGameOver('defeated');
                 this.startSwicth = false;

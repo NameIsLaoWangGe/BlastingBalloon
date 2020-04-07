@@ -1,7 +1,8 @@
 {
     "x":0,
     "type":"Scene",
-    "selectedBox":2,
+    "selectedBox":30,
+    "selecteID":31,
     "searchKey":"Scene",
     "props":{"width":750,"sceneColor":"#000000","height":1334},
     "nodeParent":-1,
@@ -186,7 +187,7 @@
                             "x":45,
                             "type":"FontClip",
                             "searchKey":"FontClip,Levels",
-                            "props":{"y":54,"x":70,"width":56,"value":"5","spaceX":-13,"skin":"UI/游戏内关卡数数字.png","sheet":"0123456789","pivotY":25,"pivotX":56,"name":"Levels","height":50,"align":"center"},
+                            "props":{"y":54,"x":70,"width":56,"value":"8","spaceX":-13,"skin":"UI/游戏内关卡数数字.png","sheet":"0123456789","pivotY":25,"pivotX":56,"name":"Levels","height":50,"align":"center"},
                             "nodeParent":30,
                             "label":"Levels",
                             "isDirectory":false,

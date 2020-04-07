@@ -350,7 +350,7 @@
         function swell_shrink(node, firstScale, scale1, time, delayed, func) {
             Laya.Tween.to(node, { scaleX: scale1, scaleY: scale1, alhpa: 1, }, time, Laya.Ease.cubicInOut, Laya.Handler.create(this, function () {
                 Laya.Tween.to(node, { scaleX: firstScale, scaleY: firstScale, rotation: 0 }, time, null, Laya.Handler.create(this, function () {
-                    Laya.Tween.to(node, { scaleX: firstScale + (scale1 - firstScale) * 0.2, scaleY: firstScale + (scale1 - firstScale) * 0.2, rotation: 0 }, time, null, Laya.Handler.create(this, function () {
+                    Laya.Tween.to(node, { scaleX: firstScale + (scale1 - firstScale) * 0.5, scaleY: firstScale + (scale1 - firstScale) * 0.5, rotation: 0 }, time * 0.5, null, Laya.Handler.create(this, function () {
                         Laya.Tween.to(node, { scaleX: firstScale, scaleY: firstScale, rotation: 0 }, time, null, Laya.Handler.create(this, function () {
                             if (func !== null) {
                                 func();
@@ -391,7 +391,8 @@
         onEnable() {
             this.self = this.owner;
             this.self['GameControl'] = this;
-            this.gameStart();
+            this.noStart();
+            this.createStartGame();
             this.adaptive();
         }
         adaptive() {
@@ -407,21 +408,23 @@
             this.Grass.y = stageH;
         }
         levelsNodeAdaptive() {
-            let len = this.Levels.value.length;
             let guan = this.LevelsNode.getChildByName('guan');
-            switch (len) {
-                case 1:
-                    guan.x = 64;
-                    break;
-                case 2:
-                    guan.x = 72;
-                    break;
-                default:
-                    guan.x = 72;
-                    break;
+            console.log(Number(this.Levels.value));
+            if (Number(this.Levels.value) >= 10) {
+                console.log(Number(this.Levels.value));
+                guan.x = 72;
+            }
+            else {
+                guan.x = 64;
             }
         }
-        gameStart() {
+        noStart() {
+            this.Tip.alpha = 0;
+            this.BalloonVessel.alpha = 0;
+        }
+        start() {
+            this.Tip.alpha = 1;
+            this.BalloonVessel.alpha = 1;
             this.time.value = 1;
             this.Levels.value = (Number(this.Levels.value) + 1).toString();
             this.levelsNodeAdaptive();
@@ -457,11 +460,9 @@
             let scaleX3 = 0.85;
             let scaleY3 = 1.15;
             let plug_01 = this.Tip.getChildByName('plug_01');
-            let targetX_01 = plug_01.x;
-            Animation.deform_Move(plug_01, 1550, targetX_01, scaleX3, scaleY3, time, delayed, null);
+            Animation.deform_Move(plug_01, 1550, 555, scaleX3, scaleY3, time, delayed, null);
             let plug_02 = this.Tip.getChildByName('plug_02');
-            let targetX_02 = plug_02.x;
-            Animation.deform_Move(plug_02, -800, targetX_02, scaleX3, scaleY3, time, delayed, fun => {
+            Animation.deform_Move(plug_02, -800, 171, scaleX3, scaleY3, time, delayed, fun => {
                 Animation.leftRight_Shake(this.Tip, 60, 15, 100, null);
                 Animation.leftRight_Shake(this.PropsNode, 60, 15, 160, null);
                 Animation.leftRight_Shake(this.LevelsNode, 60, 15, 160, null);
@@ -532,8 +533,8 @@
             let time1 = 200;
             let time2 = 100;
             let delayed = 250;
-            Animation.swell_shrink(this.LevelsNode, 1, 1.3, time1 * 0.2, 0, f => {
-                Animation.swell_shrink(this.LevelsNode, 1, 1.3, time1 * 0.2, 0, f => {
+            Animation.swell_shrink(this.LevelsNode, 1, 1.3, time1 * 0.5, 0, f => {
+                Animation.swell_shrink(this.LevelsNode, 1, 1.3, time1 * 0.5, 0, f => {
                 });
             });
             Animation.bombs_Vanish(this.TimeNode, 0, 0, 0, time1, delayed * 2, f => {
@@ -648,7 +649,7 @@
                     let name = balloon.name;
                     if (taskName === name) {
                         let num = taskBallon['Balloon_Icon'].num;
-                        num.value = (Number(num.value) + 1).toString();
+                        this.start();
                         this.clickOrderArr.push(name);
                     }
                 }
@@ -686,7 +687,7 @@
         onUpdate() {
             if (this.startSwicth) {
                 if (this.time.value > 0) {
-                    this.time.value -= 0.01;
+                    this.time.value -= 0.0001;
                 }
                 else if (this.time.value <= 0) {
                     this.createGameOver('defeated');
@@ -718,6 +719,7 @@
             }
         }
         clickError() {
+            this.gameControl.createGameOver('defeated');
         }
         balloonClicksOn() {
             Clicks.clicksOn('balloon', '音效/按钮点击.mp3', this.self, this, null, null, this.up, null);
@@ -732,6 +734,7 @@
                 this.clickRight();
             }
             else {
+                this.clickError();
                 console.log('点击错误！');
             }
         }
@@ -859,23 +862,20 @@
             Animation.bombs_Vanish(this.logo, 0, 0, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time, delayed * 1, null);
             Animation.bombs_Vanish(this.btn_again, 0, 0, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time, delayed * 2, null);
             Animation.bombs_Vanish(this.btn_return, 0, 0, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time, delayed * 3, f => {
-                if (type === 'return') {
-                    this.gameControl.leaveAnimation();
-                }
-                else {
-                    if (this.settlementType === 'victory') {
-                        this.gameControl.moveToNextLevel();
-                    }
-                    else if (this.settlementType === 'defeated') {
-                        this.gameControl.againCurrentlevel();
-                    }
-                }
-                this.self.removeSelf();
+                this.vanishFunc(type);
             });
         }
         vanishFunc(type) {
-            if (Laya.Browser.onMiniGame) {
-                this.gameControl.bannerAd.hide();
+            if (type === 'return') {
+                this.gameControl.leaveAnimation();
+            }
+            else {
+                if (this.settlementType === 'victory') {
+                    this.gameControl.moveToNextLevel();
+                }
+                else if (this.settlementType === 'defeated') {
+                    this.gameControl.againCurrentlevel();
+                }
             }
             this.self.removeSelf();
         }
@@ -974,6 +974,215 @@
         }
     }
 
+    var WXDataManager;
+    (function (WXDataManager) {
+        WXDataManager._thislevels = 0;
+        WXDataManager.wx = Laya.Browser.window.wx;
+        function WXcheckSession() {
+            if (Laya.Browser.onMiniGame) {
+                WXDataManager.wx.checkSession({
+                    success() {
+                        console.log('已经登录过了！');
+                    },
+                    fail() {
+                        authorizedWXLogin();
+                        console.log('重新登录');
+                    }
+                });
+            }
+        }
+        WXDataManager.WXcheckSession = WXcheckSession;
+        function authorizedWXLogin() {
+            if (Laya.Browser.onMiniGame) {
+                WXDataManager.wx.login({
+                    success: function (res) {
+                        if (res.code) {
+                            console.log("登录成功，获取到code", res.code);
+                        }
+                        var button = WXDataManager.wx.createUserInfoButton({
+                            type: 'text',
+                            text: '开始游戏',
+                            style: {
+                                left: WXDataManager.wx.getSystemInfoSync().screenWidth / 2 - 60,
+                                bottom: WXDataManager.wx.getSystemInfoSync().screenHeight / 2 - 60,
+                                width: 120,
+                                height: 40,
+                                lineHeight: 40,
+                                backgroundColor: '#fb94a9',
+                                color: '#ffffff',
+                                textAlign: 'center',
+                                fontSize: 16,
+                                borderRadius: 20
+                            }
+                        });
+                        button.show();
+                        button.onTap((res) => {
+                            console.log(res);
+                            if (res.errMsg === "getUserInfo:ok") {
+                                console.log("已经授权");
+                                button.destroy();
+                                getUserinfo(null);
+                            }
+                            else {
+                                console.log("没有授权");
+                            }
+                        });
+                    }
+                });
+            }
+        }
+        WXDataManager.authorizedWXLogin = authorizedWXLogin;
+        function normalWXLogin() {
+            if (Laya.Browser.onMiniGame) {
+                WXDataManager.wx.checkSession({
+                    success() {
+                        console.log('已经登录过了！');
+                        getUserinfo('haveLogin');
+                    },
+                    fail() {
+                        console.log('重新登录');
+                        WXDataManager.wx.login({
+                            success(res) {
+                                getUserinfo('loginAgain');
+                            },
+                            fail() {
+                                console.log('登录失败');
+                            }
+                        });
+                    }
+                });
+            }
+        }
+        WXDataManager.normalWXLogin = normalWXLogin;
+        function getUserinfo(type) {
+            if (Laya.Browser.onMiniGame) {
+                WXDataManager.wx.cloud.init({
+                    env: 'release-lwg'
+                });
+                WXDataManager.wx.cloud.callFunction({
+                    name: "login",
+                }).then(res => {
+                    console.log("登录成功回调：", res);
+                    WXDataManager.WXopenid = res.result.openid;
+                    console.log("WXopenid为：", WXDataManager.WXopenid);
+                    WXDataManager.user_id = WXDataManager.WXopenid;
+                    if (type === 'loginAgain') {
+                        try {
+                            add_Levels();
+                        }
+                        catch (error) {
+                            console.log(error);
+                        }
+                    }
+                    else if (type === 'haveLogin') {
+                        try {
+                            get_Levels();
+                        }
+                        catch (error) {
+                            console.log(error);
+                        }
+                    }
+                });
+            }
+        }
+        WXDataManager.getUserinfo = getUserinfo;
+        function add_Levels() {
+            if (Laya.Browser.onMiniGame) {
+                WXDataManager.wx.cloud.init({
+                    env: 'release-lwg'
+                });
+                let db = WXDataManager.wx.cloud.database();
+                let user_info = db.collection('user_info');
+                user_info.add({
+                    data: {
+                        _id: WXDataManager.user_id,
+                        _levels: WXDataManager._thislevels,
+                        due: new Date("2018-09-01"),
+                        location: new db.Geo.Point(113, 23),
+                        done: false
+                    },
+                }).then(res => {
+                    console.log('没有登录过重新上传：' + res);
+                });
+            }
+        }
+        WXDataManager.add_Levels = add_Levels;
+        function get_Levels() {
+            if (Laya.Browser.onMiniGame) {
+                WXDataManager.wx.cloud.init({
+                    env: 'release-lwg'
+                });
+                let db = WXDataManager.wx.cloud.database();
+                let user_info = db.collection('user_info');
+                user_info.doc(WXDataManager.user_id).get().then(res => {
+                    console.log(res.data);
+                    WXDataManager._lastlevels = res.data._levels;
+                    console.log('上次的关卡数为：' + WXDataManager._lastlevels);
+                    WXDataManager._thislevels = WXDataManager._lastlevels;
+                });
+            }
+        }
+        WXDataManager.get_Levels = get_Levels;
+        function update_Levels() {
+            if (Laya.Browser.onMiniGame) {
+                WXDataManager.wx.cloud.init({
+                    env: 'release-lwg'
+                });
+                let db = WXDataManager.wx.cloud.database();
+                let user_info = db.collection('user_info');
+                user_info.doc(WXDataManager.user_id).update({
+                    data: {
+                        _levels: WXDataManager._thislevels,
+                    },
+                }).then(res => {
+                    console.log(res);
+                });
+            }
+        }
+        WXDataManager.update_Levels = update_Levels;
+        function wxPostInit() {
+            if (Laya.Browser.onMiniGame) {
+                Laya.loader.load(["res/atlas/rank.atlas"], Laya.Handler.create(null, function () {
+                    Laya.MiniAdpter.sendAtlasToOpenDataContext("res/atlas/rank.atlas");
+                    let wx = Laya.Browser.window.wx;
+                    let openDataContext = wx.getOpenDataContext();
+                    openDataContext.postMessage({ action: 'init' });
+                }));
+            }
+        }
+        WXDataManager.wxPostInit = wxPostInit;
+        function wxPostData(score) {
+            if (Laya.Browser.onMiniGame) {
+                let args = {
+                    type: 'scores', data: { scores: score }
+                };
+                let wx = Laya.Browser.window.wx;
+                let openDataContext = wx.getOpenDataContext();
+                openDataContext.postMessage(args);
+                console.log('上传了');
+            }
+            else {
+                console.log('没有上传');
+            }
+        }
+        WXDataManager.wxPostData = wxPostData;
+        function wxShare() {
+            if (Laya.Browser.onMiniGame) {
+                let wx = Laya.Browser.window.wx;
+                wx.shareAppMessage({
+                    title: '你的手速够快吗？',
+                    imageUrlId: 'CRYATpcgSFGkeB4Hs75jOQ',
+                    imageUrl: 'https://mmocgame.qpic.cn/wechatgame/9zdKibmXJ3RsmFpXn6UAV4ScT8ulA4wzqUUNicKWDIaODZbuv38lkBBOBQv8XbxOI0/0'
+                });
+                console.log("主动进行了转发");
+            }
+            else {
+                console.log("仅支持微信客户端");
+            }
+        }
+        WXDataManager.wxShare = wxShare;
+    })(WXDataManager || (WXDataManager = {}));
+
     class StartGame extends Laya.Script {
         constructor() { super(); }
         onEnable() {
@@ -983,10 +1192,10 @@
             this.LevelsNode = this.gameControl.LevelsNode;
             this.gameControl.startNode = this.self;
             this.startSwitch = false;
-            this.startChange = 'appear';
             this.watchAds = false;
             Adaptive.interface_Center(this.self);
             Adaptive.child_Center(this.anti_addiction, this.self, Laya.stage.height * 9 / 10);
+            this.timer = 0;
             this.appaer();
         }
         appaer() {
@@ -1000,31 +1209,35 @@
             }
             Animation.bombs_Appear(this.btn_start, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 2, null);
             Animation.bombs_Appear(this.btn_ranking, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 3, null);
-            Animation.bombs_Appear(this.btn_share, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 4, null);
+            Animation.bombs_Appear(this.btn_share, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 4, f => {
+                this.appaerFunc();
+            });
             Animation.fade_out(this.anti_addiction, 0, 1, 1000, 0, null);
         }
         appaerFunc() {
             this.startSwitch = true;
             this.clicksOnBtn();
-            if (Laya.Browser.onMiniGame) {
-                this.gameControl.bannerAd.show()
-                    .then(() => console.log('banner 广告显示'));
+        }
+        vanish() {
+            let time = 250;
+            let delayed = 100;
+            for (let index = 0; index < this.logo._children.length; index++) {
+                const element = this.logo._children[index];
+                Animation.bombs_Vanish(element, 0, 0, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time, delayed * index, null);
             }
+            Animation.bombs_Vanish(this.btn_start, 0, 0, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time, delayed * 1, f => {
+                Laya.Tween.clearAll(this.btn_start);
+                this.startSwitch = false;
+            });
+            Animation.bombs_Vanish(this.btn_ranking, 0, 0, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time, delayed * 2, null);
+            Animation.bombs_Vanish(this.btn_share, 0, 0, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time, delayed * 3, f => {
+                this.vanishFunc();
+            });
+            Animation.fade_out(this.anti_addiction, 1, 0, 1000, 0, null);
         }
-        vanish(type) {
-            let time = 600;
-            let y = 1800;
-            let delayed = 50;
-            Animation.drop(this.logo, y, Math.floor(Math.random() * 2) === 1 ? 30 : -30, time, delayed * 0, null);
-            Animation.drop(this.btn_start, y, Math.floor(Math.random() * 2) === 1 ? 30 : -30, time, delayed * 1, null);
-            Animation.drop(this.btn_ranking, y, Math.floor(Math.random() * 2) === 1 ? 30 : -30, time, delayed * 3, null);
-            Animation.drop(this.btn_share, y, Math.floor(Math.random() * 2) === 1 ? 30 : -30, time, delayed * 5, func => this.vanishFunc(type));
-            Animation.fade_out(this.anti_addiction, 1, 0, 300, 0, null);
-        }
-        vanishFunc(type) {
+        vanishFunc() {
             this.self.removeSelf();
-            this.gameControl.otherAppear();
-            this.gameControl.replacementCard(type);
+            this.gameControl.start();
         }
         clicksOnBtn() {
             Clicks.clicksOn('largen', '音效/按钮点击.mp3', this.btn_start, this, null, null, this.up, null);
@@ -1039,46 +1252,19 @@
         up(event) {
             event.currentTarget.scale(1, 1);
             if (event.currentTarget.name === 'btn_start') {
-                if (Laya.Browser.onMiniGame) {
-                    this.gameControl.bannerAd.hide();
-                }
-                this.vanish('start');
-                this.clicksOffBtn();
+                this.vanish();
             }
-            else if (event.currentTarget.name === 'btn_adv') {
-                if (Laya.Browser.onMiniGame) {
-                    this.gameControl.bannerAd.hide();
-                }
-                this.videoAd.show().catch(() => {
-                    this.videoAd.load()
-                        .then(() => this.videoAd.show())
-                        .catch(err => {
-                        console.log('激励视频 广告显示失败');
-                    });
-                });
-            }
-            else if (event.currentTarget.name === 'btn_ranking') {
-                this.gameControl.createRanking();
-            }
+            else if (event.currentTarget.name === 'btn_ranking') ;
             else if (event.currentTarget.name === 'btn_share') {
-                this.gameControl.wxShare();
+                WXDataManager.wxShare();
             }
+            this.clicksOffBtn();
         }
         onUpdate() {
             if (this.startSwitch) {
-                if (this.startChange === 'appear') {
-                    this.btn_start.scaleX += 0.003;
-                    this.btn_start.scaleY += 0.003;
-                    if (this.btn_start.scaleX > 1.1) {
-                        this.startChange = 'vanish';
-                    }
-                }
-                else if (this.startChange === 'vanish') {
-                    this.btn_start.scaleX -= 0.003;
-                    this.btn_start.scaleY -= 0.003;
-                    if (this.btn_start.scaleX < 1) {
-                        this.startChange = 'appear';
-                    }
+                this.timer++;
+                if (this.timer % 100 === 0) {
+                    Animation.swell_shrink(this.btn_start, 1, 1.15, 120, 0, null);
                 }
             }
         }

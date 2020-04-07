@@ -2,6 +2,7 @@ import { Clicks } from "../Template/Clicks";
 import { Animation } from "../Template/Animation";
 import { PalyAudio } from "../Template/PlayAudio";
 import { Adaptive } from "../Template/Adaptive";
+import { WXDataManager } from "../Template/WXDataManager";
 
 export default class StartGame extends Laya.Script {
     /** @prop {name:logo, tips:"游戏结束标题", type:Node}*/
@@ -28,7 +29,9 @@ export default class StartGame extends Laya.Script {
 
     /**开始游戏按别扭的渐隐动画开关*/
     private startSwitch: boolean;
-    private startChange: string;
+
+    /**计时器*/
+    private timer: number
 
     /**保存视频实例*/
     private videoAd;
@@ -46,11 +49,11 @@ export default class StartGame extends Laya.Script {
         this.gameControl.startNode = this.self;
 
         this.startSwitch = false;
-        this.startChange = 'appear';
         this.watchAds = false;
 
         Adaptive.interface_Center(this.self);
-        Adaptive.child_Center(this.anti_addiction, this.self, Laya.stage.height * 9 / 10)
+        Adaptive.child_Center(this.anti_addiction, this.self, Laya.stage.height * 9 / 10);
+        this.timer = 0;
 
         // this.videoAd = this.gameControl.videoAd;
 
@@ -69,7 +72,7 @@ export default class StartGame extends Laya.Script {
         let time1 = 250;
         let time2 = 60;
         let delayed = 300;
-        
+
         // logo
         for (let index = 0; index < this.logo._children.length; index++) {
             const element = this.logo._children[index];
@@ -83,7 +86,9 @@ export default class StartGame extends Laya.Script {
         Animation.bombs_Appear(this.btn_ranking, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 3, null);
 
         // 分享按钮
-        Animation.bombs_Appear(this.btn_share, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 4, null);
+        Animation.bombs_Appear(this.btn_share, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 4, f => {
+            this.appaerFunc();
+        });
 
         // 防沉迷文字
         Animation.fade_out(this.anti_addiction, 0, 1, 1000, 0, null);
@@ -93,11 +98,11 @@ export default class StartGame extends Laya.Script {
     appaerFunc(): void {
         this.startSwitch = true;
         this.clicksOnBtn();
-        // 显示bannar广告
-        if (Laya.Browser.onMiniGame) {
-            this.gameControl.bannerAd.show()
-                .then(() => console.log('banner 广告显示'));
-        }
+        // // 显示bannar广告
+        // if (Laya.Browser.onMiniGame) {
+        //     this.gameControl.bannerAd.show()
+        //         .then(() => console.log('banner 广告显示'));
+        // }
     }
 
     /**
@@ -106,30 +111,35 @@ export default class StartGame extends Laya.Script {
      * 一种是看广告开始
      * @param  type 消失后的开始游戏类型
     */
-    vanish(type): void {
-        let time = 600;
-        let y = 1800;
-        let delayed = 50;
-        // logo下落
-        Animation.drop(this.logo, y, Math.floor(Math.random() * 2) === 1 ? 30 : -30, time, delayed * 0, null);
-        // 开始按钮下落
-        Animation.drop(this.btn_start, y, Math.floor(Math.random() * 2) === 1 ? 30 : -30, time, delayed * 1, null);
-
-        // 排行榜按钮下落
-        Animation.drop(this.btn_ranking, y, Math.floor(Math.random() * 2) === 1 ? 30 : -30, time, delayed * 3, null);
-        // 分享按钮下落
-        Animation.drop(this.btn_share, y, Math.floor(Math.random() * 2) === 1 ? 30 : -30, time, delayed * 5, func => this.vanishFunc(type));
-        // 分割线消失
-        Animation.fade_out(this.anti_addiction, 1, 0, 300, 0, null);
+    vanish(): void {
+        let time = 250;
+        let delayed = 100;
+        // logo
+        for (let index = 0; index < this.logo._children.length; index++) {
+            const element = this.logo._children[index];
+            Animation.bombs_Vanish(element, 0, 0, Math.floor(Math.random() * 2) === 1 ? 5 : - 5, time, delayed * index, null);
+        }
+        // 开始按钮
+        Animation.bombs_Vanish(this.btn_start, 0, 0, Math.floor(Math.random() * 2) === 1 ? 5 : - 5, time, delayed * 1, f => {
+            Laya.Tween.clearAll(this.btn_start);
+            this.startSwitch = false;
+        });
+        // 排行榜按钮
+        Animation.bombs_Vanish(this.btn_ranking, 0, 0, Math.floor(Math.random() * 2) === 1 ? 5 : - 5, time, delayed * 2, null);
+        // 分享按钮
+        Animation.bombs_Vanish(this.btn_share, 0, 0, Math.floor(Math.random() * 2) === 1 ? 5 : - 5, time, delayed * 3, f => {
+            this.vanishFunc();
+        });
+        // 防沉迷文字
+        Animation.fade_out(this.anti_addiction, 1, 0, 1000, 0, null);
     }
 
     /**
      * 动画播放完毕后开始游戏
     */
-    vanishFunc(type): void {
+    vanishFunc(): void {
         this.self.removeSelf();
-        this.gameControl.otherAppear();
-        this.gameControl.replacementCard(type);
+        this.gameControl.start();
     }
 
     /**按钮的点击事件*/
@@ -150,52 +160,20 @@ export default class StartGame extends Laya.Script {
     up(event): void {
         event.currentTarget.scale(1, 1);
         if (event.currentTarget.name === 'btn_start') {
-            // 关闭bannar广告
-            if (Laya.Browser.onMiniGame) {
-                this.gameControl.bannerAd.hide();
-            }
-            this.vanish('start');
-            this.clicksOffBtn();
-        } else if (event.currentTarget.name === 'btn_adv') {
-            // 关闭bannar广告
-            if (Laya.Browser.onMiniGame) {
-                this.gameControl.bannerAd.hide();
-            }
-            // 用户触发广告后，显示激励视频广告
-            this.videoAd.show().catch(() => {
-                // 失败重试
-                this.videoAd.load()
-                    .then(() => this.videoAd.show())
-                    .catch(err => {
-                        console.log('激励视频 广告显示失败')
-                    })
-            })
+            this.vanish();
         } else if (event.currentTarget.name === 'btn_ranking') {
-            this.gameControl.createRanking();
-
+            // this.gameControl.createRanking();
         } else if (event.currentTarget.name === 'btn_share') {
-            this.gameControl.wxShare();
+            WXDataManager.wxShare();
         }
+        this.clicksOffBtn();
     }
 
     onUpdate(): void {
         if (this.startSwitch) {
-            if (this.startChange === 'appear') {
-
-                this.btn_start.scaleX += 0.003;
-                this.btn_start.scaleY += 0.003;
-
-                if (this.btn_start.scaleX > 1.1) {
-                    this.startChange = 'vanish';
-                }
-            } else if (this.startChange === 'vanish') {
-
-                this.btn_start.scaleX -= 0.003;
-                this.btn_start.scaleY -= 0.003;
-
-                if (this.btn_start.scaleX < 1) {
-                    this.startChange = 'appear';
-                }
+            this.timer++;
+            if (this.timer % 100 === 0) {
+                Animation.swell_shrink(this.btn_start, 1, 1.15, 120, 0, null);
             }
         }
     }

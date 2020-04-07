@@ -111,19 +111,7 @@ export default class GameOver extends Laya.Script {
         Animation.bombs_Vanish(this.btn_again, 0, 0, Math.floor(Math.random() * 2) === 1 ? 5 : - 5, time, delayed * 2, null);
 
         Animation.bombs_Vanish(this.btn_return, 0, 0, Math.floor(Math.random() * 2) === 1 ? 5 : - 5, time, delayed * 3, f => {
-            if (type === 'return') {
-                this.gameControl.leaveAnimation();
-            } else {
-                if (this.settlementType === 'victory') {
-                    // 下一关
-                    this.gameControl.moveToNextLevel();
-                } else if (this.settlementType === 'defeated') {
-                    // 重来
-                    this.gameControl.againCurrentlevel();
-                }
-            }
-            this.self.removeSelf();
-
+            this.vanishFunc(type);
         });
     }
     /**
@@ -133,9 +121,20 @@ export default class GameOver extends Laya.Script {
      * @param type 
      */
     vanishFunc(type): void {
-        // 关闭bannar广告
-        if (Laya.Browser.onMiniGame) {
-            this.gameControl.bannerAd.hide();
+        // // 关闭bannar广告
+        // if (Laya.Browser.onMiniGame) {
+        //     this.gameControl.bannerAd.hide();
+        // }
+        if (type === 'return') {
+            this.gameControl.leaveAnimation();
+        } else if('again'){
+            if (this.settlementType === 'victory') {
+                // 下一关
+                this.gameControl.moveToNextLevel();
+            } else if (this.settlementType === 'defeated') {
+                // 重来
+                this.gameControl.againCurrentlevel();
+            }
         }
         this.self.removeSelf();
     }
