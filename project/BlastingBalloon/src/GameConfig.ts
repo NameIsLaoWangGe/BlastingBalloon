@@ -3,6 +3,9 @@ import LevelsNode from "./Script/Project/LevelsNode"
 import GameControl from "./Script/Project/GameControl"
 import Balloon from "./Script/Project/Balloon"
 import Balloon_Icon from "./Script/Project/Balloon_Icon"
+import GameOver from "./Script/Project/GameOver"
+import Ranking from "./Script/Project/Ranking"
+import StartGame from "./Script/Project/StartGame"
 /*
 * 游戏初始化配置;
 */
@@ -26,6 +29,9 @@ export default class GameConfig{
         reg("Script/Project/GameControl.ts",GameControl);
         reg("Script/Project/Balloon.ts",Balloon);
         reg("Script/Project/Balloon_Icon.ts",Balloon_Icon);
+        reg("Script/Project/GameOver.ts",GameOver);
+        reg("Script/Project/Ranking.ts",Ranking);
+        reg("Script/Project/StartGame.ts",StartGame);
     }
 }
 GameConfig.init();

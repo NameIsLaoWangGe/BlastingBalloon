@@ -90,7 +90,7 @@ export class Btn_LargenEffect {
     }
     /**移动*/
     move(event): void {
-        event.currentTarget.scale(1.1, 1.1);
+        event.currentTarget.scale(1, 1);
     }
     /**出屏幕*/
     out(event): void {

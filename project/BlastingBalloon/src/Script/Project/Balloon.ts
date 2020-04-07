@@ -32,6 +32,10 @@ export default class Balloon extends Laya.Script {
             this.gameControl.clickOrderArr.shift();
         }
         this.gameControl.balloonClickOrder();
+
+        if (this.gameControl.clickOrderArr.length === 0) {
+            this.gameControl.createGameOver('victory');
+        }
     }
 
     /**
@@ -42,17 +46,14 @@ export default class Balloon extends Laya.Script {
     }
 
     /**开启点击事件*/
-    cardClicksOn(): void {
+    balloonClicksOn(): void {
         Clicks.clicksOn('balloon', '音效/按钮点击.mp3', this.self, this, null, null, this.up, null);
     }
     /**关闭点击事件*/
-    cardClicksOff(): void {
+    balloonClicksOff(): void {
         Clicks.clicksOff('balloon', this.self, this, null, null, this.up, null);
     }
-    /**按下*/
-    down(event): void {
-        event.currentTarget.scale(Clicks.balloonScale + 0.1, Clicks.balloonScale + 0.1);
-    }
+
     /**抬起*/
     up(event): void {
         // 无论点错点对时间都停止

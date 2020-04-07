@@ -47,9 +47,10 @@ export module Animation {
      * @param node 节点
      * @param time 花费时间
      * @param range 幅度
+     * @param delayed 延时
      * @param func 回调函数
      */
-    export function leftRight_Shake(node, time, range, func): void {
+    export function leftRight_Shake(node, time, range, delayed, func): void {
         Laya.Tween.to(node, { x: node.x - range }, time, null, Laya.Handler.create(this, function () {
             Laya.Tween.to(node, { x: node.x + range * 2 }, time, null, Laya.Handler.create(this, function () {
                 Laya.Tween.to(node, { x: node.x - range }, time, null, Laya.Handler.create(this, function () {
@@ -58,7 +59,7 @@ export module Animation {
                     }
                 }))
             }))
-        }))
+        }), delayed);
     }
 
     /**
@@ -301,6 +302,127 @@ export module Animation {
             }), 0);
         }), 0);
     }
+
+    /**
+     * 类似气球弹出并且回弹，第一个阶段弹到空中，这个阶段可以给个角度，第二阶段落下变为原始状态，第三阶段再次放大一次，这次放大小一点，第四阶段回到原始状态，三、四个阶段是回弹一次，根据第一个阶段参数进行调整
+     * @param node 节点
+     * @param firstAlpha 初始透明度
+    * @param  firstScale 初始大小，因为有些节点可能初始Scale并不是1
+     * @param scale1 第一阶段放大比例
+     * @param rotation 第一阶段角度 
+     * @param time1 第一阶段花费时间
+     * @param time2 第二阶段花费时间
+     * @param delayed 延时时间
+     * @param func 完成后的回调
+     */
+    export function bombs_Appear(node, firstAlpha, firstScale, scale1, rotation, time1, time2, delayed, func): void {
+        node.scale(0, 0);
+        node.alhpa = firstAlpha;
+        Laya.Tween.to(node, { scaleX: scale1, scaleY: scale1, alhpa: 1, rotation: rotation }, time1, Laya.Ease.cubicInOut, Laya.Handler.create(this, function () {
+
+            Laya.Tween.to(node, { scaleX: firstScale, scaleY: firstScale, rotation: 0 }, time2, null, Laya.Handler.create(this, function () {
+
+                Laya.Tween.to(node, { scaleX: firstScale + (scale1 - firstScale) * 0.2, scaleY: firstScale + (scale1 - firstScale) * 0.2, rotation: 0 }, time2, null, Laya.Handler.create(this, function () {
+
+                    Laya.Tween.to(node, { scaleX: firstScale, scaleY: firstScale, rotation: 0 }, time2, null, Laya.Handler.create(this, function () {
+                        if (func !== null) {
+                            func()
+                        }
+                    }), 0);
+                }), 0);
+            }), 0);
+        }), delayed);
+    }
+
+
+
+    /**
+     * 类似气球收缩消失
+     * @param node 节点
+     * @param scale 收缩后的大小
+     * @param alpha 收缩后的透明度
+     * @param rotation 收缩后的角度 
+     * @param time 花费时间
+     * @param delayed 延时时间
+     * @param func 完成后的回调
+     */
+    export function bombs_Vanish(node, scale, alpha, rotation, time, delayed, func): void {
+        Laya.Tween.to(node, { scaleX: scale, scaleY: scale, alhpa: alpha, rotation: rotation }, time, Laya.Ease.cubicOut, Laya.Handler.create(this, function () {
+            if (func !== null) {
+                func()
+            }
+        }), delayed);
+    }
+
+    /**
+     * 类似于心脏跳动的回弹效果
+     * @param node 节点
+     * @param firstScale 初始大小
+     * @param scale1 需要放大的大小
+     * @param time 花费时间
+     * @param delayed 延时时间
+     * @param func 完成后的回调
+     */
+    export function swell_shrink(node, firstScale, scale1, time, delayed, func): void {
+        Laya.Tween.to(node, { scaleX: scale1, scaleY: scale1, alhpa: 1, }, time, Laya.Ease.cubicInOut, Laya.Handler.create(this, function () {
+
+            Laya.Tween.to(node, { scaleX: firstScale, scaleY: firstScale, rotation: 0 }, time, null, Laya.Handler.create(this, function () {
+
+                Laya.Tween.to(node, { scaleX: firstScale + (scale1 - firstScale) * 0.2, scaleY: firstScale + (scale1 - firstScale) * 0.2, rotation: 0 }, time, null, Laya.Handler.create(this, function () {
+
+                    Laya.Tween.to(node, { scaleX: firstScale, scaleY: firstScale, rotation: 0 }, time, null, Laya.Handler.create(this, function () {
+                        if (func !== null) {
+                            func()
+                        }
+                    }), 0);
+                }), 0);
+            }), 0);
+        }), delayed);
+    }
+
+    /**
+     * 简单移动
+     * @param node 节点
+     * @param firstX 初始x位置
+     * @param firstY 初始y位置
+     * @param targetX 目标y位置
+     * @param targetY 目标y位置
+     * @param time 花费时间
+     * @param func 完成后的回调
+     */
+    export function simple_Move(node, firstX, firstY, targetX, targetY, time, delayed, func): void {
+        node.x = firstX;
+        node.y = firstY;
+        Laya.Tween.to(node, { x: targetX, y: targetY }, time, Laya.Ease.cubicOut, Laya.Handler.create(this, function () {
+            if (func !== null) {
+                func()
+            }
+        }), delayed);
+    }
+
+
+    /**
+    * 形变移动伴随回弹效果，移动的过程中X轴或Y轴方向会被挤压，然后回到原始状态
+    * @param node 节点
+    * @param firstX 初始x位置
+    * @param scaleX x轴方向的挤压
+    * @param scaleY y轴方向的挤压
+    * @param targetX 目标y位置
+    * @param time 花费时间
+    * @param func 完成后的回调
+    */
+    export function deform_Move(node, firstX, targetX, scaleX, scaleY, time, delayed, func): void {
+        node.x = firstX;
+        Laya.Tween.to(node, { x: targetX, scaleX: scaleX, scaleY: scaleY }, time, Laya.Ease.cubicOut, Laya.Handler.create(this, function () {
+            // 原始状态
+            Laya.Tween.to(node, { scaleX: 1, scaleY: 1 }, time, null, Laya.Handler.create(this, function () {
+                if (func !== null) {
+                    func()
+                }
+            }), 0);
+        }), delayed);
+    }
+
 }
 export default Animation;
 

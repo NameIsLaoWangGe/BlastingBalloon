@@ -250,5 +250,56 @@ export module WXDataManager {
             })
         }
     }
+
+    /** 微信排行榜初始化*/
+    export function wxPostInit() {
+        if (Laya.Browser.onMiniGame) {
+            Laya.loader.load(["res/atlas/rank.atlas"], Laya.Handler.create(null, function () {
+                //加载完成
+                //使用接口将图集透传到子域
+                Laya.MiniAdpter.sendAtlasToOpenDataContext("res/atlas/rank.atlas");
+
+                let wx: any = Laya.Browser.window.wx;
+                let openDataContext: any = wx.getOpenDataContext();
+                openDataContext.postMessage({ action: 'init' });
+            }));
+        }
+    }
+
+    /** 
+     * 更新微信排行榜的数据
+     * @param score 需要上传的分数
+    */
+    export function wxPostData(score) {
+        if (Laya.Browser.onMiniGame) {
+            let args = {
+                type: 'scores', data: { scores: score }
+            }
+            let wx: any = Laya.Browser.window.wx;
+            let openDataContext: any = wx.getOpenDataContext();
+            openDataContext.postMessage(args);
+            console.log('上传了');
+        } else {
+            console.log('没有上传');
+        }
+    }
+
+    /**分享*/
+    export function wxShare() {
+        if (Laya.Browser.onMiniGame) {
+            let wx: any = Laya.Browser.window.wx;
+            //下次测试
+            wx.shareAppMessage({
+                title: '你的手速够快吗？',
+                imageUrlId: 'CRYATpcgSFGkeB4Hs75jOQ',
+                imageUrl: 'https://mmocgame.qpic.cn/wechatgame/9zdKibmXJ3RsmFpXn6UAV4ScT8ulA4wzqUUNicKWDIaODZbuv38lkBBOBQv8XbxOI0/0'
+            });
+            console.log("主动进行了转发");
+        } else {
+            console.log("仅支持微信客户端");
+        }
+    }
+
+
 }
 export default WXDataManager;

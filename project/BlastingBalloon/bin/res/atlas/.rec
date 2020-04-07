@@ -55,12 +55,13 @@ P 217B850D icon_青色.png
 P 80D058D7 icon_青色_pitch.png
 P D8E9DF8A icon_黄色.png
 P 89F0C295 icon_黄色_pitch.png
-P DD684F3E logo1.png
+P CE4DA356 logo1.png
 P 7DC67336 logo2.png
 P C42F0071 logo3.png
 P 61639734 logo4.png
-P 3ECD6441 logo气球装饰.png
-P 5D07898B 下一关按钮.png
+P 5840C1B4 logo气球装饰.png
+R AE92DB07 UI-123.png
+P 88C6E511 下一关按钮.png
 P 2556E2C1 不看按钮.png
 P D3803CD3 关卡数底板.png
 P 47DED465 分享按钮.png
@@ -81,7 +82,6 @@ P 65B6ABBB 游戏内关卡数_关.png
 P 51E0AB12 游戏内关卡数数字.png
 R 1D5BA304 游戏结束关卡字.png
 P 2846EE25 游戏结束第几关字.png
-P 81BDFCBA 继续按钮.png
 R 3A7EDA36 背景图.png
 P 8F7CA724 观看一次广告可以获得一个 “小喇叭”道具，“小喇叭”道 具可以驱赶虫子,是否立即观看_.png
 P 555B278D 观看按钮.png
@@ -92,8 +92,11 @@ P 1A7BB010 进度条影子.png
 P D5D436B2 进度条装饰.png
 P 0AE7E2BA 进度条高光.png
 P 8812F487 道具数量字体.png
+P FD6B5272 重来按钮.png
 P 639397BE 闯关失败logo.png
 P 68FE20CB 闯关成功logo.png
+R 129BD0E2 防沉迷文字.png
+P 2668466B 黑色遮罩.png
 D 特效
 P 30D8B5E6 effect_粉色1.png
 P F5E39418 effect_粉色2.png
