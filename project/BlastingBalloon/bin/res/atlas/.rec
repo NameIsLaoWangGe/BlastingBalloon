@@ -105,6 +105,10 @@ P 68FE20CB 闯关成功logo.png
 R 129BD0E2 防沉迷文字.png
 P 2668466B 黑色遮罩.png
 D 特效
+P 76D1EA92 effect_淡黄1.png
+P 3234BCC3 effect_淡黄2.png
+P D09AABC7 effect_淡黄3.png
+P 55090885 effect_淡黄4.png
 P 30D8B5E6 effect_粉色1.png
 P F5E39418 effect_粉色2.png
 P BA7B59C5 effect_粉色3.png
@@ -113,10 +117,6 @@ P 98ED6CFB effect_紫色1.png
 P B0FE4B48 effect_紫色2.png
 P 779B2F51 effect_紫色3.png
 P 4B64E5F6 effect_紫色4.png
-P 76D1EA92 effect_绿色1.png
-P 3234BCC3 effect_绿色2.png
-P D09AABC7 effect_绿色3.png
-P 55090885 effect_绿色4.png
 P FEF6807C effect_青色1.png
 P 29267200 effect_青色2.png
 P 09F87516 effect_青色3.png
@@ -125,6 +125,7 @@ P E3AD312C effect_黄色1.png
 P 8EC2E403 effect_黄色2.png
 P A47CF66B effect_黄色3.png
 P 135AE420 effect_黄色4.png
+P FFF8FF30 白色单元.png
 D 音效
 R 6D5BFA13 全体下落.mp3
 R A97C282E 单张发牌.mp3

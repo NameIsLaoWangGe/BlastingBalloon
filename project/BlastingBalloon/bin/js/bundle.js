@@ -480,6 +480,41 @@
             IconSkin_02[IconSkin_02["UI/icon_\u9752\u8272_pitch.png"] = 3] = "UI/icon_\u9752\u8272_pitch.png";
             IconSkin_02[IconSkin_02["UI/icon_\u7D2B\u8272_pitch.png"] = 4] = "UI/icon_\u7D2B\u8272_pitch.png";
         })(IconSkin_02 = Enum.IconSkin_02 || (Enum.IconSkin_02 = {}));
+        let Explode_Yellowish;
+        (function (Explode_Yellowish) {
+            Explode_Yellowish[Explode_Yellowish["\u7279\u6548/effect_\u6DE1\u9EC41.png"] = 0] = "\u7279\u6548/effect_\u6DE1\u9EC41.png";
+            Explode_Yellowish[Explode_Yellowish["\u7279\u6548/effect_\u6DE1\u9EC42.png"] = 1] = "\u7279\u6548/effect_\u6DE1\u9EC42.png";
+            Explode_Yellowish[Explode_Yellowish["\u7279\u6548/effect_\u6DE1\u9EC43.png"] = 2] = "\u7279\u6548/effect_\u6DE1\u9EC43.png";
+            Explode_Yellowish[Explode_Yellowish["\u7279\u6548/effect_\u6DE1\u9EC44.png"] = 3] = "\u7279\u6548/effect_\u6DE1\u9EC44.png";
+        })(Explode_Yellowish = Enum.Explode_Yellowish || (Enum.Explode_Yellowish = {}));
+        let Explode_Pink;
+        (function (Explode_Pink) {
+            Explode_Pink[Explode_Pink["\u7279\u6548/effect_\u7C89\u82721.png"] = 0] = "\u7279\u6548/effect_\u7C89\u82721.png";
+            Explode_Pink[Explode_Pink["\u7279\u6548/effect_\u7C89\u82722.png"] = 1] = "\u7279\u6548/effect_\u7C89\u82722.png";
+            Explode_Pink[Explode_Pink["\u7279\u6548/effect_\u7C89\u82723.png"] = 2] = "\u7279\u6548/effect_\u7C89\u82723.png";
+            Explode_Pink[Explode_Pink["\u7279\u6548/effect_\u7C89\u82724.png"] = 3] = "\u7279\u6548/effect_\u7C89\u82724.png";
+        })(Explode_Pink = Enum.Explode_Pink || (Enum.Explode_Pink = {}));
+        let Explode_Yellow;
+        (function (Explode_Yellow) {
+            Explode_Yellow[Explode_Yellow["\u7279\u6548/effect_\u9EC4\u82721.png"] = 0] = "\u7279\u6548/effect_\u9EC4\u82721.png";
+            Explode_Yellow[Explode_Yellow["\u7279\u6548/effect_\u9EC4\u82722.png"] = 1] = "\u7279\u6548/effect_\u9EC4\u82722.png";
+            Explode_Yellow[Explode_Yellow["\u7279\u6548/effect_\u9EC4\u82723.png"] = 2] = "\u7279\u6548/effect_\u9EC4\u82723.png";
+            Explode_Yellow[Explode_Yellow["\u7279\u6548/effect_\u9EC4\u82724.png"] = 3] = "\u7279\u6548/effect_\u9EC4\u82724.png";
+        })(Explode_Yellow = Enum.Explode_Yellow || (Enum.Explode_Yellow = {}));
+        let Explode_Cyan;
+        (function (Explode_Cyan) {
+            Explode_Cyan[Explode_Cyan["\u7279\u6548/effect_\u9752\u82721.png"] = 0] = "\u7279\u6548/effect_\u9752\u82721.png";
+            Explode_Cyan[Explode_Cyan["\u7279\u6548/effect_\u9752\u82722.png"] = 1] = "\u7279\u6548/effect_\u9752\u82722.png";
+            Explode_Cyan[Explode_Cyan["\u7279\u6548/effect_\u9752\u82723.png"] = 2] = "\u7279\u6548/effect_\u9752\u82723.png";
+            Explode_Cyan[Explode_Cyan["\u7279\u6548/effect_\u9752\u82724.png"] = 3] = "\u7279\u6548/effect_\u9752\u82724.png";
+        })(Explode_Cyan = Enum.Explode_Cyan || (Enum.Explode_Cyan = {}));
+        let Explode_Purple;
+        (function (Explode_Purple) {
+            Explode_Purple[Explode_Purple["\u7279\u6548/effect_\u7D2B\u82721.png"] = 0] = "\u7279\u6548/effect_\u7D2B\u82721.png";
+            Explode_Purple[Explode_Purple["\u7279\u6548/effect_\u7D2B\u82722.png"] = 1] = "\u7279\u6548/effect_\u7D2B\u82722.png";
+            Explode_Purple[Explode_Purple["\u7279\u6548/effect_\u7D2B\u82723.png"] = 2] = "\u7279\u6548/effect_\u7D2B\u82723.png";
+            Explode_Purple[Explode_Purple["\u7279\u6548/effect_\u7D2B\u82724.png"] = 3] = "\u7279\u6548/effect_\u7D2B\u82724.png";
+        })(Explode_Purple = Enum.Explode_Purple || (Enum.Explode_Purple = {}));
     })(Enum || (Enum = {}));
 
     var Advertising;
@@ -723,6 +758,7 @@
                         this.clearAllTaskBallon(type);
                         this.BalloonParent.removeChildren(0, len - 1);
                     }
+                    this.explodeAni(this.BalloonVessel, element.x, element.y, 'vanish', 10, 10);
                 });
                 delayed += 80;
             }
@@ -893,6 +929,16 @@
             let beetle = Laya.Pool.getItemByCreateFun('beetle', this.beetle.create, this.beetle);
             this.beetleParent.addChild(beetle);
         }
+        explodeAni(parent, x, y, type, number, zOrder) {
+            for (let i = 0; i < number; i++) {
+                let explode = Laya.Pool.getItemByCreateFun('explode', this.explode.create, this.explode);
+                parent.addChild(explode);
+                explode.zOrder = zOrder;
+                explode.pos(x, y);
+                explode['Explode'].type = type;
+                explode['Explode'].initProperty(type);
+            }
+        }
         onUpdate() {
             if (this.timeSwicth) {
                 if (this.time.value > 0) {
@@ -939,6 +985,7 @@
         up(event) {
             event.currentTarget.scale(Clicks.balloonScale, Clicks.balloonScale);
             if (this.self.name === this.gameControl.clickOrderArr[0]) {
+                this.gameControl.explodeAni(this.gameControl.BalloonVessel, this.self.x, this.self.y, this.self.name, 20, 10);
                 console.log('点击正确1');
                 this.clickRight();
             }
@@ -1063,6 +1110,281 @@
             }
         }
         onDisable() {
+        }
+    }
+
+    var Tools;
+    (function (Tools) {
+        function random(n, m) {
+            m = m || 10;
+            const c = m - n + 1;
+            return Math.floor(Math.random() * c + n);
+        }
+        Tools.random = random;
+        function getRandomArrayElements(arr, count) {
+            var shuffled = arr.slice(0), i = arr.length, min = i - count, temp, index;
+            while (i-- > min) {
+                index = Math.floor((i + 1) * Math.random());
+                temp = shuffled[index];
+                shuffled[index] = shuffled[i];
+                shuffled[i] = temp;
+            }
+            return shuffled.slice(min);
+        }
+        Tools.getRandomArrayElements = getRandomArrayElements;
+        function getArrayDifElements(arr, count) {
+            const result = [];
+            let i = 0;
+            for (i; i < count; i++) {
+                const temp = getDiffEle(arr.slice(), result, i);
+                result.push(temp);
+            }
+            return result;
+        }
+        Tools.getArrayDifElements = getArrayDifElements;
+        function getDiffEle(arr, result, place) {
+            let indexArr = [];
+            let i = 0;
+            for (i; i < arr.length - place; i++) {
+                indexArr.push(i);
+            }
+            const ranIndex = Math.floor(Math.random() * indexArr.length);
+            if (result.indexOf(arr[ranIndex]) === -1) {
+                const backNum = arr[ranIndex];
+                arr[ranIndex] = arr[indexArr.length - 1];
+                return backNum;
+            }
+            else {
+                arr.splice(ranIndex, 1);
+                return getDiffEle(arr, result, place);
+            }
+        }
+        Tools.getDiffEle = getDiffEle;
+        Tools.roleDragCan = false;
+        function copydata(obj) {
+            const ret = {};
+            Object.getOwnPropertyNames(obj).forEach(name => {
+                ret[name] = obj[name];
+            });
+            return ret;
+        }
+        Tools.copydata = copydata;
+        function fillArray(value, len) {
+            var arr = [];
+            for (var i = 0; i < len; i++) {
+                arr.push(value);
+            }
+            return arr;
+        }
+        Tools.fillArray = fillArray;
+        function speedByAngle(angle, XY) {
+            if (angle % 90 === 0 || !angle) {
+                console.error("计算的角度异常,需要查看：", angle);
+                return;
+            }
+            let speedXY = { x: 0, y: 0 };
+            speedXY.y = XY.y;
+            speedXY.x = speedXY.y / Math.tan(angle * Math.PI / 180);
+            return speedXY;
+        }
+        Tools.speedByAngle = speedByAngle;
+        function speedXYByAngle(angle, speed) {
+            const speedXY = { x: 0, y: 0 };
+            speedXY.x = speed * Math.cos(angle * Math.PI / 180);
+            speedXY.y = speed * Math.sin(angle * Math.PI / 180);
+            return speedXY;
+        }
+        Tools.speedXYByAngle = speedXYByAngle;
+        function speedLabelByAngle(angle, speed, speedBate) {
+            const speedXY = { x: 0, y: 0 };
+            const selfAngle = angle;
+            const defaultSpeed = speed;
+            const bate = speedBate || 1;
+            if (selfAngle % 90 === 0) {
+                if (selfAngle === 0 || selfAngle === 360) {
+                    speedXY.x = Math.abs(defaultSpeed) * bate;
+                }
+                else if (selfAngle === 90) {
+                    speedXY.y = Math.abs(defaultSpeed) * bate;
+                }
+                else if (selfAngle === 180) {
+                    speedXY.x = -Math.abs(defaultSpeed) * bate;
+                }
+                else {
+                    speedXY.y = -Math.abs(defaultSpeed) * bate;
+                }
+            }
+            else {
+                const tempXY = Tools.speedXYByAngle(selfAngle, defaultSpeed);
+                speedXY.x = tempXY.x;
+                speedXY.y = tempXY.y;
+                if (selfAngle > 0 && selfAngle < 180) {
+                    speedXY.y = Math.abs(speedXY.y) * bate;
+                }
+                else {
+                    speedXY.y = -Math.abs(speedXY.y) * bate;
+                }
+                if (selfAngle > 90 && selfAngle < 270) {
+                    speedXY.x = -Math.abs(speedXY.x) * bate;
+                }
+                else {
+                    speedXY.x = Math.abs(speedXY.x) * bate;
+                }
+            }
+            return speedXY;
+        }
+        Tools.speedLabelByAngle = speedLabelByAngle;
+        function getRad(degree) {
+            return degree / 180 * Math.PI;
+        }
+        Tools.getRad = getRad;
+        function getRoundPos(angle, radius, centPos) {
+            var center = centPos;
+            var radius = radius;
+            var hudu = (2 * Math.PI / 360) * angle;
+            var X = center.x + Math.sin(hudu) * radius;
+            var Y = center.y - Math.cos(hudu) * radius;
+            return { x: X, y: Y };
+        }
+        Tools.getRoundPos = getRoundPos;
+        function converteNum(num) {
+            if (typeof (num) !== "number") {
+                console.warn("要转化的数字并不为number");
+                return num;
+            }
+            let backNum;
+            if (num < 1000) {
+                backNum = "" + num;
+            }
+            else if (num < 1000000) {
+                backNum = "" + (num / 1000).toFixed(1) + "k";
+            }
+            else if (num < 10e8) {
+                backNum = "" + (num / 1000000).toFixed(1) + "m";
+            }
+            else {
+                backNum = "" + num;
+            }
+            return backNum;
+        }
+        Tools.converteNum = converteNum;
+    })(Tools || (Tools = {}));
+
+    class Explode extends Laya.Script {
+        constructor() { super(); }
+        onEnable() {
+            this.timer = 0;
+            this.accelerated = 0.1;
+            this.self = this.owner;
+            this.img = this.self.getChildByName('img');
+            this.self['Explode'] = this;
+            this.self.pivotX = this.self.width / 2;
+            this.self.pivotY = this.self.height / 2;
+        }
+        initProperty(type) {
+            this.effectsType = type;
+            if (this.effectsType === Enum.ColorName[0] || this.effectsType === Enum.ColorName[1] || this.effectsType === Enum.ColorName[2] || this.effectsType === Enum.ColorName[3]) {
+                this.explosionBalloon_P();
+            }
+            else {
+                this.vanishProperty();
+            }
+            this.img.pivotX = this.img.width / 2;
+            this.img.pivotY = this.img.height / 2;
+        }
+        explosionBalloon_P() {
+            this.moveSwitch = true;
+            this.randomSpeed = Math.floor(Math.random() * 15) + 2;
+            this.initialAngle = Math.floor(Math.random() * 360);
+            this.scale = Math.floor(Math.random() * 8) + 4;
+            this.self.scaleX = this.scale / 10;
+            this.self.scaleY = this.scale / 10;
+            this.vinshTime = Math.floor(Math.random() * 5) + 2;
+            this.startAlpha = 1;
+            this.self.alpha = this.startAlpha;
+            this.rotationD = Math.floor(Math.random() * 2) === 1 ? -10 : 10;
+            let number = Math.floor(Math.random() * 4);
+            switch (this.effectsType) {
+                case Enum.ColorName[0]:
+                    this.img.skin = Enum.Explode_Yellowish[number];
+                    break;
+                case Enum.ColorName[1]:
+                    this.img.skin = Enum.Explode_Pink[number];
+                    break;
+                case Enum.ColorName[2]:
+                    this.img.skin = Enum.Explode_Yellow[number];
+                    break;
+                case Enum.ColorName[3]:
+                    this.img.skin = Enum.Explode_Cyan[number];
+                    break;
+                case Enum.ColorName[4]:
+                    this.img.skin = Enum.Explode_Purple[number];
+                    break;
+                default:
+                    break;
+            }
+        }
+        explosionBalloon_Move() {
+            this.img.rotation += this.rotationD;
+            this.accelerated += 0.1;
+            if (this.timer > 0 && this.timer <= 15) {
+                this.commonSpeedXYByAngle(this.initialAngle, this.randomSpeed + 5);
+            }
+            else if (this.timer > 15 && this.timer < 18) {
+                this.commonSpeedXYByAngle(this.initialAngle, this.randomSpeed - 5);
+            }
+            else if (this.timer >= 18) {
+                this.self.removeSelf();
+            }
+        }
+        vanishProperty() {
+            this.moveSwitch = true;
+            this.randomSpeed = Math.random() * 2 + 2;
+            this.initialAngle = Math.floor(Math.random() * 360);
+            this.scale = 7;
+            this.self.scale(this.scale / 10, this.scale / 10);
+            this.vinshTime = Math.floor(Math.random() * 5) + 2;
+            this.startAlpha = (Math.floor(Math.random() * 6) + 4) / 10;
+            this.self.alpha = this.startAlpha;
+            this.rotationD = Math.floor(Math.random() * 2) === 1 ? -5 : 5;
+            this.img.skin = '特效/白色单元.png';
+            this.img.rotation = this.initialAngle - 90;
+        }
+        vanish_Move() {
+            this.accelerated += 0.01;
+            if (this.timer > 0 && this.timer <= 20) {
+                this.commonSpeedXYByAngle(this.initialAngle, this.randomSpeed);
+            }
+            else if (this.timer > 20 && this.timer < 30) {
+                this.commonSpeedXYByAngle(this.initialAngle, this.randomSpeed - 2);
+            }
+            else if (this.timer >= 30) {
+                this.self.alpha -= 0.02;
+                if (this.self.alpha <= 0) {
+                    this.self.removeSelf();
+                }
+            }
+        }
+        move() {
+            if (this.effectsType === Enum.ColorName[0] || this.effectsType === Enum.ColorName[1] || this.effectsType === Enum.ColorName[2] || this.effectsType === Enum.ColorName[3]) {
+                this.explosionBalloon_Move();
+            }
+            else if (this.effectsType === 'vanish') {
+                this.vanish_Move();
+            }
+        }
+        commonSpeedXYByAngle(angle, speed) {
+            this.self.x += Tools.speedXYByAngle(angle, speed + this.accelerated).x;
+            this.self.y += Tools.speedXYByAngle(angle, speed + this.accelerated).y;
+        }
+        onUpdate() {
+            if (this.moveSwitch) {
+                this.timer += 1;
+                this.move();
+            }
+        }
+        onDisable() {
+            Laya.Pool.recover('explode', this.self);
         }
     }
 
@@ -1683,6 +2005,7 @@
             reg("Script/Project/Balloon.ts", Balloon);
             reg("Script/Project/Balloon_Icon.ts", Balloon_Icon);
             reg("Script/Project/Beetle.ts", Beetle);
+            reg("Script/Project/Explode.ts", Explode);
             reg("Script/Project/GameOver.ts", GameOver);
             reg("Script/Project/Hint.ts", Hint);
             reg("Script/Project/Ranking.ts", Ranking);
@@ -1698,7 +2021,7 @@
     GameConfig.startScene = "Scenes/MainScene.scene";
     GameConfig.sceneRoot = "";
     GameConfig.debug = false;
-    GameConfig.stat = true;
+    GameConfig.stat = false;
     GameConfig.physicsDebug = false;
     GameConfig.exportSceneToJson = true;
     GameConfig.init();

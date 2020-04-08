@@ -67,6 +67,9 @@ export default class GameControl extends Laya.Script {
     /** @prop {name:beetle, tips:"小甲虫", type:Prefab}*/
     public beetle: Laya.Prefab;
 
+    /** @prop {name:explode, tips:"特效元素", type:Prefab}*/
+    public explode: Laya.Prefab;
+
     /**
      * 指代挂载当前脚本的节点
      */
@@ -368,6 +371,7 @@ export default class GameControl extends Laya.Script {
                     this.clearAllTaskBallon(type);
                     this.BalloonParent.removeChildren(0, len - 1);
                 }
+                this.explodeAni(this.BalloonVessel, element.x, element.y, 'vanish', 10, 10)
             })
             delayed += 80;
         }
@@ -584,7 +588,6 @@ export default class GameControl extends Laya.Script {
         }
     }
 
-
     /**
     * 创建排行榜界面
     * */
@@ -611,6 +614,26 @@ export default class GameControl extends Laya.Script {
     createBeetle(): void {
         let beetle = Laya.Pool.getItemByCreateFun('beetle', this.beetle.create, this.beetle) as Laya.Sprite;
         this.beetleParent.addChild(beetle);
+    }
+
+    /**爆炸动画
+    * @param parent 父节点
+    * @param x x位置
+    * @param y y位置
+    * @param type 类型 
+    * @param number 数量 
+    * @param zOrder 层级
+   */
+    explodeAni(parent, x, y, type, number, zOrder): void {
+        for (let i = 0; i < number; i++) {
+            let explode = Laya.Pool.getItemByCreateFun('explode', this.explode.create, this.explode) as Laya.Sprite;
+            parent.addChild(explode);
+            explode.zOrder = zOrder;
+            explode.pos(x, y);
+            // 类型
+            explode['Explode'].type = type;
+            explode['Explode'].initProperty(type);
+        }
     }
 
     onUpdate(): void {

@@ -5,6 +5,7 @@ import GameControl from "./Script/Project/GameControl"
 import Balloon from "./Script/Project/Balloon"
 import Balloon_Icon from "./Script/Project/Balloon_Icon"
 import Beetle from "./Script/Project/Beetle"
+import Explode from "./Script/Project/Explode"
 import GameOver from "./Script/Project/GameOver"
 import Hint from "./Script/Project/Hint"
 import Ranking from "./Script/Project/Ranking"
@@ -22,7 +23,7 @@ export default class GameConfig{
     static startScene:any="Scenes/MainScene.scene";
     static sceneRoot:string="";
     static debug:boolean=false;
-    static stat:boolean=true;
+    static stat:boolean=false;
     static physicsDebug:boolean=false;
     static exportSceneToJson:boolean=true;
     constructor(){}
@@ -34,6 +35,7 @@ export default class GameConfig{
         reg("Script/Project/Balloon.ts",Balloon);
         reg("Script/Project/Balloon_Icon.ts",Balloon_Icon);
         reg("Script/Project/Beetle.ts",Beetle);
+        reg("Script/Project/Explode.ts",Explode);
         reg("Script/Project/GameOver.ts",GameOver);
         reg("Script/Project/Hint.ts",Hint);
         reg("Script/Project/Ranking.ts",Ranking);

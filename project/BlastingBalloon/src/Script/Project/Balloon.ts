@@ -59,6 +59,8 @@ export default class Balloon extends Laya.Script {
         // 无论点错点对时间都停止
         event.currentTarget.scale(Clicks.balloonScale, Clicks.balloonScale);
         if (this.self.name === this.gameControl.clickOrderArr[0]) {
+            // 特效表现
+            this.gameControl.explodeAni(this.gameControl.BalloonVessel, this.self.x, this.self.y, this.self.name, 20, 10)
             console.log('点击正确1');
             this.clickRight();
         } else {

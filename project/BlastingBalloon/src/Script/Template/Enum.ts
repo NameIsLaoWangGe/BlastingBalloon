@@ -30,6 +30,41 @@ export module Enum {
         'UI/icon_紫色_pitch.png',
     }
 
+    export enum Explode_Yellowish {
+        '特效/effect_淡黄1.png',
+        '特效/effect_淡黄2.png',
+        '特效/effect_淡黄3.png',
+        '特效/effect_淡黄4.png',
+    }
+
+    export enum Explode_Pink {
+        '特效/effect_粉色1.png',
+        '特效/effect_粉色2.png',
+        '特效/effect_粉色3.png',
+        '特效/effect_粉色4.png',
+    }
+
+    export enum Explode_Yellow {
+        '特效/effect_黄色1.png',
+        '特效/effect_黄色2.png',
+        '特效/effect_黄色3.png',
+        '特效/effect_黄色4.png',
+    }
+
+    export enum Explode_Cyan {
+        '特效/effect_青色1.png',
+        '特效/effect_青色2.png',
+        '特效/effect_青色3.png',
+        '特效/effect_青色4.png',
+    }
+
+    export enum Explode_Purple {
+        '特效/effect_紫色1.png',
+        '特效/effect_紫色2.png',
+        '特效/effect_紫色3.png',
+        '特效/effect_紫色4.png',
+    }
+
 
 }
 
