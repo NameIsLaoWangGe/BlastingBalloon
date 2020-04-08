@@ -1,0 +1,4 @@
+{
+  "code": "export default class Levels extends Laya.Script {\r\n    constructor() { super(); }\r\n    onEnable() {\r\n        this.self = this.owner;\r\n        this.self['LevelsNode'] = this;\r\n        this.gameControl = this.self.scene['GameControl'];\r\n    }\r\n    adaptive() {\r\n        let len = this.Levels.value.length;\r\n        switch (len) {\r\n            case 1:\r\n                this.guan.x = 64;\r\n                break;\r\n            case 2:\r\n                this.guan.x = 72;\r\n                break;\r\n            default:\r\n                this.guan.x = 72;\r\n                break;\r\n        }\r\n    }\r\n    onDisable() {\r\n    }\r\n}\r\n",
+  "references": []
+}

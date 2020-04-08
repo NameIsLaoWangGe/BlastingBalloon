@@ -26,42 +26,6 @@
         }
     }
 
-    var Enum;
-    (function (Enum) {
-        let ColorSkin;
-        (function (ColorSkin) {
-            ColorSkin[ColorSkin["UI/balloon_\u6DE1\u9EC4.png"] = 0] = "UI/balloon_\u6DE1\u9EC4.png";
-            ColorSkin[ColorSkin["UI/balloon_\u7C89\u8272.png"] = 1] = "UI/balloon_\u7C89\u8272.png";
-            ColorSkin[ColorSkin["UI/balloon_\u9EC4\u8272.png"] = 2] = "UI/balloon_\u9EC4\u8272.png";
-            ColorSkin[ColorSkin["UI/balloon_\u9752\u8272.png"] = 3] = "UI/balloon_\u9752\u8272.png";
-            ColorSkin[ColorSkin["UI/balloon_\u7D2B\u8272.png"] = 4] = "UI/balloon_\u7D2B\u8272.png";
-        })(ColorSkin = Enum.ColorSkin || (Enum.ColorSkin = {}));
-        let ColorName;
-        (function (ColorName) {
-            ColorName[ColorName["yellowish"] = 0] = "yellowish";
-            ColorName[ColorName["pink"] = 1] = "pink";
-            ColorName[ColorName["yellow"] = 2] = "yellow";
-            ColorName[ColorName["cyan"] = 3] = "cyan";
-            ColorName[ColorName["purple"] = 4] = "purple";
-        })(ColorName = Enum.ColorName || (Enum.ColorName = {}));
-        let IconSkin_01;
-        (function (IconSkin_01) {
-            IconSkin_01[IconSkin_01["UI/icon_\u6DE1\u9EC4.png"] = 0] = "UI/icon_\u6DE1\u9EC4.png";
-            IconSkin_01[IconSkin_01["UI/icon_\u7C89\u8272.png"] = 1] = "UI/icon_\u7C89\u8272.png";
-            IconSkin_01[IconSkin_01["UI/icon_\u9EC4\u8272.png"] = 2] = "UI/icon_\u9EC4\u8272.png";
-            IconSkin_01[IconSkin_01["UI/icon_\u9752\u8272.png"] = 3] = "UI/icon_\u9752\u8272.png";
-            IconSkin_01[IconSkin_01["UI/icon_\u7D2B\u8272.png"] = 4] = "UI/icon_\u7D2B\u8272.png";
-        })(IconSkin_01 = Enum.IconSkin_01 || (Enum.IconSkin_01 = {}));
-        let IconSkin_02;
-        (function (IconSkin_02) {
-            IconSkin_02[IconSkin_02["UI/icon_\u6DE1\u9EC4_pitch.png"] = 0] = "UI/icon_\u6DE1\u9EC4_pitch.png";
-            IconSkin_02[IconSkin_02["UI/icon_\u7C89\u8272_pitch.png"] = 1] = "UI/icon_\u7C89\u8272_pitch.png";
-            IconSkin_02[IconSkin_02["UI/icon_\u9EC4\u8272_pitch.png"] = 2] = "UI/icon_\u9EC4\u8272_pitch.png";
-            IconSkin_02[IconSkin_02["UI/icon_\u9752\u8272_pitch.png"] = 3] = "UI/icon_\u9752\u8272_pitch.png";
-            IconSkin_02[IconSkin_02["UI/icon_\u7D2B\u8272_pitch.png"] = 4] = "UI/icon_\u7D2B\u8272_pitch.png";
-        })(IconSkin_02 = Enum.IconSkin_02 || (Enum.IconSkin_02 = {}));
-    })(Enum || (Enum = {}));
-
     var Clicks;
     (function (Clicks) {
         function clicksOn(effect, audioUrl, target, caller, down, move, up, out) {
@@ -73,6 +37,9 @@
                     break;
                 case 'balloon':
                     btnEffect = new Btn_Balloon();
+                    break;
+                case 'beetle':
+                    btnEffect = new Btn_Beetle();
                     break;
                 default:
                     btnEffect = new Btn_LargenEffect();
@@ -92,6 +59,9 @@
                     break;
                 case 'balloon':
                     btnEffect = new Btn_Balloon();
+                    break;
+                case 'beetle':
+                    btnEffect = new Btn_Beetle();
                     break;
                 default:
                     break;
@@ -137,6 +107,81 @@
             event.currentTarget.scale(Clicks.balloonScale, Clicks.balloonScale);
         }
     }
+    class Btn_Beetle {
+        constructor() {
+        }
+        down(event) {
+            event.currentTarget.scale(Clicks.beetleScale + 0.06, Clicks.beetleScale + 0.06);
+            Laya.SoundManager.playSound(Clicks.audioUrl, 1, Laya.Handler.create(this, function () { }));
+        }
+        up(event) {
+            event.currentTarget.scale(Clicks.beetleScale, Clicks.beetleScale);
+        }
+        move(event) {
+            event.currentTarget.scale(Clicks.beetleScale, Clicks.beetleScale);
+        }
+        out(event) {
+            event.currentTarget.scale(Clicks.beetleScale, Clicks.beetleScale);
+        }
+    }
+
+    class Props extends Laya.Script {
+        constructor() { super(); }
+        onEnable() {
+            this.self = this.owner;
+            this.self['Porps'] = this;
+            this.gameControl = this.self.scene['GameControl'];
+            this.clicksOnBtn();
+        }
+        clicksOnBtn() {
+            Clicks.clicksOn('largen', '音效/按钮点击.mp3', this.self, this, null, null, this.up, null);
+        }
+        clicksOffBtn() {
+            Clicks.clicksOff('largen', this.self, this, null, null, this.up, null);
+        }
+        up(event) {
+            event.currentTarget.scale(1, 1);
+            this.gameControl.createHint();
+        }
+        onDisable() {
+        }
+    }
+
+    var Enum;
+    (function (Enum) {
+        let ColorSkin;
+        (function (ColorSkin) {
+            ColorSkin[ColorSkin["UI/balloon_\u6DE1\u9EC4.png"] = 0] = "UI/balloon_\u6DE1\u9EC4.png";
+            ColorSkin[ColorSkin["UI/balloon_\u7C89\u8272.png"] = 1] = "UI/balloon_\u7C89\u8272.png";
+            ColorSkin[ColorSkin["UI/balloon_\u9EC4\u8272.png"] = 2] = "UI/balloon_\u9EC4\u8272.png";
+            ColorSkin[ColorSkin["UI/balloon_\u9752\u8272.png"] = 3] = "UI/balloon_\u9752\u8272.png";
+            ColorSkin[ColorSkin["UI/balloon_\u7D2B\u8272.png"] = 4] = "UI/balloon_\u7D2B\u8272.png";
+        })(ColorSkin = Enum.ColorSkin || (Enum.ColorSkin = {}));
+        let ColorName;
+        (function (ColorName) {
+            ColorName[ColorName["yellowish"] = 0] = "yellowish";
+            ColorName[ColorName["pink"] = 1] = "pink";
+            ColorName[ColorName["yellow"] = 2] = "yellow";
+            ColorName[ColorName["cyan"] = 3] = "cyan";
+            ColorName[ColorName["purple"] = 4] = "purple";
+        })(ColorName = Enum.ColorName || (Enum.ColorName = {}));
+        let IconSkin_01;
+        (function (IconSkin_01) {
+            IconSkin_01[IconSkin_01["UI/icon_\u6DE1\u9EC4.png"] = 0] = "UI/icon_\u6DE1\u9EC4.png";
+            IconSkin_01[IconSkin_01["UI/icon_\u7C89\u8272.png"] = 1] = "UI/icon_\u7C89\u8272.png";
+            IconSkin_01[IconSkin_01["UI/icon_\u9EC4\u8272.png"] = 2] = "UI/icon_\u9EC4\u8272.png";
+            IconSkin_01[IconSkin_01["UI/icon_\u9752\u8272.png"] = 3] = "UI/icon_\u9752\u8272.png";
+            IconSkin_01[IconSkin_01["UI/icon_\u7D2B\u8272.png"] = 4] = "UI/icon_\u7D2B\u8272.png";
+        })(IconSkin_01 = Enum.IconSkin_01 || (Enum.IconSkin_01 = {}));
+        let IconSkin_02;
+        (function (IconSkin_02) {
+            IconSkin_02[IconSkin_02["UI/icon_\u6DE1\u9EC4_pitch.png"] = 0] = "UI/icon_\u6DE1\u9EC4_pitch.png";
+            IconSkin_02[IconSkin_02["UI/icon_\u7C89\u8272_pitch.png"] = 1] = "UI/icon_\u7C89\u8272_pitch.png";
+            IconSkin_02[IconSkin_02["UI/icon_\u9EC4\u8272_pitch.png"] = 2] = "UI/icon_\u9EC4\u8272_pitch.png";
+            IconSkin_02[IconSkin_02["UI/icon_\u9752\u8272_pitch.png"] = 3] = "UI/icon_\u9752\u8272_pitch.png";
+            IconSkin_02[IconSkin_02["UI/icon_\u7D2B\u8272_pitch.png"] = 4] = "UI/icon_\u7D2B\u8272_pitch.png";
+        })(IconSkin_02 = Enum.IconSkin_02 || (Enum.IconSkin_02 = {}));
+    })(Enum || (Enum = {}));
 
     var Animation;
     (function (Animation) {
@@ -217,6 +262,16 @@
             }), delayed);
         }
         Animation.drop = drop;
+        function drop_excursion(node, targetY, targetX, rotation, time, delayed, func) {
+            Laya.Tween.to(node, { x: node.x + targetX, y: node.y + targetY * 1 / 6 }, time, Laya.Ease.expoIn, Laya.Handler.create(this, function () {
+                Laya.Tween.to(node, { x: node.x + targetX + 50, y: targetY, rotation: rotation }, time, null, Laya.Handler.create(this, function () {
+                    if (func !== null) {
+                        func();
+                    }
+                }), 0);
+            }), delayed);
+        }
+        Animation.drop_excursion = drop_excursion;
         function go_up(node, initialY, initialR, targetY, time, delayed, func) {
             node.y = initialY;
             node.rotation = initialR;
@@ -384,6 +439,56 @@
         Animation.deform_Move = deform_Move;
     })(Animation || (Animation = {}));
 
+    var Advertising;
+    (function (Advertising) {
+        Advertising.wx = Laya.Browser.window.wx;
+        function videoAd_01_Lode(func_yes, func_no) {
+            if (Laya.Browser.onMiniGame) {
+                console.log('广告开始加载');
+                Advertising.videoAd_01 = Advertising.wx.createRewardedVideoAd({
+                    adUnitId: 'adunit-6de18c6de7b6d9ab'
+                });
+                Advertising.videoAd_01.onLoad(() => {
+                    console.log('激励视频 广告加载成功');
+                });
+                Advertising.videoAd_01.onError(err => {
+                    console.log(err);
+                });
+                Advertising.videoAd_01.onClose(res => {
+                    if (res && res.isEnded || res === undefined) {
+                        func_yes();
+                    }
+                    else {
+                        console.log('视频没有看望不会开始游戏');
+                        func_no();
+                    }
+                });
+            }
+        }
+        Advertising.videoAd_01_Lode = videoAd_01_Lode;
+        function bannerAd_01_Lode() {
+            if (Laya.Browser.onMiniGame) {
+                console.log('广告开始加载');
+                Advertising.bannarAd_01 = Advertising.wx.createBannerAd({
+                    adUnitId: 'adunit-5329937f4349b0ea',
+                    adIntervals: 30,
+                    style: {
+                        left: 0,
+                        top: 0,
+                        width: 750
+                    }
+                });
+                Advertising.bannarAd_01.onLoad(() => {
+                    console.log('banner 广告加载成功');
+                });
+                Advertising.bannarAd_01.onError(err => {
+                    console.log(err);
+                });
+            }
+        }
+        Advertising.bannerAd_01_Lode = bannerAd_01_Lode;
+    })(Advertising || (Advertising = {}));
+
     class GameControl extends Laya.Script {
         constructor() {
             super();
@@ -394,6 +499,17 @@
             this.noStart();
             this.createStartGame();
             this.adaptive();
+            Advertising.videoAd_01_Lode(f => this.watchAdsFunc('yes'), f => this.watchAdsFunc('no'));
+            Advertising.bannerAd_01_Lode();
+        }
+        watchAdsFunc(type) {
+            if (type === 'yes') {
+                this.propNum.value = (Number(this.propNum.value) + 1).toString();
+            }
+            else {
+                console.log('广告没有看完不给与奖励');
+            }
+            this.timeSwicth = true;
         }
         adaptive() {
             let stageH = Laya.stage.height;
@@ -409,36 +525,40 @@
         }
         levelsNodeAdaptive() {
             let guan = this.LevelsNode.getChildByName('guan');
-            console.log(Number(this.Levels.value));
             if (Number(this.Levels.value) >= 10) {
-                console.log(Number(this.Levels.value));
                 guan.x = 72;
+                this.Levels.x = 68;
             }
             else {
                 guan.x = 64;
+                this.Levels.x = 70;
             }
         }
         noStart() {
             this.Tip.alpha = 0;
             this.BalloonVessel.alpha = 0;
         }
-        start() {
-            this.Tip.alpha = 1;
-            this.BalloonVessel.alpha = 1;
+        readyStart(type) {
             this.time.value = 1;
-            this.Levels.value = (Number(this.Levels.value) + 1).toString();
-            this.levelsNodeAdaptive();
             this.row = 3;
             this.line = 4;
             this.spacing = 5;
             this.colorCategory = 3;
-            this.openingAnimation();
+            if (type === 'nextLevel') {
+                this.Levels.value = (Number(this.Levels.value) + 1).toString();
+            }
+            else if (type === 'startGame') {
+                this.openingAnimation();
+            }
+            this.levelsNodeAdaptive();
         }
         createStartGame() {
             let startGame = Laya.Pool.getItemByCreateFun('startGame', this.startGame.create, this.startGame);
             this.self.addChild(startGame);
         }
         openingAnimation() {
+            this.Tip.alpha = 1;
+            this.BalloonVessel.alpha = 1;
             let scale1 = 1.05;
             let time1 = 300;
             let time2 = 100;
@@ -506,6 +626,7 @@
                     Clicks.balloonScale = scale;
                     Animation.bombs_Appear(balloon, 0, scale, scale + 0.1, 0, 200, 100, delayed, f => {
                         if (i === this.row - 1 && j === this.line - 1) {
+                            this.createBeetle();
                             this.TaskBalloonParentSet();
                         }
                     });
@@ -517,7 +638,7 @@
             let time2 = 100;
             let delayed = 250;
             Animation.bombs_Vanish(this.LevelsNode, 0, 0, 0, 100, delayed, f => {
-                this.Levels.value = (Number(this.Levels.value) + 1).toString();
+                this.readyStart('nextLevel');
                 Animation.bombs_Appear(this.LevelsNode, 0, 1, 1.1, 0, time1, time2, delayed, f => {
                 });
             });
@@ -609,14 +730,20 @@
                 let name = arr2[j];
                 let x = widthP / len * (j + 1) - widthP / (len * 2);
                 let y = heightP / 2;
-                let colorSkin = Enum.IconSkin_01[Enum.ColorName[name]];
-                let ballon_Icon = this.createBallon_Icon(x, y, colorSkin);
+                let colorSkin;
+                if (j === 0) {
+                    colorSkin = Enum.IconSkin_02[Enum.ColorName[name]];
+                }
+                else {
+                    colorSkin = Enum.IconSkin_01[Enum.ColorName[name]];
+                }
+                let ballon_Icon = this.createBallon_Icon(x, y, colorSkin, name);
                 Animation.bombs_Appear(ballon_Icon, 0, 1, 1.1, 0, 200, 200, delayed, f => {
                     if (j === len - 1) {
                         this.balloonCount();
                         this.balloonClickOrder();
                         this.clicksAllOn();
-                        this.startSwicth = true;
+                        this.timeSwicth = true;
                     }
                 });
             }
@@ -629,7 +756,7 @@
                 const name = taskBallon.name;
                 let img = taskBallon['Balloon_Icon'].img;
                 if (name === this.clickOrderArr[0]) {
-                    Animation.swell_shrink(taskBallon, 1.1, 1.3, 25, 0, f => {
+                    Animation.swell_shrink(taskBallon, 1.1, 1.3, 50, 0, f => {
                     });
                     img.skin = Enum.IconSkin_02[Enum.ColorName[name]];
                 }
@@ -649,19 +776,19 @@
                     let name = balloon.name;
                     if (taskName === name) {
                         let num = taskBallon['Balloon_Icon'].num;
-                        this.start();
+                        num.value = (Number(num.value) + 1).toString();
                         this.clickOrderArr.push(name);
                     }
                 }
             }
         }
-        createBallon_Icon(x, y, colorSkin) {
+        createBallon_Icon(x, y, colorSkin, name) {
             let balloon_icon = Laya.Pool.getItemByCreateFun('balloon_icon', this.balloon_icon.create, this.balloon_icon);
             this.TaskBalloonParent.addChild(balloon_icon);
             balloon_icon.pos(x, y);
             let img = balloon_icon['Balloon_Icon'].img;
             img.skin = colorSkin;
-            balloon_icon.name = Enum.ColorName[Enum.IconSkin_01[colorSkin]];
+            balloon_icon.name = name;
             return balloon_icon;
         }
         clicksAllOn() {
@@ -679,19 +806,57 @@
         }
         createGameOver(type) {
             let gameOver = Laya.Pool.getItemByCreateFun('gameOver', this.gameOver.create, this.gameOver);
-            this.self.addChild(gameOver);
-            gameOver['GameOver'].gameOverType(type);
             this.clicksAllOff();
-            this.startSwicth = false;
+            this.timeSwicth = false;
+            let len = this.beetleParent._children.length;
+            if (len === 0) {
+                this.self.addChild(gameOver);
+                gameOver['GameOver'].gameOverType(type);
+                return;
+            }
+            for (let index = 0; index < len; index++) {
+                const beetle = this.beetleParent._children[index];
+                beetle['Beetle'].moveSwitch = false;
+                beetle['Beetle'].remainTime = -20000;
+                if (type === 'defeated') {
+                    beetle['Beetle'].playSkeletonAni(1, 'move');
+                    Animation.simple_Move(beetle, beetle.x, beetle.y, beetle.x, -300, 1500, 0, f => {
+                        beetle.removeSelf();
+                        this.self.addChild(gameOver);
+                        gameOver['GameOver'].gameOverType(type);
+                    });
+                }
+                else if (type === 'victory') {
+                    beetle['Beetle'].playSkeletonAni(1, 'death');
+                    Animation.drop(beetle, beetle.y + 1600, 0, 1000, 0, f => {
+                        beetle.removeSelf();
+                        this.self.addChild(gameOver);
+                        gameOver['GameOver'].gameOverType(type);
+                    });
+                }
+            }
+        }
+        createRanking() {
+            let ranking = Laya.Pool.getItemByCreateFun('ranking', this.ranking.create, this.ranking);
+            this.self.addChild(ranking);
+        }
+        createHint() {
+            let hint = Laya.Pool.getItemByCreateFun('hint', this.hint.create, this.hint);
+            this.self.addChild(hint);
+            this.timeSwicth = false;
+        }
+        createBeetle() {
+            let beetle = Laya.Pool.getItemByCreateFun('beetle', this.beetle.create, this.beetle);
+            this.beetleParent.addChild(beetle);
         }
         onUpdate() {
-            if (this.startSwicth) {
+            if (this.timeSwicth) {
                 if (this.time.value > 0) {
-                    this.time.value -= 0.0001;
+                    this.time.value -= 0.001;
                 }
                 else if (this.time.value <= 0) {
                     this.createGameOver('defeated');
-                    this.startSwicth = false;
+                    this.timeSwicth = false;
                 }
             }
         }
@@ -756,6 +921,104 @@
         onDisable() {
         }
         onUpdate() {
+        }
+    }
+
+    class Beetle extends Laya.Script {
+        constructor() {
+            super();
+            this.remainTime = 0;
+        }
+        onEnable() {
+            this.self = this.owner;
+            this.self['Beetle'] = this;
+            this.gameControl = this.self.scene['GameControl'];
+            this.BalloonVessel = this.gameControl.BalloonVessel;
+            this.skeleton = this.self.getChildByName('skeleton');
+            this.createBoneAni();
+            this.birthLocation();
+            this.speed = 8;
+            this.clicksOnBtn();
+        }
+        birthLocation() {
+            let direction = Math.floor(Math.random() * 2);
+            if (direction === 1) {
+                this.self.x = this.BalloonVessel.x + this.BalloonVessel.width / 2 + 800;
+            }
+            else {
+                this.self.x = this.BalloonVessel.x + this.BalloonVessel.width / 2 - 800;
+            }
+            this.self.y = this.BalloonVessel.y + (Math.random() * 1) * this.BalloonVessel.height;
+        }
+        movePos() {
+            let shrink = 80;
+            this.moveX = this.BalloonVessel.x - this.BalloonVessel.width / 2 + 50 + (this.BalloonVessel.width - shrink * 2) * (Math.random() * 1);
+            this.moveY = this.BalloonVessel.y + shrink + (this.BalloonVessel.height - shrink * 2) * (Math.random() * 1);
+        }
+        createBoneAni() {
+            this.templet = new Laya.Templet();
+            this.templet.on(Laya.Event.COMPLETE, this, this.parseComplete);
+            this.templet.on(Laya.Event.ERROR, this, this.onError);
+            this.templet.loadAni("Skeleton/beetle_01.sk");
+        }
+        onError() {
+            console.log('骨骼动画加载错误！');
+        }
+        clicksOnBtn() {
+            Clicks.beetleScale = this.self.scaleX;
+            Clicks.clicksOn('beetle', '音效/按钮点击.mp3', this.self, this, null, null, this.up, null);
+        }
+        clicksOffBtn() {
+            Clicks.clicksOff('beetle', this.self, this, null, null, this.up, null);
+        }
+        up(event) {
+            this.clicksOffBtn();
+            event.currentTarget.scale(Clicks.beetleScale, Clicks.beetleScale);
+            this.gameControl.createGameOver('defeated');
+        }
+        parseComplete() {
+            this.moveSwitch = true;
+            this.posSwitch = true;
+            this.playSkeletonAni(1, 'move');
+        }
+        playSkeletonAni(speed, type) {
+            this.skeleton.play(type, true);
+            this.skeleton.rotation = 0;
+            this.skeleton.playbackRate(speed);
+        }
+        moveRule() {
+            let point = new Laya.Point(this.moveX - this.self.x, this.moveY - this.self.y);
+            point.normalize();
+            this.self.x += point.x * this.speed;
+            this.self.y += point.y * this.speed;
+            let differenceX = Math.abs(this.self.x - this.moveX);
+            let differenceY = Math.abs(this.self.y - this.moveY);
+            if (differenceX < 10 && differenceY < 10) {
+                this.playSkeletonAni(1, 'stand');
+                this.moveSwitch = false;
+                this.remainTime = 0;
+            }
+        }
+        onUpdate() {
+            if (this.moveSwitch) {
+                if (this.posSwitch) {
+                    this.movePos();
+                    this.playSkeletonAni(1, 'move');
+                    this.posSwitch = false;
+                }
+                else {
+                    this.moveRule();
+                }
+            }
+            else {
+                this.remainTime++;
+                if (this.remainTime > 200) {
+                    this.moveSwitch = true;
+                    this.posSwitch = true;
+                }
+            }
+        }
+        onDisable() {
         }
     }
 
@@ -852,7 +1115,16 @@
             Animation.bombs_Appear(this.scoreNode, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 0, null);
             Animation.bombs_Appear(this.logo, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 1, null);
             Animation.bombs_Appear(this.btn_again, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 2, null);
-            Animation.bombs_Appear(this.btn_return, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 3, func => this.clicksOnBtn());
+            Animation.bombs_Appear(this.btn_return, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 3, func => {
+                this.appearFunc();
+            });
+        }
+        appearFunc() {
+            this.clicksOnBtn();
+            if (Laya.Browser.onMiniGame) {
+                Advertising.bannarAd_01.show()
+                    .then(() => console.log('banner 广告显示'));
+            }
         }
         vanish(type) {
             let time = 250;
@@ -866,6 +1138,9 @@
             });
         }
         vanishFunc(type) {
+            if (Laya.Browser.onMiniGame) {
+                Advertising.bannarAd_01.hide();
+            }
             if (type === 'return') {
                 this.gameControl.leaveAnimation();
             }
@@ -917,16 +1192,74 @@
         }
     }
 
+    class Hint extends Laya.Script {
+        constructor() { super(); }
+        onEnable() {
+            this.self = this.owner;
+            this.self['Hint'] = this;
+            this.gameControl = this.self.scene['GameControl'];
+            this.appaer();
+        }
+        appaer() {
+            let scale = 1.3;
+            let time1 = 250;
+            let time2 = 80;
+            let delayed = 200;
+            PalyAudio.aAingleCard(3);
+            Animation.fade_out(this.background, 0, 0.8, 200, 0, null);
+            Animation.bombs_Appear(this.hintBox, 0, 1, scale - 0.2, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 0, null);
+            Animation.bombs_Appear(this.btn_not, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 1, null);
+            Animation.bombs_Appear(this.btn_watch, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 2, f => {
+                this.appaerFunc();
+            });
+        }
+        appaerFunc() {
+            this.clicksOnBtn();
+        }
+        vanish() {
+            let time = 250;
+            let delayed = 150;
+            Animation.fade_out(this.background, 0.8, 0, time, delayed * 4, null);
+            Animation.bombs_Vanish(this.btn_watch, 0, 0, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time, delayed * 1, null);
+            Animation.bombs_Vanish(this.btn_not, 0, 0, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time, delayed * 2, null);
+            Animation.bombs_Vanish(this.hintBox, 0, 0, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time, delayed * 3, f => {
+                this.vanishFunc();
+            });
+        }
+        vanishFunc() {
+            this.gameControl.timeSwicth = true;
+            this.self.removeSelf();
+        }
+        clicksOnBtn() {
+            Clicks.clicksOn('largen', '音效/按钮点击.mp3', this.btn_not, this, null, null, this.up, null);
+            Clicks.clicksOn('largen', '音效/按钮点击.mp3', this.btn_watch, this, null, null, this.up, null);
+        }
+        clicksOffBtn() {
+            Clicks.clicksOff('largen', this.btn_not, this, null, null, this.up, null);
+            Clicks.clicksOff('largen', this.btn_watch, this, null, null, this.up, null);
+        }
+        up(event) {
+            event.currentTarget.scale(1, 1);
+            if (event.currentTarget.name === 'btn_watch') {
+                if (Laya.Browser.onMiniGame) {
+                    Advertising.videoAd_01.show().then(() => console.log('banner 广告显示'));
+                }
+            }
+            this.clicksOffBtn();
+            this.vanish();
+        }
+        onDisable() {
+        }
+    }
+
     class Ranking extends Laya.Script {
         constructor() { super(); }
         onEnable() {
             this.self = this.owner;
-            this.self['GameOVer'] = this;
-            this.gameControl = this.self.scene['Gamecontrol'];
-            this.background.width = Laya.stage.width;
-            this.background.height = Laya.stage.height;
-            this.gameControl.childAdaptive(this.background, this.self, this.background.y);
-            this.gameControl.adaptiveOther(this.self);
+            this.self['Ranking'] = this;
+            this.gameControl = this.self.scene['GameControl'];
+            Adaptive.background_Center(this.background, this.self);
+            Adaptive.interface_Center(this.self);
             this.appear();
         }
         onAwake() {
@@ -954,10 +1287,6 @@
                 let openDataContext = wx.getOpenDataContext();
                 openDataContext.postMessage({ action: 'close' });
             }
-            if (Laya.Browser.onMiniGame) {
-                this.gameControl.bannerAd.show()
-                    .then(() => console.log('banner 广告显示'));
-            }
         }
         clicksOnBtn() {
             Clicks.clicksOn('largen', '音效/按钮点击.mp3', this.background, this, null, null, this.up, null);
@@ -977,6 +1306,7 @@
     var WXDataManager;
     (function (WXDataManager) {
         WXDataManager._thislevels = 0;
+        WXDataManager._thisPropNum = 0;
         WXDataManager.wx = Laya.Browser.window.wx;
         function WXcheckSession() {
             if (Laya.Browser.onMiniGame) {
@@ -1187,7 +1517,7 @@
         constructor() { super(); }
         onEnable() {
             this.self = this.owner;
-            this.self['GameOVer'] = this;
+            this.self['GameOver'] = this;
             this.gameControl = this.self.scene['GameControl'];
             this.LevelsNode = this.gameControl.LevelsNode;
             this.gameControl.startNode = this.self;
@@ -1237,7 +1567,7 @@
         }
         vanishFunc() {
             this.self.removeSelf();
-            this.gameControl.start();
+            this.gameControl.readyStart('startGame');
         }
         clicksOnBtn() {
             Clicks.clicksOn('largen', '音效/按钮点击.mp3', this.btn_start, this, null, null, this.up, null);
@@ -1253,12 +1583,14 @@
             event.currentTarget.scale(1, 1);
             if (event.currentTarget.name === 'btn_start') {
                 this.vanish();
+                this.clicksOffBtn();
             }
-            else if (event.currentTarget.name === 'btn_ranking') ;
+            else if (event.currentTarget.name === 'btn_ranking') {
+                this.gameControl.createRanking();
+            }
             else if (event.currentTarget.name === 'btn_share') {
                 WXDataManager.wxShare();
             }
-            this.clicksOffBtn();
         }
         onUpdate() {
             if (this.startSwitch) {
@@ -1277,10 +1609,13 @@
         static init() {
             var reg = Laya.ClassUtils.regClass;
             reg("Script/Project/LevelsNode.ts", Levels);
+            reg("Script/Project/Props.ts", Props);
             reg("Script/Project/GameControl.ts", GameControl);
             reg("Script/Project/Balloon.ts", Balloon);
             reg("Script/Project/Balloon_Icon.ts", Balloon_Icon);
+            reg("Script/Project/Beetle.ts", Beetle);
             reg("Script/Project/GameOver.ts", GameOver);
+            reg("Script/Project/Hint.ts", Hint);
             reg("Script/Project/Ranking.ts", Ranking);
             reg("Script/Project/StartGame.ts", StartGame);
         }

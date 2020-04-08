@@ -2,6 +2,7 @@ import { WXDataManager } from "../Template/WXDataManager";
 import { Enum } from "../Template/Enum";
 import { Clicks } from "../Template/Clicks";
 import { Animation } from "../Template/Animation";
+import { Advertising } from "../Template/Advertising";
 
 export default class GameControl extends Laya.Script {
 
@@ -44,6 +45,10 @@ export default class GameControl extends Laya.Script {
     /** @prop {name:PropsNode, tips:"道具父节点", type:Node}*/
     public PropsNode: Laya.Sprite;
 
+    /** @prop {name:propNum, tips:"道具的数量", type:Node}*/
+    public propNum: Laya.FontClip;
+
+
     /** @prop {name:startGame, tips:"游戏开始预制体", type:Prefab}*/
     public startGame: Laya.Prefab;
 
@@ -53,6 +58,14 @@ export default class GameControl extends Laya.Script {
     /** @prop {name:ranking, tips:"排行榜", type:Prefab}*/
     public ranking: Laya.Prefab;
 
+    /** @prop {name:hint, tips:"提示", type:Prefab}*/
+    public hint: Laya.Prefab;
+
+    /** @prop {name:beetleParent, tips:"小甲虫父节点", type:Node}*/
+    public beetleParent: Laya.Sprite;
+
+    /** @prop {name:beetle, tips:"小甲虫", type:Prefab}*/
+    public beetle: Laya.Prefab;
 
     /**
      * 指代挂载当前脚本的节点
@@ -81,8 +94,8 @@ export default class GameControl extends Laya.Script {
      */
     private clickOrderArr: Array<string>
 
-    /**开始开关*/
-    private startSwicth
+    /**时间开关*/
+    private timeSwicth
 
     /**开始游戏界面的复赋值*/
     private startNode
@@ -97,6 +110,26 @@ export default class GameControl extends Laya.Script {
         this.noStart();
         this.createStartGame();
         this.adaptive();
+
+        // 加载01视频广告
+        Advertising.videoAd_01_Lode(f => this.watchAdsFunc('yes'), f => this.watchAdsFunc('no'));
+        // 加载01bannar广告
+        Advertising.bannerAd_01_Lode();
+    }
+
+    /**
+   * 看完广告后的回调
+   * 没看完不给奖励
+   * 打开时间开关，游戏继续进行
+   * @param type 是否看完广告
+  */
+    watchAdsFunc(type): void {
+        if (type === 'yes') {
+            this.propNum.value = (Number(this.propNum.value) + 1).toString();
+        } else {
+            console.log('广告没有看完不给与奖励');
+        }
+        this.timeSwicth = true;
     }
 
     /**自适应*/
@@ -121,12 +154,12 @@ export default class GameControl extends Laya.Script {
     /**分数节点的自适应自适应*/
     levelsNodeAdaptive(): void {
         let guan = this.LevelsNode.getChildByName('guan') as Laya.Sprite;
-          console.log(Number(this.Levels.value));
         if (Number(this.Levels.value) >= 10) {
-            console.log(Number(this.Levels.value));
             guan.x = 72;
+            this.Levels.x = 68;
         } else {
             guan.x = 64;
+            this.Levels.x = 70;
         }
     }
 
@@ -140,22 +173,27 @@ export default class GameControl extends Laya.Script {
     }
 
     /**
-     * 关卡参数
+     * 准备开始前的参数设置
      * 每个关卡会执行一次，参数每关不一样
+     * @param type 一类型是从开始界面进入游戏，一种是下一关
      */
-    start(): void {
-        // 游戏内节点出现
-        this.Tip.alpha = 1;
-        this.BalloonVessel.alpha = 1;
+    readyStart(type): void {
         // 其他参数设置
         this.time.value = 1;
-        this.Levels.value = (Number(this.Levels.value) + 1).toString();
-        this.levelsNodeAdaptive();
         this.row = 3;
         this.line = 4;
         this.spacing = 5;
         this.colorCategory = 3;
-        this.openingAnimation();
+        if (type === 'nextLevel') {
+            this.Levels.value = (Number(this.Levels.value) + 1).toString();
+        } else if (type === 'startGame') {
+            // 从服务器拿到上次的关卡数
+            // this.Levels.value = WXDataManager._lastlevels;
+            // 从服务器拿到上次的剩余道具数量
+            // this.Levels.value = WXDataManager._lastPropNum;
+            this.openingAnimation();
+        }
+        this.levelsNodeAdaptive();
     }
 
     /**创建开始游戏界面*/
@@ -166,6 +204,8 @@ export default class GameControl extends Laya.Script {
 
     /**开始游戏时的开场动画*/
     openingAnimation(): void {
+        this.Tip.alpha = 1;
+        this.BalloonVessel.alpha = 1;
         let scale1 = 1.05;
         let time1 = 300;
         let time2 = 100;
@@ -260,6 +300,7 @@ export default class GameControl extends Laya.Script {
 
                 Animation.bombs_Appear(balloon, 0, scale, scale + 0.1, 0, 200, 100, delayed, f => {
                     if (i === this.row - 1 && j === this.line - 1) {
+                        this.createBeetle();
                         this.TaskBalloonParentSet();
                     }
                 })
@@ -274,7 +315,7 @@ export default class GameControl extends Laya.Script {
         let time2 = 100;
         let delayed = 250;
         Animation.bombs_Vanish(this.LevelsNode, 0, 0, 0, 100, delayed, f => {
-            this.Levels.value = (Number(this.Levels.value) + 1).toString();
+            this.readyStart('nextLevel');
             Animation.bombs_Appear(this.LevelsNode, 0, 1, 1.1, 0, time1, time2, delayed, f => {
             });
         })
@@ -400,14 +441,20 @@ export default class GameControl extends Laya.Script {
             let x = widthP / len * (j + 1) - widthP / (len * 2);
             let y = heightP / 2;
             // 通过Enum.ColorName[name]名称索引对应Enum.IconSkin_01图片地址
-            let colorSkin = Enum.IconSkin_01[Enum.ColorName[name]];
-            let ballon_Icon = this.createBallon_Icon(x, y, colorSkin);
+            // 第一个直接改变成提示样式的skin
+            let colorSkin;
+            if (j === 0) {
+                colorSkin = Enum.IconSkin_02[Enum.ColorName[name]];
+            } else {
+                colorSkin = Enum.IconSkin_01[Enum.ColorName[name]];
+            }
+            let ballon_Icon = this.createBallon_Icon(x, y, colorSkin, name);
             Animation.bombs_Appear(ballon_Icon, 0, 1, 1.1, 0, 200, 200, delayed, f => {
                 if (j === len - 1) {
                     this.balloonCount();
                     this.balloonClickOrder();
                     this.clicksAllOn();
-                    this.startSwicth = true;
+                    this.timeSwicth = true;
                 }
             });
         }
@@ -429,9 +476,9 @@ export default class GameControl extends Laya.Script {
             const name = taskBallon.name;
             let img = taskBallon['Balloon_Icon'].img as Laya.Image;
             if (name === this.clickOrderArr[0]) {
-                Animation.swell_shrink(taskBallon, 1.1, 1.3, 25, 0, f => {
+                Animation.swell_shrink(taskBallon, 1.1, 1.3, 50, 0, f => {
                 });
-                img.skin = Enum.IconSkin_02[Enum.ColorName[name]];
+                img.skin = Enum.IconSkin_02[Enum.ColorName[name]];//当前点击的用另一个图片
             } else {
                 taskBallon.scale(1, 1);
                 img.skin = Enum.IconSkin_01[Enum.ColorName[name]];
@@ -464,15 +511,16 @@ export default class GameControl extends Laya.Script {
      * @param x 
      * @param y 
      * @param colorSkin 颜色
+     * @param name 命名
      */
-    createBallon_Icon(x, y, colorSkin): Laya.Sprite {
+    createBallon_Icon(x, y, colorSkin, name): Laya.Sprite {
         let balloon_icon = Laya.Pool.getItemByCreateFun('balloon_icon', this.balloon_icon.create, this.balloon_icon) as Laya.Sprite;
         this.TaskBalloonParent.addChild(balloon_icon);
         balloon_icon.pos(x, y);
         // 根据关卡数随机给与颜色
         let img = balloon_icon['Balloon_Icon'].img as Laya.Image;
         img.skin = colorSkin;
-        balloon_icon.name = Enum.ColorName[Enum.IconSkin_01[colorSkin]];
+        balloon_icon.name = name;
         return balloon_icon;
     }
 
@@ -495,25 +543,82 @@ export default class GameControl extends Laya.Script {
 
     /**
      * 创建结算界面
+     * 需要关闭时间开关
      * @param type 胜利或失败
      * */
     createGameOver(type): void {
         let gameOver = Laya.Pool.getItemByCreateFun('gameOver', this.gameOver.create, this.gameOver) as Laya.Sprite;
-        this.self.addChild(gameOver);
-        gameOver['GameOver'].gameOverType(type);
-
+        // 关掉时间和点击
         this.clicksAllOff();
-        this.startSwicth = false;
+        this.timeSwicth = false;
+        // 小甲虫离开游戏
+        let len = this.beetleParent._children.length;
+        if (len === 0) {
+            this.self.addChild(gameOver);
+            gameOver['GameOver'].gameOverType(type);
+            return;
+        }
+        for (let index = 0; index < len; index++) {
+            const beetle = this.beetleParent._children[index];
+            // 通过类型判断是闯关成功还是失败，，失败小甲虫往上走，成功小甲虫往下掉
+            beetle['Beetle'].moveSwitch = false;//移动关闭
+            beetle['Beetle'].remainTime = -20000;//停止时间无限大
+            if (type === 'defeated') {
+                beetle['Beetle'].playSkeletonAni(1, 'move');
+                Animation.simple_Move(beetle, beetle.x, beetle.y, beetle.x, -300, 1500, 0, f => {
+                    beetle.removeSelf();
+                    this.self.addChild(gameOver);
+                    gameOver['GameOver'].gameOverType(type);
+
+                });
+            } else if (type === 'victory') {
+                beetle['Beetle'].playSkeletonAni(1, 'death');
+                Animation.drop(beetle, beetle.y + 1600, 0, 1000, 0, f => {
+                    beetle.removeSelf();
+                    this.self.addChild(gameOver);
+                    gameOver['GameOver'].gameOverType(type);
+
+                });
+            }
+        }
     }
 
 
+    /**
+    * 创建排行榜界面
+    * */
+    createRanking(): void {
+        let ranking = Laya.Pool.getItemByCreateFun('ranking', this.ranking.create, this.ranking) as Laya.Sprite;
+        this.self.addChild(ranking);
+    }
+
+    /**
+      * 创建提示界面
+      * 需要停止进度条和关闭点击事件
+      * */
+    createHint(): void {
+        let hint = Laya.Pool.getItemByCreateFun('hint', this.hint.create, this.hint) as Laya.Sprite;
+        this.self.addChild(hint);
+
+        this.timeSwicth = false;
+    }
+
+
+    /**
+      * 创建小甲虫
+      * */
+    createBeetle(): void {
+        let beetle = Laya.Pool.getItemByCreateFun('beetle', this.beetle.create, this.beetle) as Laya.Sprite;
+        this.beetleParent.addChild(beetle);
+    }
+
     onUpdate(): void {
-        if (this.startSwicth) {
+        if (this.timeSwicth) {
             if (this.time.value > 0) {
-                this.time.value -= 0.0001;
+                this.time.value -= 0.001;
             } else if (this.time.value <= 0) {
                 this.createGameOver('defeated');
-                this.startSwicth = false;
+                this.timeSwicth = false;
             }
         }
     }

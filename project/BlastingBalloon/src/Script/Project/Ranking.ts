@@ -1,9 +1,11 @@
 import { Clicks } from "../Template/Clicks";
 import { Animation } from "../Template/Animation";
+import { Adaptive } from "../Template/Adaptive";
+import { Advertising } from "../Template/Advertising";
 
 export default class Ranking extends Laya.Script {
     /** @prop {name:background, tips:"黑色背景图", type:Node}*/
-    public background: Laya.Sprite;
+    public background: Laya.Image;
 
     /** @prop {name:baseboard, tips:"排行内容", type:Node}*/
     public baseboard: Laya.Sprite;
@@ -16,13 +18,10 @@ export default class Ranking extends Laya.Script {
 
     onEnable(): void {
         this.self = this.owner as Laya.Sprite;
-        this.self['GameOVer'] = this;
-        this.gameControl = this.self.scene['Gamecontrol'];
-
-        this.background.width = Laya.stage.width;
-        this.background.height = Laya.stage.height;
-        this.gameControl.childAdaptive(this.background, this.self, this.background.y);
-        this.gameControl.adaptiveOther(this.self);
+        this.self['Ranking'] = this;
+        this.gameControl = this.self.scene['GameControl'];
+        Adaptive.background_Center(this.background, this.self);
+        Adaptive.interface_Center(this.self);
         this.appear();
     }
 
@@ -62,11 +61,7 @@ export default class Ranking extends Laya.Script {
             let openDataContext: any = wx.getOpenDataContext();
             openDataContext.postMessage({ action: 'close' });
         }
-        // 显示bannar广告
-        if (Laya.Browser.onMiniGame) {
-            this.gameControl.bannerAd.show()
-                .then(() => console.log('banner 广告显示'));
-        }
+      
     }
 
     /**两个按钮的点击事件*/

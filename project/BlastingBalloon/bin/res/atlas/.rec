@@ -38,6 +38,9 @@ P 0587871F vscroll$up.png
 P 5FD17798 vscroll.png
 P DDDDFB9E vslider$bar.png
 P 01BAE7F5 vslider.png
+D Skeleton
+R C69E7A5E beetle_01.png
+R 0531EF8A beetle_01.sk
 D UI
 P 6EF3272D balloon_淡黄.png
 P 62772CCC balloon_粉色.png
@@ -68,14 +71,14 @@ P 47DED465 分享按钮.png
 R C76162B2 前景小草.png
 P CCC902E7 右边插头.png
 P 462272F8 小喇叭.png
-R 82EA241E 小提示底板.png
+R 385E15AC 小提示底板.png
 P 1FB7D8B8 小提示文字.png
 P 9891ADD2 小虫.png
 P 44A295BF 左边插头.png
 P F7F7323F 开始游戏按钮.png
 R 273530CF 指引底板.png
 P 9D9F0EA9 排行榜字.png
-R 4FFA0441 排行榜底板.png
+R 89DBB6E8 排行榜底板.png
 P 5FC8EDD3 排行榜按钮.png
 R 7681EAF1 气球陈列底板.png
 P 65B6ABBB 游戏内关卡数_关.png

@@ -43,7 +43,7 @@ export default class StartGame extends Laya.Script {
 
     onEnable(): void {
         this.self = this.owner as Laya.Sprite;
-        this.self['GameOVer'] = this;
+        this.self['GameOver'] = this;
         this.gameControl = this.self.scene['GameControl'];
         this.LevelsNode = this.gameControl.LevelsNode as Laya.Sprite;
         this.gameControl.startNode = this.self;
@@ -139,7 +139,7 @@ export default class StartGame extends Laya.Script {
     */
     vanishFunc(): void {
         this.self.removeSelf();
-        this.gameControl.start();
+        this.gameControl.readyStart('startGame');
     }
 
     /**按钮的点击事件*/
@@ -161,12 +161,12 @@ export default class StartGame extends Laya.Script {
         event.currentTarget.scale(1, 1);
         if (event.currentTarget.name === 'btn_start') {
             this.vanish();
+            this.clicksOffBtn();
         } else if (event.currentTarget.name === 'btn_ranking') {
-            // this.gameControl.createRanking();
+            this.gameControl.createRanking();
         } else if (event.currentTarget.name === 'btn_share') {
             WXDataManager.wxShare();
         }
-        this.clicksOffBtn();
     }
 
     onUpdate(): void {

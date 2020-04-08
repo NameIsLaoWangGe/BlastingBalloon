@@ -2,6 +2,7 @@ import { Animation } from "../Template/Animation";
 import { Clicks } from "../Template/Clicks";
 import { PalyAudio } from "../Template/PlayAudio";
 import { Adaptive } from "../Template/Adaptive";
+import { Advertising } from "../Template/Advertising";
 
 export default class GameOver extends Laya.Script {
     /** @prop {name:logo, tips:"游戏结束标题", type:Node}*/
@@ -88,7 +89,18 @@ export default class GameOver extends Laya.Script {
 
         Animation.bombs_Appear(this.btn_again, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 2, null);
 
-        Animation.bombs_Appear(this.btn_return, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 3, func => this.clicksOnBtn());
+        Animation.bombs_Appear(this.btn_return, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 3, func => {
+            this.appearFunc()
+        });
+    }
+
+    appearFunc(): void {
+        this.clicksOnBtn()
+        // 显示bannar广告
+        if (Laya.Browser.onMiniGame) {
+            Advertising.bannarAd_01.show()
+                .then(() => console.log('banner 广告显示'));
+        }
     }
 
     /** 
@@ -114,6 +126,7 @@ export default class GameOver extends Laya.Script {
             this.vanishFunc(type);
         });
     }
+
     /**
      * 下落消失回调
      * 一种是重来消失
@@ -121,13 +134,13 @@ export default class GameOver extends Laya.Script {
      * @param type 
      */
     vanishFunc(type): void {
-        // // 关闭bannar广告
-        // if (Laya.Browser.onMiniGame) {
-        //     this.gameControl.bannerAd.hide();
-        // }
+        // 关闭bannar广告
+        if (Laya.Browser.onMiniGame) {
+            Advertising.bannarAd_01.hide();
+        }
         if (type === 'return') {
             this.gameControl.leaveAnimation();
-        } else if('again'){
+        } else if ('again') {
             if (this.settlementType === 'victory') {
                 // 下一关
                 this.gameControl.moveToNextLevel();

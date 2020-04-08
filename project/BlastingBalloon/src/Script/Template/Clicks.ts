@@ -10,6 +10,10 @@ export module Clicks {
      * */
     export let balloonScale;
     /**
+    * 当前小甲虫被缩放的比例
+    * */
+    export let beetleScale;
+    /**b
      * 点击事件注册,传函数名的时候不要用func=>因为这是传函数不是函数名
      * @param effect 效果类型 1.'largen'
      * @param soundUrl 音效的地址
@@ -30,6 +34,9 @@ export module Clicks {
                 break;
             case 'balloon':
                 btnEffect = new Btn_Balloon();
+                break;
+            case 'beetle':
+                btnEffect = new Btn_Beetle();
                 break;
             default:
                 btnEffect = new Btn_LargenEffect();
@@ -60,6 +67,9 @@ export module Clicks {
                 break;
             case 'balloon':
                 btnEffect = new Btn_Balloon();
+                break;
+            case 'beetle':
+                btnEffect = new Btn_Beetle();
                 break;
             default:
                 break;
@@ -99,7 +109,7 @@ export class Btn_LargenEffect {
 }
 
 /**
- * 点击向上位移
+ * 气球的点击效果
  */
 export class Btn_Balloon {
     constructor() {
@@ -120,5 +130,30 @@ export class Btn_Balloon {
     /**出屏幕*/
     out(event): void {
         event.currentTarget.scale(Clicks.balloonScale, Clicks.balloonScale);
+    }
+}
+
+/**
+ * 气球的点击效果
+ */
+export class Btn_Beetle {
+    constructor() {
+    }
+    /**按下*/
+    down(event): void {
+        event.currentTarget.scale(Clicks.beetleScale + 0.06, Clicks.beetleScale + 0.06);
+        Laya.SoundManager.playSound(Clicks.audioUrl, 1, Laya.Handler.create(this, function () { }));
+    }
+    /**抬起*/
+    up(event): void {
+        event.currentTarget.scale(Clicks.beetleScale, Clicks.beetleScale);
+    }
+    /**移动*/
+    move(event): void {
+        event.currentTarget.scale(Clicks.beetleScale, Clicks.beetleScale);
+    }
+    /**出屏幕*/
+    out(event): void {
+        event.currentTarget.scale(Clicks.beetleScale, Clicks.beetleScale);
     }
 }

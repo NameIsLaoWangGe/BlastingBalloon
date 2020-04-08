@@ -6,16 +6,23 @@ export module WXDataManager {
 
 
     /**用户的微信里面的openid*/
-    export let WXopenid;
+    export let WXopenid
 
     /**用户在某个数据库集合下的记录上的_id，在数据库任何集合下都是个id*/
-    export let user_id;
+    export let user_id: string
 
     /**玩家上次的关卡，从服务器拿取*/
-    export let _lastlevels;
+    export let _lastlevels: number
 
     /**这次的关卡*/
-    export let _thislevels = 0;
+    export let _thislevels: number = 0
+
+
+    /**玩家上次剩余的道具数量，从服务器拿取*/
+    export let _lastPropNum;
+
+    /**这次的道具数量*/
+    export let _thisPropNum = 0;
 
 
     /**Laya中的微信引用，在当前模块可以直接使用，在其他模块需要加上模块名*/

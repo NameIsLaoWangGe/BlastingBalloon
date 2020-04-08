@@ -135,6 +135,27 @@ export module Animation {
     }
 
     /**
+     * 偏移下落,模仿抛物线
+     * @param node 节点
+     * @param targetY y目标位置
+     * @param targetX x偏移量
+     * @param rotation 落地角度
+     * @param time 花费时间
+     * @param delayed 延时时间
+     * @param func 回调函数
+     */
+    export function drop_excursion(node, targetY, targetX, rotation, time, delayed, func): void {
+        // 第一阶段
+        Laya.Tween.to(node, { x: node.x + targetX, y: node.y + targetY * 1 / 6 }, time, Laya.Ease.expoIn, Laya.Handler.create(this, function () {
+            Laya.Tween.to(node, { x: node.x + targetX + 50, y: targetY, rotation: rotation }, time, null, Laya.Handler.create(this, function () {
+                if (func !== null) {
+                    func();
+                }
+            }), 0);
+        }), delayed);
+    }
+
+    /**
      * 上升
      * @param node 节点
      * @param initialY 初始y位置
@@ -385,9 +406,10 @@ export module Animation {
      * @param node 节点
      * @param firstX 初始x位置
      * @param firstY 初始y位置
-     * @param targetX 目标y位置
+     * @param targetX 目标x位置
      * @param targetY 目标y位置
      * @param time 花费时间
+     * @param delayed 延时时间
      * @param func 完成后的回调
      */
     export function simple_Move(node, firstX, firstY, targetX, targetY, time, delayed, func): void {
