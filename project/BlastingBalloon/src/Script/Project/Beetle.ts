@@ -83,28 +83,6 @@ export default class Beetle extends Laya.Script {
         console.log('骨骼动画加载错误！');
     }
 
-    /**
-     * 小甲虫死亡动画
-     * */
-
-    /**
- 
-    /**两个按钮的点击事件*/
-    clicksOnBtn(): void {
-        Clicks.beetleScale = this.self.scaleX;
-        Clicks.clicksOn('beetle', '音效/按钮点击.mp3', this.self, this, null, null, this.up, null);
-    }
-    /**两个按钮的点击事件*/
-    clicksOffBtn(): void {
-        Clicks.clicksOff('beetle', this.self, this, null, null, this.up, null);
-    }
-    /**抬起*/
-    up(event): void {
-        this.clicksOffBtn();
-        event.currentTarget.scale(Clicks.beetleScale, Clicks.beetleScale);
-        this.gameControl.createGameOver('defeated');
-    }
-
     parseComplete(): void {
         this.moveSwitch = true;
         this.posSwitch = true;
@@ -119,6 +97,22 @@ export default class Beetle extends Laya.Script {
         this.skeleton.play(type, true);
         this.skeleton.rotation = 0;
         this.skeleton.playbackRate(speed);
+    }
+
+    /**两个按钮的点击事件*/
+    clicksOnBtn(): void {
+        Clicks.beetleScale = this.self.scaleX;
+        Clicks.clicksOn('beetle', '音效/按钮点击.mp3', this.self, this, null, null, this.up, null);
+    }
+    /**两个按钮的点击事件*/
+    clicksOffBtn(): void {
+        Clicks.clicksOff('beetle', this.self, this, null, null, this.up, null);
+    }
+    /**抬起*/
+    up(event): void {
+        this.clicksOffBtn();
+        event.currentTarget.scale(Clicks.beetleScale, Clicks.beetleScale);
+        this.gameControl.createGameOver('defeated');
     }
 
     /**

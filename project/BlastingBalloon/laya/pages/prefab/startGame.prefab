@@ -1,12 +1,12 @@
 {
     "x":0,
     "type":"Sprite",
-    "selectedBox":44,
+    "selectedBox":34,
     "selecteID":71,
     "searchKey":"Sprite,startGame",
     "props":{"y":0,"x":0,"width":750,"presetID":1,"preset":"laya/pages/prefab/startGame.prefab","name":"startGame","isPresetRoot":true,"height":1334},
     "nodeParent":-1,
-    "maxID":72,
+    "maxID":73,
     "label":"startGame",
     "isOpen":true,
     "isDirectory":true,
@@ -89,15 +89,29 @@
                     "x":30,
                     "type":"Image",
                     "searchKey":"Image,balloon",
-                    "props":{"zOrder":-1,"y":41,"x":421,"width":120,"skin":"UI/logo气球装饰.png","presetID":30,"preset":"laya/pages/prefab/startGame.prefab","pivotY":194,"pivotX":84,"name":"balloon","height":194},
+                    "props":{"zOrder":-1,"y":41,"x":421,"width":120,"presetID":30,"preset":"laya/pages/prefab/startGame.prefab","pivotY":194,"pivotX":84,"name":"balloon","height":194},
                     "nodeParent":44,
                     "label":"balloon",
-                    "isDirectory":false,
+                    "isOpen":true,
+                    "isDirectory":true,
                     "isAniNode":true,
-                    "hasChild":false,
+                    "hasChild":true,
                     "compId":71,
                     "child":[
-                        ]
+                        {
+                            "x":45,
+                            "type":"SkeletonPlayer",
+                            "searchKey":"SkeletonPlayer,balloon_skeleton",
+                            "props":{"y":90,"x":57,"url":"Skeleton/logoBallon.sk","presetID":31,"preset":"laya/pages/prefab/startGame.prefab","name":"balloon_skeleton"},
+                            "nodeParent":71,
+                            "label":"balloon_skeleton",
+                            "isDirectory":false,
+                            "isAniNode":true,
+                            "hasChild":false,
+                            "compId":72,
+                            "child":[
+                                ]
+                        }]
                 }]
         },
         {
@@ -163,7 +177,7 @@
             "source":"src/Script/Project/StartGame.ts",
             "searchKey":"Script,StartGame",
             "removeAble":true,
-            "props":{"y":0,"x":0,"presetID":16,"preset":"laya/pages/prefab/startGame.prefab","logo":"@node:44","btn_start":"@node:51","btn_share":"@node:52","btn_ranking":"@node:53","anti_addiction":"@node:48"},
+            "props":{"y":0,"x":0,"presetID":16,"preset":"laya/pages/prefab/startGame.prefab","logo":"@node:44","btn_start":"@node:51","btn_share":"@node:52","btn_ranking":"@node:53","balloon":"@node:71","anti_addiction":"@node:48"},
             "nodeParent":34,
             "label":"StartGame",
             "isDirectory":false,

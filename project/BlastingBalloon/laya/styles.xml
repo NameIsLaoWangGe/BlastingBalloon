@@ -4,4 +4,6 @@
    <item name="Skeleton/小甲虫.png" type="Sprite" compress="0" pack="2" quality="80" props="" picType="0" scale="0"/>
    <item name="Skeleton/newBeetle.png" type="Sprite" compress="0" pack="2" quality="80" props="" picType="0" scale="0"/>
    <item name="Skeleton/beetle_01.png" type="Sprite" compress="0" pack="2" quality="80" props="" picType="0" scale="0"/>
+   <item name="Skeleton/trumpet.png" type="Sprite" compress="0" pack="2" quality="80" props="" picType="0" scale="0"/>
+   <item name="Skeleton/logoBallon.png" type="Sprite" compress="0" pack="2" quality="80" props="" picType="0" scale="0"/>
 </res>

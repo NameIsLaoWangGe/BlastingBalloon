@@ -125,64 +125,6 @@
         }
     }
 
-    class Props extends Laya.Script {
-        constructor() { super(); }
-        onEnable() {
-            this.self = this.owner;
-            this.self['Porps'] = this;
-            this.gameControl = this.self.scene['GameControl'];
-            this.clicksOnBtn();
-        }
-        clicksOnBtn() {
-            Clicks.clicksOn('largen', '音效/按钮点击.mp3', this.self, this, null, null, this.up, null);
-        }
-        clicksOffBtn() {
-            Clicks.clicksOff('largen', this.self, this, null, null, this.up, null);
-        }
-        up(event) {
-            event.currentTarget.scale(1, 1);
-            this.gameControl.createHint();
-        }
-        onDisable() {
-        }
-    }
-
-    var Enum;
-    (function (Enum) {
-        let ColorSkin;
-        (function (ColorSkin) {
-            ColorSkin[ColorSkin["UI/balloon_\u6DE1\u9EC4.png"] = 0] = "UI/balloon_\u6DE1\u9EC4.png";
-            ColorSkin[ColorSkin["UI/balloon_\u7C89\u8272.png"] = 1] = "UI/balloon_\u7C89\u8272.png";
-            ColorSkin[ColorSkin["UI/balloon_\u9EC4\u8272.png"] = 2] = "UI/balloon_\u9EC4\u8272.png";
-            ColorSkin[ColorSkin["UI/balloon_\u9752\u8272.png"] = 3] = "UI/balloon_\u9752\u8272.png";
-            ColorSkin[ColorSkin["UI/balloon_\u7D2B\u8272.png"] = 4] = "UI/balloon_\u7D2B\u8272.png";
-        })(ColorSkin = Enum.ColorSkin || (Enum.ColorSkin = {}));
-        let ColorName;
-        (function (ColorName) {
-            ColorName[ColorName["yellowish"] = 0] = "yellowish";
-            ColorName[ColorName["pink"] = 1] = "pink";
-            ColorName[ColorName["yellow"] = 2] = "yellow";
-            ColorName[ColorName["cyan"] = 3] = "cyan";
-            ColorName[ColorName["purple"] = 4] = "purple";
-        })(ColorName = Enum.ColorName || (Enum.ColorName = {}));
-        let IconSkin_01;
-        (function (IconSkin_01) {
-            IconSkin_01[IconSkin_01["UI/icon_\u6DE1\u9EC4.png"] = 0] = "UI/icon_\u6DE1\u9EC4.png";
-            IconSkin_01[IconSkin_01["UI/icon_\u7C89\u8272.png"] = 1] = "UI/icon_\u7C89\u8272.png";
-            IconSkin_01[IconSkin_01["UI/icon_\u9EC4\u8272.png"] = 2] = "UI/icon_\u9EC4\u8272.png";
-            IconSkin_01[IconSkin_01["UI/icon_\u9752\u8272.png"] = 3] = "UI/icon_\u9752\u8272.png";
-            IconSkin_01[IconSkin_01["UI/icon_\u7D2B\u8272.png"] = 4] = "UI/icon_\u7D2B\u8272.png";
-        })(IconSkin_01 = Enum.IconSkin_01 || (Enum.IconSkin_01 = {}));
-        let IconSkin_02;
-        (function (IconSkin_02) {
-            IconSkin_02[IconSkin_02["UI/icon_\u6DE1\u9EC4_pitch.png"] = 0] = "UI/icon_\u6DE1\u9EC4_pitch.png";
-            IconSkin_02[IconSkin_02["UI/icon_\u7C89\u8272_pitch.png"] = 1] = "UI/icon_\u7C89\u8272_pitch.png";
-            IconSkin_02[IconSkin_02["UI/icon_\u9EC4\u8272_pitch.png"] = 2] = "UI/icon_\u9EC4\u8272_pitch.png";
-            IconSkin_02[IconSkin_02["UI/icon_\u9752\u8272_pitch.png"] = 3] = "UI/icon_\u9752\u8272_pitch.png";
-            IconSkin_02[IconSkin_02["UI/icon_\u7D2B\u8272_pitch.png"] = 4] = "UI/icon_\u7D2B\u8272_pitch.png";
-        })(IconSkin_02 = Enum.IconSkin_02 || (Enum.IconSkin_02 = {}));
-    })(Enum || (Enum = {}));
-
     var Animation;
     (function (Animation) {
         function upDown_Rotate(node, time, func) {
@@ -438,6 +380,107 @@
         }
         Animation.deform_Move = deform_Move;
     })(Animation || (Animation = {}));
+
+    class Props extends Laya.Script {
+        constructor() { super(); }
+        onEnable() {
+            this.self = this.owner;
+            this.self['Porps'] = this;
+            this.gameControl = this.self.scene['GameControl'];
+            this.prop_skeleton = this.self.getChildByName('prop_skeleton');
+            this.beetleParent = this.gameControl.beetleParent;
+            this.clicksOnBtn();
+            this.createBoneAni();
+        }
+        createBoneAni() {
+            this.templet = new Laya.Templet();
+            this.templet.on(Laya.Event.COMPLETE, this, this.parseComplete);
+            this.templet.on(Laya.Event.ERROR, this, this.onError);
+            this.templet.loadAni("Skeleton/trumpet.sk");
+        }
+        onError() {
+            console.log('小喇叭骨骼动画加载错误！');
+        }
+        parseComplete() {
+            console.log('小喇叭骨骼动画加载成功！');
+            this.playSkeletonAni(1, 'static');
+        }
+        playSkeletonAni(speed, type) {
+            this.prop_skeleton.play(type, true);
+            this.prop_skeleton.rotation = 0;
+            this.prop_skeleton.playbackRate(speed);
+        }
+        eliminateBeetle() {
+            let len = this.beetleParent._children.length;
+            if (len === 0) {
+                return;
+            }
+            let beetle = this.beetleParent._children[0];
+            beetle['Beetle'].playSkeletonAni(1, 'death');
+            beetle['Beetle'].clicksOffBtn();
+            Animation.drop(beetle, beetle.y + 1600, 0, 1000, 0, f => {
+                beetle.removeSelf();
+            });
+        }
+        clicksOnBtn() {
+            Clicks.clicksOn('largen', '音效/按钮点击.mp3', this.self, this, null, null, this.up, null);
+        }
+        clicksOffBtn() {
+            Clicks.clicksOff('largen', this.self, this, null, null, this.up, null);
+        }
+        up(event) {
+            event.currentTarget.scale(1, 1);
+            let number = Number(this.propNum.value.substring(1, 3));
+            console.log(number);
+            if (number > 0) {
+                this.prop_skeleton.play('attack', false);
+                this.prop_skeleton.playbackRate(3);
+                this.propNum.value = 'x' + (number - 1).toString();
+                this.eliminateBeetle();
+            }
+            else {
+                this.gameControl.createHint();
+            }
+        }
+        onDisable() {
+        }
+    }
+
+    var Enum;
+    (function (Enum) {
+        let ColorSkin;
+        (function (ColorSkin) {
+            ColorSkin[ColorSkin["UI/balloon_\u6DE1\u9EC4.png"] = 0] = "UI/balloon_\u6DE1\u9EC4.png";
+            ColorSkin[ColorSkin["UI/balloon_\u7C89\u8272.png"] = 1] = "UI/balloon_\u7C89\u8272.png";
+            ColorSkin[ColorSkin["UI/balloon_\u9EC4\u8272.png"] = 2] = "UI/balloon_\u9EC4\u8272.png";
+            ColorSkin[ColorSkin["UI/balloon_\u9752\u8272.png"] = 3] = "UI/balloon_\u9752\u8272.png";
+            ColorSkin[ColorSkin["UI/balloon_\u7D2B\u8272.png"] = 4] = "UI/balloon_\u7D2B\u8272.png";
+        })(ColorSkin = Enum.ColorSkin || (Enum.ColorSkin = {}));
+        let ColorName;
+        (function (ColorName) {
+            ColorName[ColorName["yellowish"] = 0] = "yellowish";
+            ColorName[ColorName["pink"] = 1] = "pink";
+            ColorName[ColorName["yellow"] = 2] = "yellow";
+            ColorName[ColorName["cyan"] = 3] = "cyan";
+            ColorName[ColorName["purple"] = 4] = "purple";
+        })(ColorName = Enum.ColorName || (Enum.ColorName = {}));
+        let IconSkin_01;
+        (function (IconSkin_01) {
+            IconSkin_01[IconSkin_01["UI/icon_\u6DE1\u9EC4.png"] = 0] = "UI/icon_\u6DE1\u9EC4.png";
+            IconSkin_01[IconSkin_01["UI/icon_\u7C89\u8272.png"] = 1] = "UI/icon_\u7C89\u8272.png";
+            IconSkin_01[IconSkin_01["UI/icon_\u9EC4\u8272.png"] = 2] = "UI/icon_\u9EC4\u8272.png";
+            IconSkin_01[IconSkin_01["UI/icon_\u9752\u8272.png"] = 3] = "UI/icon_\u9752\u8272.png";
+            IconSkin_01[IconSkin_01["UI/icon_\u7D2B\u8272.png"] = 4] = "UI/icon_\u7D2B\u8272.png";
+        })(IconSkin_01 = Enum.IconSkin_01 || (Enum.IconSkin_01 = {}));
+        let IconSkin_02;
+        (function (IconSkin_02) {
+            IconSkin_02[IconSkin_02["UI/icon_\u6DE1\u9EC4_pitch.png"] = 0] = "UI/icon_\u6DE1\u9EC4_pitch.png";
+            IconSkin_02[IconSkin_02["UI/icon_\u7C89\u8272_pitch.png"] = 1] = "UI/icon_\u7C89\u8272_pitch.png";
+            IconSkin_02[IconSkin_02["UI/icon_\u9EC4\u8272_pitch.png"] = 2] = "UI/icon_\u9EC4\u8272_pitch.png";
+            IconSkin_02[IconSkin_02["UI/icon_\u9752\u8272_pitch.png"] = 3] = "UI/icon_\u9752\u8272_pitch.png";
+            IconSkin_02[IconSkin_02["UI/icon_\u7D2B\u8272_pitch.png"] = 4] = "UI/icon_\u7D2B\u8272_pitch.png";
+        })(IconSkin_02 = Enum.IconSkin_02 || (Enum.IconSkin_02 = {}));
+    })(Enum || (Enum = {}));
 
     var Advertising;
     (function (Advertising) {
@@ -818,6 +861,7 @@
                 const beetle = this.beetleParent._children[index];
                 beetle['Beetle'].moveSwitch = false;
                 beetle['Beetle'].remainTime = -20000;
+                beetle['Beetle'].clicksOffBtn();
                 if (type === 'defeated') {
                     beetle['Beetle'].playSkeletonAni(1, 'move');
                     Animation.simple_Move(beetle, beetle.x, beetle.y, beetle.x, -300, 1500, 0, f => {
@@ -964,6 +1008,16 @@
         onError() {
             console.log('骨骼动画加载错误！');
         }
+        parseComplete() {
+            this.moveSwitch = true;
+            this.posSwitch = true;
+            this.playSkeletonAni(1, 'move');
+        }
+        playSkeletonAni(speed, type) {
+            this.skeleton.play(type, true);
+            this.skeleton.rotation = 0;
+            this.skeleton.playbackRate(speed);
+        }
         clicksOnBtn() {
             Clicks.beetleScale = this.self.scaleX;
             Clicks.clicksOn('beetle', '音效/按钮点击.mp3', this.self, this, null, null, this.up, null);
@@ -975,16 +1029,6 @@
             this.clicksOffBtn();
             event.currentTarget.scale(Clicks.beetleScale, Clicks.beetleScale);
             this.gameControl.createGameOver('defeated');
-        }
-        parseComplete() {
-            this.moveSwitch = true;
-            this.posSwitch = true;
-            this.playSkeletonAni(1, 'move');
-        }
-        playSkeletonAni(speed, type) {
-            this.skeleton.play(type, true);
-            this.skeleton.rotation = 0;
-            this.skeleton.playbackRate(speed);
         }
         moveRule() {
             let point = new Laya.Point(this.moveX - this.self.x, this.moveY - this.self.y);
@@ -1518,15 +1562,30 @@
         onEnable() {
             this.self = this.owner;
             this.self['GameOver'] = this;
+            this.balloon_skeleton = this.balloon.getChildByName('balloon_skeleton');
             this.gameControl = this.self.scene['GameControl'];
             this.LevelsNode = this.gameControl.LevelsNode;
             this.gameControl.startNode = this.self;
             this.startSwitch = false;
-            this.watchAds = false;
+            this.startChange = 'appear';
             Adaptive.interface_Center(this.self);
             Adaptive.child_Center(this.anti_addiction, this.self, Laya.stage.height * 9 / 10);
             this.timer = 0;
             this.appaer();
+            this.createBoneAni();
+        }
+        createBoneAni() {
+            this.templet = new Laya.Templet();
+            this.templet.on(Laya.Event.COMPLETE, this, this.parseComplete);
+            this.templet.on(Laya.Event.ERROR, this, this.onError);
+            this.templet.loadAni("Skeleton/beetle_01.sk");
+        }
+        onError() {
+            console.log('气球骨骼动画加载错误！');
+        }
+        parseComplete() {
+            this.balloon_skeleton.play('rock', true);
+            console.log('气球骨骼动画加载错误！');
         }
         appaer() {
             let scale = 1.3;
@@ -1594,9 +1653,19 @@
         }
         onUpdate() {
             if (this.startSwitch) {
-                this.timer++;
-                if (this.timer % 100 === 0) {
-                    Animation.swell_shrink(this.btn_start, 1, 1.15, 120, 0, null);
+                if (this.startChange === 'appear') {
+                    this.btn_start.scaleX += 0.003;
+                    this.btn_start.scaleY += 0.003;
+                    if (this.btn_start.scaleX > 1.05) {
+                        this.startChange = 'vanish';
+                    }
+                }
+                else if (this.startChange === 'vanish') {
+                    this.btn_start.scaleX -= 0.003;
+                    this.btn_start.scaleY -= 0.003;
+                    if (this.btn_start.scaleX < 1) {
+                        this.startChange = 'appear';
+                    }
                 }
             }
         }

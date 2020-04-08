@@ -563,6 +563,7 @@ export default class GameControl extends Laya.Script {
             // 通过类型判断是闯关成功还是失败，，失败小甲虫往上走，成功小甲虫往下掉
             beetle['Beetle'].moveSwitch = false;//移动关闭
             beetle['Beetle'].remainTime = -20000;//停止时间无限大
+            beetle['Beetle'].clicksOffBtn()//点击事件关闭
             if (type === 'defeated') {
                 beetle['Beetle'].playSkeletonAni(1, 'move');
                 Animation.simple_Move(beetle, beetle.x, beetle.y, beetle.x, -300, 1500, 0, f => {
