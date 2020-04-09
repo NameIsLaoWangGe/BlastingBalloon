@@ -618,8 +618,8 @@
         }
         readyStart(type) {
             this.time.value = 1;
-            this.row = 3;
-            this.line = 4;
+            this.row = 5;
+            this.line = 6;
             this.spacing = 5;
             this.colorCategory = 3;
             if (type === 'nextLevel') {
@@ -641,6 +641,10 @@
             let time1 = 300;
             let time2 = 100;
             let delayed = 250;
+            let plug_01 = this.Tip.getChildByName('plug_01');
+            plug_01.x = -1550;
+            let plug_02 = this.Tip.getChildByName('plug_02');
+            plug_02.x = -800;
             let parentBoard = this.BalloonVessel.getChildByName('parentBoard');
             Animation.bombs_Appear(parentBoard, 0, 1, scale1, 0, time1, time2, delayed * 1, f => {
                 this.createBalloonCollection();
@@ -651,10 +655,9 @@
             Animation.bombs_Appear(this.TimeNode, 0, 1, scale2, 0, time1, time2, delayed * 3, null);
             Animation.bombs_Appear(this.PropsNode, 0, 1, scale2, 0, time1, time2, delayed * 4, null);
             Animation.bombs_Appear(this.LevelsNode, 0, 1, scale2, 0, time1, time2, delayed * 5, null);
-            this.taskTipShake(delayed * 6);
         }
         taskTipShake(delayed) {
-            let time = 200;
+            let time = 150;
             let scaleX3 = 0.85;
             let scaleY3 = 1.15;
             let plug_01 = this.Tip.getChildByName('plug_01');
@@ -695,17 +698,21 @@
             let delayed = 0;
             for (let i = 0; i < this.row; i++) {
                 for (let j = 0; j < this.line; j++) {
-                    delayed += 100;
+                    delayed += 50;
                     let x = widthP / this.row * (i + 1) - widthP / (this.row * 2);
                     let y = heightP / this.line * (j + 1) - heightP / (this.line * 2);
                     let balloon = this.createBallon(x, y);
                     let scale = (widthP / this.row - this.spacing * 2) / balloon.width;
                     balloon.scale(scale, scale);
                     Clicks.balloonScale = scale;
+                    balloon.pivotX = balloon.width / 2;
+                    balloon.pivotY = balloon.height / 2;
                     Animation.bombs_Appear(balloon, 0, scale, scale + 0.1, 0, 200, 100, delayed, f => {
+                        this.explodeAni(this.BalloonVessel, balloon.x + (1 - scale) * balloon.pivotX / 2, balloon.y + (1 - scale) * balloon.pivotY / 2, 'vanish', 10, 10);
                         if (i === this.row - 1 && j === this.line - 1) {
                             this.createBeetle();
                             this.TaskBalloonParentSet();
+                            this.taskTipShake(0);
                         }
                     });
                 }
@@ -758,7 +765,7 @@
                         this.clearAllTaskBallon(type);
                         this.BalloonParent.removeChildren(0, len - 1);
                     }
-                    this.explodeAni(this.BalloonVessel, element.x, element.y, 'vanish', 10, 10);
+                    this.explodeAni(this.BalloonVessel, element.x + (1 - Clicks.balloonScale) * element.pivotX / 2, element.y + (1 - Clicks.balloonScale) * element.pivotY / 2, 'vanish', 10, 10);
                 });
                 delayed += 80;
             }
@@ -974,7 +981,9 @@
             }
         }
         clickError() {
-            this.gameControl.createGameOver('defeated');
+            Animation.leftRight_Shake(this.self, 20, 20, 50, f => {
+                this.gameControl.createGameOver('defeated');
+            });
         }
         balloonClicksOn() {
             Clicks.clicksOn('balloon', '音效/按钮点击.mp3', this.self, this, null, null, this.up, null);
@@ -985,7 +994,7 @@
         up(event) {
             event.currentTarget.scale(Clicks.balloonScale, Clicks.balloonScale);
             if (this.self.name === this.gameControl.clickOrderArr[0]) {
-                this.gameControl.explodeAni(this.gameControl.BalloonVessel, this.self.x, this.self.y, this.self.name, 20, 10);
+                this.gameControl.explodeAni(this.gameControl.BalloonVessel, this.self.x + (1 - Clicks.balloonScale) * this.self.pivotX / 2, this.self.y + (1 - Clicks.balloonScale) * this.self.pivotY / 2, this.self.name, 20, 10);
                 console.log('点击正确1');
                 this.clickRight();
             }
@@ -1028,7 +1037,7 @@
             this.skeleton = this.self.getChildByName('skeleton');
             this.createBoneAni();
             this.birthLocation();
-            this.speed = 8;
+            this.speed = 10;
             this.clicksOnBtn();
         }
         birthLocation() {
@@ -1075,7 +1084,9 @@
         up(event) {
             this.clicksOffBtn();
             event.currentTarget.scale(Clicks.beetleScale, Clicks.beetleScale);
-            this.gameControl.createGameOver('defeated');
+            Animation.leftRight_Shake(this.self, 20, 30, 50, f => {
+                this.gameControl.createGameOver('defeated');
+            });
         }
         moveRule() {
             let point = new Laya.Point(this.moveX - this.self.x, this.moveY - this.self.y);

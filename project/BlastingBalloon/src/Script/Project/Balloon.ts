@@ -1,5 +1,6 @@
 import GameControl from "./GameControl";
 import { Clicks } from "../Template/Clicks";
+import { Animation } from "../Template/Animation";
 export default class Balloon extends Laya.Script {
     /** @prop {name:img, tips:"气球的皮肤", type:Node}*/
     public img: Laya.Image;
@@ -42,7 +43,9 @@ export default class Balloon extends Laya.Script {
      * 点击错误
      */
     clickError(): void {
-        this.gameControl.createGameOver('defeated');
+        Animation.leftRight_Shake(this.self, 20, 20, 50, f => {
+            this.gameControl.createGameOver('defeated');
+        })
     }
 
     /**开启点击事件*/
@@ -60,7 +63,7 @@ export default class Balloon extends Laya.Script {
         event.currentTarget.scale(Clicks.balloonScale, Clicks.balloonScale);
         if (this.self.name === this.gameControl.clickOrderArr[0]) {
             // 特效表现
-            this.gameControl.explodeAni(this.gameControl.BalloonVessel, this.self.x, this.self.y, this.self.name, 20, 10)
+            this.gameControl.explodeAni(this.gameControl.BalloonVessel, this.self.x + (1 - Clicks.balloonScale) * this.self.pivotX / 2, this.self.y + (1 - Clicks.balloonScale) * this.self.pivotY / 2, this.self.name, 20, 10)
             console.log('点击正确1');
             this.clickRight();
         } else {

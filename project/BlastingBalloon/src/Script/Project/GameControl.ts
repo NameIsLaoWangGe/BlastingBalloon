@@ -3,6 +3,7 @@ import { Enum } from "../Template/Enum";
 import { Clicks } from "../Template/Clicks";
 import { Animation } from "../Template/Animation";
 import { Advertising } from "../Template/Advertising";
+import Balloon from "./Balloon";
 
 export default class GameControl extends Laya.Script {
 
@@ -183,8 +184,8 @@ export default class GameControl extends Laya.Script {
     readyStart(type): void {
         // 其他参数设置
         this.time.value = 1;
-        this.row = 3;
-        this.line = 4;
+        this.row = 5;
+        this.line = 6;
         this.spacing = 5;
         this.colorCategory = 3;
         if (type === 'nextLevel') {
@@ -209,10 +210,17 @@ export default class GameControl extends Laya.Script {
     openingAnimation(): void {
         this.Tip.alpha = 1;
         this.BalloonVessel.alpha = 1;
+
         let scale1 = 1.05;
         let time1 = 300;
         let time2 = 100;
         let delayed = 250;
+
+        // 插座位置移动到两边
+        let plug_01 = this.Tip.getChildByName('plug_01') as Laya.Image;
+        plug_01.x = -1550;
+        let plug_02 = this.Tip.getChildByName('plug_02') as Laya.Image;
+        plug_02.x = -800;
         // 底板动画，以BalloonVessel为动画目标，否则影响适配
         let parentBoard = this.BalloonVessel.getChildByName('parentBoard') as Laya.Image;
         Animation.bombs_Appear(parentBoard, 0, 1, scale1, 0, time1, time2, delayed * 1, f => {
@@ -225,13 +233,16 @@ export default class GameControl extends Laya.Script {
         Animation.bombs_Appear(this.TimeNode, 0, 1, scale2, 0, time1, time2, delayed * 3, null);
         Animation.bombs_Appear(this.PropsNode, 0, 1, scale2, 0, time1, time2, delayed * 4, null);
         Animation.bombs_Appear(this.LevelsNode, 0, 1, scale2, 0, time1, time2, delayed * 5, null);
-        this.taskTipShake(delayed * 6);
+        // this.taskTipShake(delayed * 6);
     }
 
-    /**开场任务提示抖动动画*/
+    /**
+     * 开场任务提示抖动动画
+     * @param delayed 延时时间
+    */
     taskTipShake(delayed): void {
         // 插座插入后整体抖动
-        let time = 200;
+        let time = 150;
         let scaleX3 = 0.85;
         let scaleY3 = 1.15;
         let plug_01 = this.Tip.getChildByName('plug_01') as Laya.Image;
@@ -278,7 +289,6 @@ export default class GameControl extends Laya.Script {
         Animation.deform_Move(plug_02, firstX_02, -800, scaleX3, scaleY3, time2, delayed * 3, null);
         this.createStartGame();
         this.clearAllBallon('startGame');
-
     }
 
     /**
@@ -291,7 +301,7 @@ export default class GameControl extends Laya.Script {
         let delayed = 0;
         for (let i = 0; i < this.row; i++) {
             for (let j = 0; j < this.line; j++) {
-                delayed += 100;
+                delayed += 50;
                 // 缩放大小和位置用切宫格的方法，放入气球，分为row*line块，让移动缩放到宫格中间位置
                 let x = widthP / this.row * (i + 1) - widthP / (this.row * 2);
                 let y = heightP / this.line * (j + 1) - heightP / (this.line * 2);
@@ -300,11 +310,14 @@ export default class GameControl extends Laya.Script {
                 let scale = (widthP / this.row - this.spacing * 2) / balloon.width;
                 balloon.scale(scale, scale);
                 Clicks.balloonScale = scale;
-
+                balloon.pivotX = balloon.width / 2;
+                balloon.pivotY = balloon.height / 2;
                 Animation.bombs_Appear(balloon, 0, scale, scale + 0.1, 0, 200, 100, delayed, f => {
+                    this.explodeAni(this.BalloonVessel, balloon.x + (1 - scale) * balloon.pivotX / 2, balloon.y + (1 - scale) * balloon.pivotY / 2, 'vanish', 10, 10)
                     if (i === this.row - 1 && j === this.line - 1) {
                         this.createBeetle();
                         this.TaskBalloonParentSet();
+                        this.taskTipShake(0);
                     }
                 })
             }
@@ -371,7 +384,7 @@ export default class GameControl extends Laya.Script {
                     this.clearAllTaskBallon(type);
                     this.BalloonParent.removeChildren(0, len - 1);
                 }
-                this.explodeAni(this.BalloonVessel, element.x, element.y, 'vanish', 10, 10)
+                this.explodeAni(this.BalloonVessel, element.x + (1 - Clicks.balloonScale) * element.pivotX / 2, element.y + (1 - Clicks.balloonScale) * element.pivotY / 2, 'vanish', 10, 10)
             })
             delayed += 80;
         }

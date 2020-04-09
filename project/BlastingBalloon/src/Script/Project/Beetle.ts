@@ -42,7 +42,7 @@ export default class Beetle extends Laya.Script {
         this.skeleton = this.self.getChildByName('skeleton') as Laya.Skeleton;
         this.createBoneAni();
         this.birthLocation();
-        this.speed = 8;
+        this.speed = 10;
         this.clicksOnBtn();
     }
 
@@ -112,7 +112,9 @@ export default class Beetle extends Laya.Script {
     up(event): void {
         this.clicksOffBtn();
         event.currentTarget.scale(Clicks.beetleScale, Clicks.beetleScale);
-        this.gameControl.createGameOver('defeated');
+        Animation.leftRight_Shake(this.self, 20, 30, 50, f => {
+            this.gameControl.createGameOver('defeated');
+        })
     }
 
     /**

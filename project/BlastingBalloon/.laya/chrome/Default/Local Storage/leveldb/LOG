@@ -1,3 +1,5 @@
-2020/04/08-22:59:37.715 5144 Reusing MANIFEST F:\Work\Game\03_BlastingBalloon\project\BlastingBalloon\.laya\chrome\Default\Local Storage\leveldb/MANIFEST-000001
-2020/04/08-22:59:37.716 5144 Recovering log #7
-2020/04/08-22:59:37.716 5144 Reusing old log F:\Work\Game\03_BlastingBalloon\project\BlastingBalloon\.laya\chrome\Default\Local Storage\leveldb/000007.log 
+2020/04/09-10:08:15.687 1498 Reusing MANIFEST F:\Work\Game\03_BlastingBalloon\project\BlastingBalloon\.laya\chrome\Default\Local Storage\leveldb/MANIFEST-000001
+2020/04/09-10:08:15.688 1498 Recovering log #7
+2020/04/09-10:08:15.705 1498 Level-0 table #10: started
+2020/04/09-10:08:15.742 1498 Level-0 table #10: 8450 bytes OK
+2020/04/09-10:08:15.766 1498 Delete type=0 #7
