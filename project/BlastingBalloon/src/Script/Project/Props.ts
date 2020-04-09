@@ -5,6 +5,9 @@ export default class Props extends Laya.Script {
     /** @prop {name:propNum, tips:"道具数量", type:Node}*/
     public propNum: Laya.FontClip;
 
+    /** @prop {name:bullet, tips:"道具发射的光圈", type:Prefab}*/
+    public bullet: Laya.Prefab;
+
     /**骨骼动画模板*/
     private templet: Laya.Templet
     /**骨骼动画*/
@@ -73,6 +76,24 @@ export default class Props extends Laya.Script {
         }
     }
 
+    /**
+     * 喇叭射击特效
+     * */
+    prorAttack(): void {
+        let delay = 0;
+        for (let l = 0; l < 6; l++) {
+            delay += 75;
+            Laya.timer.once(delay, this, function () {
+                let bullet = Laya.Pool.getItemByCreateFun('bullet', this.bullet.create, this.bullet) as Laya.Sprite;
+                this.self.addChild(bullet);
+                bullet.x = 25;
+                bullet.y = 60;
+                bullet['Bullet'].line = l;
+                bullet['Bullet'].moveSwitch = true;
+            })
+        }
+    }
+
     /**按钮的点击事件*/
     clicksOnBtn(): void {
         Clicks.clicksOn('largen', '音效/按钮点击.mp3', this.self, this, null, null, this.up, null);
@@ -103,8 +124,9 @@ export default class Props extends Laya.Script {
             Animation.leftRight_Shake(this.gameControl.BalloonVessel, 20, 50, 100, f => {
                 this.clicksOnBtn();
             });
-            // 特效表现
-            this.gameControl.explodeAni(this.self, 0, 100, 'lightWave', 6, 10)
+
+            // 发射特效
+            this.prorAttack();
         } else {
             this.gameControl.createHint();
         }

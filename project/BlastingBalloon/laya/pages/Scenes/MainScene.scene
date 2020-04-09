@@ -1,12 +1,12 @@
 {
     "x":0,
     "type":"Scene",
-    "selectedBox":2,
-    "selecteID":26,
+    "selectedBox":33,
+    "selecteID":49,
     "searchKey":"Scene",
     "props":{"width":750,"sceneColor":"#000000","height":1334},
     "nodeParent":-1,
-    "maxID":59,
+    "maxID":60,
     "label":"Scene",
     "isOpen":true,
     "isDirectory":true,
@@ -192,13 +192,14 @@
             "props":{"y":229,"x":375,"width":750,"pivotY":111,"pivotX":375,"name":"Tip","height":221},
             "nodeParent":2,
             "label":"Tip",
-            "isOpen":false,
+            "isOpen":true,
             "isDirectory":true,
             "isAniNode":true,
             "hasChild":true,
             "compId":26,
             "child":[
                 {
+                    "x":30,
                     "type":"Image",
                     "searchKey":"Image,plug_01",
                     "props":{"y":51,"x":555,"width":239,"skin":"UI/右边插头.png","pivotY":51,"name":"plug_01","height":101},
@@ -213,6 +214,7 @@
                         ]
                 },
                 {
+                    "x":30,
                     "type":"Image",
                     "searchKey":"Image,plug_02",
                     "props":{"y":161,"x":171,"width":239,"skin":"UI/左边插头.png","pivotY":51,"pivotX":239,"name":"plug_02","height":101},
@@ -227,6 +229,7 @@
                         ]
                 },
                 {
+                    "x":30,
                     "type":"Sprite",
                     "searchKey":"Sprite,tipboard",
                     "props":{"y":102,"x":373,"width":538,"texture":"UI/指引底板.png","pivotY":102,"pivotX":269,"name":"tipboard","height":221},
@@ -240,6 +243,7 @@
                         ]
                 },
                 {
+                    "x":30,
                     "type":"Sprite",
                     "searchKey":"Sprite,TaskBalloonParent,TaskBalloonParent",
                     "props":{"y":54,"x":375,"width":397,"var":"TaskBalloonParent","pivotY":47,"pivotX":199,"name":"TaskBalloonParent","height":94},
@@ -254,6 +258,7 @@
                         ]
                 },
                 {
+                    "x":30,
                     "type":"Sprite",
                     "searchKey":"Sprite,TimeNode",
                     "props":{"y":146,"x":363,"width":373,"pivotY":26,"pivotX":187,"name":"TimeNode","height":52},
@@ -266,6 +271,7 @@
                     "compId":18,
                     "child":[
                         {
+                            "x":45,
                             "type":"Sprite",
                             "searchKey":"Sprite,shadow",
                             "props":{"y":2,"x":-3,"texture":"UI/进度条影子.png","name":"shadow"},
@@ -279,6 +285,7 @@
                                 ]
                         },
                         {
+                            "x":45,
                             "type":"ProgressBar",
                             "searchKey":"ProgressBar,time",
                             "props":{"y":26,"x":187,"width":327,"skin":"UI/进度条.png","pivotY":26,"pivotX":164,"name":"time","height":51},
@@ -292,6 +299,7 @@
                                 ]
                         },
                         {
+                            "x":45,
                             "type":"Sprite",
                             "searchKey":"Sprite,进度条装饰",
                             "props":{"y":2,"x":1,"texture":"UI/进度条装饰.png","name":"进度条装饰"},
@@ -305,6 +313,7 @@
                                 ]
                         },
                         {
+                            "x":45,
                             "type":"Sprite",
                             "searchKey":"Sprite",
                             "props":{"y":11,"x":42,"texture":"UI/进度条高光.png"},
@@ -319,6 +328,7 @@
                         }]
                 },
                 {
+                    "x":30,
                     "type":"Sprite",
                     "searchKey":"Sprite,LevelsNode",
                     "props":{"y":56,"x":102,"width":106,"texture":"UI/关卡数底板.png","pivotY":57,"pivotX":53,"name":"LevelsNode","height":114},
@@ -331,6 +341,7 @@
                     "compId":30,
                     "child":[
                         {
+                            "x":45,
                             "type":"FontClip",
                             "searchKey":"FontClip,Levels",
                             "props":{"y":54,"x":70,"width":56,"value":"8","spaceX":-13,"skin":"UI/游戏内关卡数数字.png","sheet":"0123456789","pivotY":25,"pivotX":56,"name":"Levels","height":50,"align":"center"},
@@ -344,6 +355,7 @@
                                 ]
                         },
                         {
+                            "x":45,
                             "type":"Sprite",
                             "searchKey":"Sprite,guan",
                             "props":{"y":41,"x":64,"texture":"UI/游戏内关卡数_关.png","name":"guan"},
@@ -358,6 +370,7 @@
                                 ]
                         },
                         {
+                            "x":45,
                             "type":"Script",
                             "switchAble":true,
                             "source":"src/Script/Project/LevelsNode.ts",
@@ -375,6 +388,7 @@
                         }]
                 },
                 {
+                    "x":30,
                     "type":"Sprite",
                     "searchKey":"Sprite,PropsNode",
                     "props":{"y":156,"x":657,"width":150,"pivotY":46,"pivotX":75,"name":"PropsNode","height":92},
@@ -387,9 +401,10 @@
                     "compId":33,
                     "child":[
                         {
+                            "x":45,
                             "type":"SkeletonPlayer",
                             "searchKey":"SkeletonPlayer,prop_skeleton",
-                            "props":{"y":46,"x":68,"url":"Skeleton/trumpet.sk","name":"prop_skeleton"},
+                            "props":{"y":50,"x":68,"url":"Skeleton/trumpet.sk","rotation":-8,"name":"prop_skeleton"},
                             "nodeParent":33,
                             "label":"prop_skeleton",
                             "isDirectory":false,
@@ -400,6 +415,7 @@
                                 ]
                         },
                         {
+                            "x":45,
                             "type":"FontClip",
                             "searchKey":"FontClip,propNum",
                             "props":{"y":75,"x":111,"width":79,"value":"x10","spaceX":-8,"skin":"UI/道具数量字体.png","sheet":"x0123456789","pivotY":17,"pivotX":40,"name":"propNum","height":34,"align":"center"},
@@ -413,12 +429,13 @@
                                 ]
                         },
                         {
+                            "x":45,
                             "type":"Script",
                             "switchAble":true,
                             "source":"src/Script/Project/Props.ts",
                             "searchKey":"Script,Props",
                             "removeAble":true,
-                            "props":{"prop_icon":"@node:49","propNum":"@node:35"},
+                            "props":{"prop_icon":"@node:49","propNum":"@node:35","bullet":"@Prefab:prefab/bullet.prefab"},
                             "nodeParent":33,
                             "label":"Props",
                             "isDirectory":false,

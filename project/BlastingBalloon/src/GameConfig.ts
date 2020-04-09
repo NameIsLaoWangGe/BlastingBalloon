@@ -6,6 +6,7 @@ import GameControl from "./Script/Project/GameControl"
 import Balloon from "./Script/Project/Balloon"
 import Balloon_Icon from "./Script/Project/Balloon_Icon"
 import Beetle from "./Script/Project/Beetle"
+import Bullet from "./Script/Project/Bullet"
 import Explode from "./Script/Project/Explode"
 import GameOver from "./Script/Project/GameOver"
 import Hint from "./Script/Project/Hint"
@@ -37,6 +38,7 @@ export default class GameConfig{
         reg("Script/Project/Balloon.ts",Balloon);
         reg("Script/Project/Balloon_Icon.ts",Balloon_Icon);
         reg("Script/Project/Beetle.ts",Beetle);
+        reg("Script/Project/Bullet.ts",Bullet);
         reg("Script/Project/Explode.ts",Explode);
         reg("Script/Project/GameOver.ts",GameOver);
         reg("Script/Project/Hint.ts",Hint);

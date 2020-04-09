@@ -467,6 +467,20 @@
                 });
             }
         }
+        prorAttack() {
+            let delay = 0;
+            for (let l = 0; l < 6; l++) {
+                delay += 75;
+                Laya.timer.once(delay, this, function () {
+                    let bullet = Laya.Pool.getItemByCreateFun('bullet', this.bullet.create, this.bullet);
+                    this.self.addChild(bullet);
+                    bullet.x = 25;
+                    bullet.y = 60;
+                    bullet['Bullet'].line = l;
+                    bullet['Bullet'].moveSwitch = true;
+                });
+            }
+        }
         clicksOnBtn() {
             Clicks.clicksOn('largen', '音效/按钮点击.mp3', this.self, this, null, null, this.up, null);
         }
@@ -486,7 +500,7 @@
                 Animation.leftRight_Shake(this.gameControl.BalloonVessel, 20, 50, 100, f => {
                     this.clicksOnBtn();
                 });
-                this.gameControl.explodeAni(this.self, 0, 100, 'lightWave', 6, 10);
+                this.prorAttack();
             }
             else {
                 this.gameControl.createHint();
@@ -1367,6 +1381,49 @@
         Tools.converteNum = converteNum;
     })(Tools || (Tools = {}));
 
+    class Bullet extends Laya.Script {
+        constructor() { super(); }
+        onEnable() {
+            this.self = this.owner;
+            this.self['Bullet'] = this;
+            this.gameControl = this.self.scene['GameControl'];
+            this.timer = 0;
+            this.self.alpha = 1;
+            this.initialAngle = 145;
+            this.accelerated = 0.1;
+            this.baseSpeed = 10;
+            this.self.scale(0.2, 0.2);
+        }
+        commonSpeedXYByAngle(angle, speed) {
+            this.self.x += Tools.speedXYByAngle(angle, speed + this.accelerated).x;
+            this.self.y += Tools.speedXYByAngle(angle, speed + this.accelerated).y;
+        }
+        move() {
+            this.accelerated += 0.01;
+            if (this.timer > 0 && this.timer <= 8) {
+                this.commonSpeedXYByAngle(this.initialAngle, this.baseSpeed);
+            }
+            else if (this.timer > 8) {
+                this.commonSpeedXYByAngle(this.initialAngle, this.baseSpeed - 0.2);
+                this.self.alpha -= 0.1;
+                if (this.self.alpha <= 0) {
+                    console.log('移除自身');
+                    this.self.removeSelf();
+                }
+            }
+            this.self.scaleX += 0.1;
+            this.self.scaleY += 0.1;
+        }
+        onUpdate() {
+            if (this.moveSwitch) {
+                this.timer += 1;
+                this.move();
+            }
+        }
+        onDisable() {
+        }
+    }
+
     class Explode extends Laya.Script {
         constructor() { super(); }
         onEnable() {
@@ -1386,15 +1443,12 @@
             else if (type === 'vanish') {
                 this.vanish_P();
             }
-            else if (type === 'lightWave') {
-                this.lightWave_P();
-            }
             this.img.pivotX = this.img.width / 2;
             this.img.pivotY = this.img.height / 2;
         }
         explosionBalloon_P() {
             this.moveSwitch = true;
-            this.randomSpeed = Math.floor(Math.random() * 15) + 2;
+            this.randomSpeed = Math.floor(Math.random() * 15) + 4;
             this.initialAngle = Math.floor(Math.random() * 360);
             this.scale = Math.floor(Math.random() * 8) + 4;
             this.self.scaleX = this.scale / 10;
@@ -1456,7 +1510,7 @@
                 this.commonSpeedXYByAngle(this.initialAngle, this.randomSpeed);
             }
             else if (this.timer > 20 && this.timer < 30) {
-                this.commonSpeedXYByAngle(this.initialAngle, this.randomSpeed - 2);
+                this.commonSpeedXYByAngle(this.initialAngle, this.randomSpeed - 3);
             }
             else if (this.timer >= 30) {
                 this.self.alpha -= 0.02;
@@ -1465,36 +1519,12 @@
                 }
             }
         }
-        lightWave_P() {
-            this.moveSwitch = true;
-            this.self.alpha = 1;
-            this.self.rotation = 0;
-            this.img.rotation = 0;
-            this.self.scale(1, 1);
-            this.initialAngle = 135;
-            this.randomSpeed = 10;
-            this.img.skin = '特效/喇叭光圈.png';
-        }
-        lightWave_Move() {
-            this.accelerated += 0.01;
-            if (this.timer > 0 && this.timer <= 50) {
-                this.commonSpeedXYByAngle(this.initialAngle, this.randomSpeed);
-                this.self.scaleX += 0.1;
-                this.self.scaleY += 0.1;
-            }
-            else if (this.timer > 50) {
-                this.self.removeSelf();
-            }
-        }
         move() {
             if (this.effectsType === Enum.ColorName[0] || this.effectsType === Enum.ColorName[1] || this.effectsType === Enum.ColorName[2] || this.effectsType === Enum.ColorName[3]) {
                 this.explosionBalloon_Move();
             }
             else if (this.effectsType === 'vanish') {
                 this.vanish_Move();
-            }
-            else if (this.effectsType === 'lightWave') {
-                this.lightWave_Move();
             }
         }
         commonSpeedXYByAngle(angle, speed) {
@@ -2132,6 +2162,7 @@
             reg("Script/Project/Balloon.ts", Balloon);
             reg("Script/Project/Balloon_Icon.ts", Balloon_Icon);
             reg("Script/Project/Beetle.ts", Beetle);
+            reg("Script/Project/Bullet.ts", Bullet);
             reg("Script/Project/Explode.ts", Explode);
             reg("Script/Project/GameOver.ts", GameOver);
             reg("Script/Project/Hint.ts", Hint);

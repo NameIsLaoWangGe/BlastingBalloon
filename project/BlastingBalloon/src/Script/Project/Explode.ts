@@ -49,8 +49,6 @@ export default class Explode extends Laya.Script {
             this.explosionBalloon_P();
         } else if (type === 'vanish') {
             this.vanish_P();
-        } else if (type === 'lightWave') {
-            this.lightWave_P();
         }
         this.img.pivotX = this.img.width / 2;
         this.img.pivotY = this.img.height / 2;
@@ -59,7 +57,7 @@ export default class Explode extends Laya.Script {
     /**气球爆炸属性*/
     explosionBalloon_P(): void {
         this.moveSwitch = true;
-        this.randomSpeed = Math.floor(Math.random() * 15) + 2;
+        this.randomSpeed = Math.floor(Math.random() * 15) + 4;
         this.initialAngle = Math.floor(Math.random() * 360);
         this.scale = Math.floor(Math.random() * 8) + 4;
         this.self.scaleX = this.scale / 10;
@@ -131,7 +129,7 @@ export default class Explode extends Laya.Script {
         if (this.timer > 0 && this.timer <= 20) {
             this.commonSpeedXYByAngle(this.initialAngle, this.randomSpeed);
         } else if (this.timer > 20 && this.timer < 30) {
-            this.commonSpeedXYByAngle(this.initialAngle, this.randomSpeed - 2);
+            this.commonSpeedXYByAngle(this.initialAngle, this.randomSpeed - 3);
         } else if (this.timer >= 30) {
             this.self.alpha -= 0.02;
             if (this.self.alpha <= 0) {
@@ -141,38 +139,12 @@ export default class Explode extends Laya.Script {
     }
 
 
-    /**喇叭光波属性初始化*/
-    lightWave_P(): void {
-        this.moveSwitch = true;
-        this.self.alpha = 1;
-        this.self.rotation = 0;
-        this.img.rotation = 0;
-        this.self.scale(1, 1);
-        this.initialAngle = 135;
-        this.randomSpeed = 10;
-        this.img.skin = '特效/喇叭光圈.png';
-    }
-
-    /**消失特效移动*/
-    lightWave_Move(): void {
-        this.accelerated += 0.01;
-        if (this.timer > 0 && this.timer <= 50) {
-            this.commonSpeedXYByAngle(this.initialAngle, this.randomSpeed);
-            this.self.scaleX += 0.1;
-            this.self.scaleY += 0.1;
-        } else if (this.timer > 50) {
-            this.self.removeSelf();
-        }
-    }
-
     /**移动规则*/
     move(): void {
         if (this.effectsType === Enum.ColorName[0] || this.effectsType === Enum.ColorName[1] || this.effectsType === Enum.ColorName[2] || this.effectsType === Enum.ColorName[3]) {
             this.explosionBalloon_Move();
         } else if (this.effectsType === 'vanish') {
             this.vanish_Move();
-        } else if (this.effectsType === 'lightWave') {
-            this.lightWave_Move();
         }
     }
 
