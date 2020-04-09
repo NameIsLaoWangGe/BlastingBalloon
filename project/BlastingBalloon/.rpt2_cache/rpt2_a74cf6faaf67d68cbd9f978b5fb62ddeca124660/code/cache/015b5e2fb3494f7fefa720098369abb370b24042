@@ -1,0 +1,4 @@
+{
+  "code": "export var Adaptive;\r\n(function (Adaptive) {\r\n    function interface_Center(self) {\r\n        self.width = 750;\r\n        self.pivotX = self.width / 2;\r\n        self.pivotY = self.height / 2;\r\n        self.pos(375, Laya.stage.height / 2);\r\n    }\r\n    Adaptive.interface_Center = interface_Center;\r\n    function child_Center(child, parent, location) {\r\n        child.y = location - (Laya.stage.height / 2 - parent.height / 2);\r\n    }\r\n    Adaptive.child_Center = child_Center;\r\n    function background_Center(background, parent) {\r\n        background.y = background.y - (Laya.stage.height / 2 - parent.height / 2);\r\n        background.width = Laya.stage.width;\r\n        background.height = Laya.stage.height;\r\n    }\r\n    Adaptive.background_Center = background_Center;\r\n})(Adaptive || (Adaptive = {}));\r\nexport default Adaptive;\r\n",
+  "references": []
+}

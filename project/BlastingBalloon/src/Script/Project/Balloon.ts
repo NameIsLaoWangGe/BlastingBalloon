@@ -1,6 +1,8 @@
 import GameControl from "./GameControl";
 import { Clicks } from "../Template/Clicks";
 import { Animation } from "../Template/Animation";
+import { SkTemplete } from "../Template/SkTemplete";
+
 export default class Balloon extends Laya.Script {
     /** @prop {name:img, tips:"气球的皮肤", type:Node}*/
     public img: Laya.Image;
@@ -13,14 +15,41 @@ export default class Balloon extends Laya.Script {
      */
     private self: Laya.Sprite
 
+    /**骨骼动画模板*/
+    private templet: Laya.Templet
+    /**骨骼动画*/
+    private skeleton: Laya.Skeleton
+
+    /**加载完成开关*/
+    private loadOnOff;
+
     constructor() {
         super();
     }
 
     onEnable(): void {
         this.self = this.owner as Laya.Sprite;
-        this.gameControl = this.self.scene['GameControl'];
         this.self['Balloon'] = this;
+        this.gameControl = this.self.scene['GameControl'];
+    }
+
+    /**骨骼动画设置*/
+    skeletoninit() {
+        this.skeleton = SkTemplete.baoolonTemplet.buildArmature(0);
+        this.skeleton.pos(150, 160);
+        this.skeleton.play('scale' + '_' + this.self.name, true);
+        this.self.addChild(this.skeleton);
+    }
+
+    /**播放骨骼动画
+     * @param type 播放动画类型
+     * @param loop 是否循环
+     * @param speed 播放速度
+    */
+    playSkeletonAni(type: string, loop: boolean, speed: number): void {
+        this.skeleton.play(type + '_' + this.self.name, loop);
+        this.skeleton.rotation = 0;
+        this.skeleton.playbackRate(speed);
     }
 
     /**
@@ -45,6 +74,7 @@ export default class Balloon extends Laya.Script {
     clickError(): void {
         Animation.leftRight_Shake(this.self, 20, 20, 50, f => {
             this.gameControl.createGameOver('defeated');
+            this.playSkeletonAni('disdain', true, 1);//自己鄙视动画
         })
     }
 
@@ -76,5 +106,6 @@ export default class Balloon extends Laya.Script {
 
     }
     onUpdate() {
+
     }
 }

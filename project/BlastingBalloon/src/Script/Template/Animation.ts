@@ -45,12 +45,12 @@ export module Animation {
     /**
      * 左右抖动
      * @param node 节点
-     * @param time 花费时间
      * @param range 幅度
+     * @param time 花费时间
      * @param delayed 延时
      * @param func 回调函数
      */
-    export function leftRight_Shake(node, time, range, delayed, func): void {
+    export function leftRight_Shake(node, range, time, delayed, func): void {
         Laya.Tween.to(node, { x: node.x - range }, time, null, Laya.Handler.create(this, function () {
             Laya.Tween.to(node, { x: node.x + range * 2 }, time, null, Laya.Handler.create(this, function () {
                 Laya.Tween.to(node, { x: node.x - range }, time, null, Laya.Handler.create(this, function () {
@@ -84,15 +84,15 @@ export module Animation {
     /**
      * 渐隐渐出
      * @param node 节点
-     * @param alhpa1 最初的透明度
-     * @param alhpa2 渐隐到的透明度
+     * @param alpha1 最初的透明度
+     * @param alpha2 渐隐到的透明度
      * @param time 花费时间
      * @param delayed 延时
      * @param func 回调函数
      */
-    export function fade_out(node, alhpa1, alhpa2, time, delayed, func): void {
-        node.alpha = alhpa1;
-        Laya.Tween.to(node, { alpha: alhpa2 }, time, null, Laya.Handler.create(this, function () {
+    export function fade_out(node, alpha1, alpha2, time, delayed, func): void {
+        node.alpha = alpha1;
+        Laya.Tween.to(node, { alpha: alpha2 }, time, null, Laya.Handler.create(this, function () {
             if (func !== null) {
                 func();
             }
@@ -338,8 +338,8 @@ export module Animation {
      */
     export function bombs_Appear(node, firstAlpha, firstScale, scale1, rotation, time1, time2, delayed, func): void {
         node.scale(0, 0);
-        node.alhpa = firstAlpha;
-        Laya.Tween.to(node, { scaleX: scale1, scaleY: scale1, alhpa: 1, rotation: rotation }, time1, Laya.Ease.cubicInOut, Laya.Handler.create(this, function () {
+        node.alpha = firstAlpha;
+        Laya.Tween.to(node, { scaleX: scale1, scaleY: scale1, alpha: 1, rotation: rotation }, time1, Laya.Ease.cubicInOut, Laya.Handler.create(this, function () {
 
             Laya.Tween.to(node, { scaleX: firstScale, scaleY: firstScale, rotation: 0 }, time2, null, Laya.Handler.create(this, function () {
 
@@ -368,7 +368,7 @@ export module Animation {
      * @param func 完成后的回调
      */
     export function bombs_Vanish(node, scale, alpha, rotation, time, delayed, func): void {
-        Laya.Tween.to(node, { scaleX: scale, scaleY: scale, alhpa: alpha, rotation: rotation }, time, Laya.Ease.cubicOut, Laya.Handler.create(this, function () {
+        Laya.Tween.to(node, { scaleX: scale, scaleY: scale, alpha: alpha, rotation: rotation }, time, Laya.Ease.cubicOut, Laya.Handler.create(this, function () {
             if (func !== null) {
                 func()
             }
@@ -385,7 +385,7 @@ export module Animation {
      * @param func 完成后的回调
      */
     export function swell_shrink(node, firstScale, scale1, time, delayed, func): void {
-        Laya.Tween.to(node, { scaleX: scale1, scaleY: scale1, alhpa: 1, }, time, Laya.Ease.cubicInOut, Laya.Handler.create(this, function () {
+        Laya.Tween.to(node, { scaleX: scale1, scaleY: scale1, alpha: 1, }, time, Laya.Ease.cubicInOut, Laya.Handler.create(this, function () {
 
             Laya.Tween.to(node, { scaleX: firstScale, scaleY: firstScale, rotation: 0 }, time, null, Laya.Handler.create(this, function () {
 
@@ -429,8 +429,9 @@ export module Animation {
     * @param firstX 初始x位置
     * @param scaleX x轴方向的挤压
     * @param scaleY y轴方向的挤压
-    * @param targetX 目标y位置
+    * @param targetX 目标X位置
     * @param time 花费时间
+    * @param delayed 延时时间
     * @param func 完成后的回调
     */
     export function deform_Move(node, firstX, targetX, scaleX, scaleY, time, delayed, func): void {
@@ -438,6 +439,27 @@ export module Animation {
         Laya.Tween.to(node, { x: targetX, scaleX: scaleX, scaleY: scaleY }, time, Laya.Ease.cubicOut, Laya.Handler.create(this, function () {
             // 原始状态
             Laya.Tween.to(node, { scaleX: 1, scaleY: 1 }, time, null, Laya.Handler.create(this, function () {
+                if (func !== null) {
+                    func()
+                }
+            }), 0);
+        }), delayed);
+    }
+
+    /**
+    * 简单的透明度渐变闪烁动画
+    * @param node 节点
+    * @param minAlpha 最低到多少透明度
+    * @param maXalpha 最高透明度
+    * @param time 花费时间
+    * @param delayed 延迟时间
+    * @param func 完成后的回调
+    */
+    export function blink(node, minAlpha, maXalpha, time, delayed, func): void {
+        node.alpha = minAlpha;
+        Laya.Tween.to(node, { alpha: maXalpha }, time, null, Laya.Handler.create(this, function () {
+            // 原始状态
+            Laya.Tween.to(node, { alpha: minAlpha }, time, null, Laya.Handler.create(this, function () {
                 if (func !== null) {
                     func()
                 }

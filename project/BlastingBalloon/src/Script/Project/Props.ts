@@ -62,14 +62,15 @@ export default class Props extends Laya.Script {
     eliminateBeetle(): void {
         let len = this.beetleParent._children.length;
         if (len === 0) {
-            return;
+            console.log('没有小甲虫');
+        } else {
+            let beetle = this.beetleParent._children[0];
+            beetle['Beetle'].playSkeletonAni(1, 'death');
+            beetle['Beetle'].clicksOffBtn()//点击事件关闭
+            Animation.drop(beetle, beetle.y + 1600, 0, 1000, 0, f => {
+                beetle.removeSelf();
+            });
         }
-        let beetle = this.beetleParent._children[0];
-        beetle['Beetle'].playSkeletonAni(1, 'death');
-        beetle['Beetle'].clicksOffBtn()//点击事件关闭
-        Animation.drop(beetle, beetle.y + 1600, 0, 1000, 0, f => {
-            beetle.removeSelf();
-        });
     }
 
     /**按钮的点击事件*/
@@ -90,10 +91,20 @@ export default class Props extends Laya.Script {
         let number = Number(this.propNum.value.substring(1, 3));
         console.log(number);
         if (number > 0) {
+            // 播放攻击动画
             this.prop_skeleton.play('attack', false);
             this.prop_skeleton.playbackRate(3);
+            // 数量减一
             this.propNum.value = 'x' + (number - 1).toString();
+            // 消灭一个小甲虫
             this.eliminateBeetle();
+            //整个气球位置抖动配合喇叭,抖动时关闭点击事件
+            this.clicksOffBtn();
+            Animation.leftRight_Shake(this.gameControl.BalloonVessel, 20, 50, 100, f => {
+                this.clicksOnBtn();
+            });
+            // 特效表现
+            this.gameControl.explodeAni(this.self, 0, 100, 'lightWave', 6, 10)
         } else {
             this.gameControl.createHint();
         }

@@ -2,6 +2,7 @@ import { Clicks } from "../Template/Clicks";
 import { PalyAudio } from "../Template/PlayAudio";
 import { Animation } from "../Template/Animation";
 import { Advertising } from "../Template/Advertising";
+import { Adaptive } from "../Template/Adaptive";
 
 export default class Hint extends Laya.Script {
     /** @prop {name:background, tips:"背景图", type:Node}*/
@@ -28,6 +29,8 @@ export default class Hint extends Laya.Script {
         this.self = this.owner as Laya.Sprite;
         this.self['Hint'] = this;
         this.gameControl = this.self.scene['GameControl'];
+        Adaptive.interface_Center(this.self);
+        Adaptive.background_Center(this.background, this.self);
         this.appaer();
     }
 

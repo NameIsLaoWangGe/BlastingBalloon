@@ -1,130 +1,6 @@
 (function () {
     'use strict';
 
-    class Levels extends Laya.Script {
-        constructor() { super(); }
-        onEnable() {
-            this.self = this.owner;
-            this.self['LevelsNode'] = this;
-            this.gameControl = this.self.scene['GameControl'];
-        }
-        adaptive() {
-            let len = this.Levels.value.length;
-            switch (len) {
-                case 1:
-                    this.guan.x = 64;
-                    break;
-                case 2:
-                    this.guan.x = 72;
-                    break;
-                default:
-                    this.guan.x = 72;
-                    break;
-            }
-        }
-        onDisable() {
-        }
-    }
-
-    var Clicks;
-    (function (Clicks) {
-        function clicksOn(effect, audioUrl, target, caller, down, move, up, out) {
-            let btnEffect;
-            Clicks.audioUrl = audioUrl;
-            switch (effect) {
-                case 'largen':
-                    btnEffect = new Btn_LargenEffect();
-                    break;
-                case 'balloon':
-                    btnEffect = new Btn_Balloon();
-                    break;
-                case 'beetle':
-                    btnEffect = new Btn_Beetle();
-                    break;
-                default:
-                    btnEffect = new Btn_LargenEffect();
-                    break;
-            }
-            target.on(Laya.Event.MOUSE_DOWN, caller, down === null ? btnEffect.down : down);
-            target.on(Laya.Event.MOUSE_MOVE, caller, move === null ? btnEffect.move : move);
-            target.on(Laya.Event.MOUSE_UP, caller, up === null ? btnEffect.up : up);
-            target.on(Laya.Event.MOUSE_OUT, caller, out === null ? btnEffect.out : out);
-        }
-        Clicks.clicksOn = clicksOn;
-        function clicksOff(effect, target, caller, down, move, up, out) {
-            let btnEffect;
-            switch (effect) {
-                case 'largen':
-                    btnEffect = new Btn_LargenEffect();
-                    break;
-                case 'balloon':
-                    btnEffect = new Btn_Balloon();
-                    break;
-                case 'beetle':
-                    btnEffect = new Btn_Beetle();
-                    break;
-                default:
-                    break;
-            }
-            target.off(Laya.Event.MOUSE_DOWN, caller, down === null ? btnEffect.down : down);
-            target.off(Laya.Event.MOUSE_MOVE, caller, move === null ? btnEffect.move : move);
-            target.off(Laya.Event.MOUSE_UP, caller, up === null ? btnEffect.up : up);
-            target.off(Laya.Event.MOUSE_OUT, caller, out === null ? btnEffect.out : out);
-        }
-        Clicks.clicksOff = clicksOff;
-    })(Clicks || (Clicks = {}));
-    class Btn_LargenEffect {
-        constructor() {
-        }
-        down(event) {
-            event.currentTarget.scale(1.1, 1.1);
-            Laya.SoundManager.playSound(Clicks.audioUrl, 1, Laya.Handler.create(this, function () { }));
-        }
-        up(event) {
-            event.currentTarget.scale(1, 1);
-        }
-        move(event) {
-            event.currentTarget.scale(1, 1);
-        }
-        out(event) {
-            event.currentTarget.scale(1, 1);
-        }
-    }
-    class Btn_Balloon {
-        constructor() {
-        }
-        down(event) {
-            event.currentTarget.scale(Clicks.balloonScale + 0.06, Clicks.balloonScale + 0.06);
-            Laya.SoundManager.playSound(Clicks.audioUrl, 1, Laya.Handler.create(this, function () { }));
-        }
-        up(event) {
-            event.currentTarget.scale(Clicks.balloonScale, Clicks.balloonScale);
-        }
-        move(event) {
-            event.currentTarget.scale(Clicks.balloonScale, Clicks.balloonScale);
-        }
-        out(event) {
-            event.currentTarget.scale(Clicks.balloonScale, Clicks.balloonScale);
-        }
-    }
-    class Btn_Beetle {
-        constructor() {
-        }
-        down(event) {
-            event.currentTarget.scale(Clicks.beetleScale + 0.06, Clicks.beetleScale + 0.06);
-            Laya.SoundManager.playSound(Clicks.audioUrl, 1, Laya.Handler.create(this, function () { }));
-        }
-        up(event) {
-            event.currentTarget.scale(Clicks.beetleScale, Clicks.beetleScale);
-        }
-        move(event) {
-            event.currentTarget.scale(Clicks.beetleScale, Clicks.beetleScale);
-        }
-        out(event) {
-            event.currentTarget.scale(Clicks.beetleScale, Clicks.beetleScale);
-        }
-    }
-
     var Animation;
     (function (Animation) {
         function upDown_Rotate(node, time, func) {
@@ -155,7 +31,7 @@
             }), 0);
         }
         Animation.leftRight_Rotate = leftRight_Rotate;
-        function leftRight_Shake(node, time, range, delayed, func) {
+        function leftRight_Shake(node, range, time, delayed, func) {
             Laya.Tween.to(node, { x: node.x - range }, time, null, Laya.Handler.create(this, function () {
                 Laya.Tween.to(node, { x: node.x + range * 2 }, time, null, Laya.Handler.create(this, function () {
                     Laya.Tween.to(node, { x: node.x - range }, time, null, Laya.Handler.create(this, function () {
@@ -179,9 +55,9 @@
             }));
         }
         Animation.upDwon_Shake = upDwon_Shake;
-        function fade_out(node, alhpa1, alhpa2, time, delayed, func) {
-            node.alpha = alhpa1;
-            Laya.Tween.to(node, { alpha: alhpa2 }, time, null, Laya.Handler.create(this, function () {
+        function fade_out(node, alpha1, alpha2, time, delayed, func) {
+            node.alpha = alpha1;
+            Laya.Tween.to(node, { alpha: alpha2 }, time, null, Laya.Handler.create(this, function () {
                 if (func !== null) {
                     func();
                 }
@@ -322,8 +198,8 @@
         Animation.move_changeRotate = move_changeRotate;
         function bombs_Appear(node, firstAlpha, firstScale, scale1, rotation, time1, time2, delayed, func) {
             node.scale(0, 0);
-            node.alhpa = firstAlpha;
-            Laya.Tween.to(node, { scaleX: scale1, scaleY: scale1, alhpa: 1, rotation: rotation }, time1, Laya.Ease.cubicInOut, Laya.Handler.create(this, function () {
+            node.alpha = firstAlpha;
+            Laya.Tween.to(node, { scaleX: scale1, scaleY: scale1, alpha: 1, rotation: rotation }, time1, Laya.Ease.cubicInOut, Laya.Handler.create(this, function () {
                 Laya.Tween.to(node, { scaleX: firstScale, scaleY: firstScale, rotation: 0 }, time2, null, Laya.Handler.create(this, function () {
                     Laya.Tween.to(node, { scaleX: firstScale + (scale1 - firstScale) * 0.2, scaleY: firstScale + (scale1 - firstScale) * 0.2, rotation: 0 }, time2, null, Laya.Handler.create(this, function () {
                         Laya.Tween.to(node, { scaleX: firstScale, scaleY: firstScale, rotation: 0 }, time2, null, Laya.Handler.create(this, function () {
@@ -337,7 +213,7 @@
         }
         Animation.bombs_Appear = bombs_Appear;
         function bombs_Vanish(node, scale, alpha, rotation, time, delayed, func) {
-            Laya.Tween.to(node, { scaleX: scale, scaleY: scale, alhpa: alpha, rotation: rotation }, time, Laya.Ease.cubicOut, Laya.Handler.create(this, function () {
+            Laya.Tween.to(node, { scaleX: scale, scaleY: scale, alpha: alpha, rotation: rotation }, time, Laya.Ease.cubicOut, Laya.Handler.create(this, function () {
                 if (func !== null) {
                     func();
                 }
@@ -345,7 +221,7 @@
         }
         Animation.bombs_Vanish = bombs_Vanish;
         function swell_shrink(node, firstScale, scale1, time, delayed, func) {
-            Laya.Tween.to(node, { scaleX: scale1, scaleY: scale1, alhpa: 1, }, time, Laya.Ease.cubicInOut, Laya.Handler.create(this, function () {
+            Laya.Tween.to(node, { scaleX: scale1, scaleY: scale1, alpha: 1, }, time, Laya.Ease.cubicInOut, Laya.Handler.create(this, function () {
                 Laya.Tween.to(node, { scaleX: firstScale, scaleY: firstScale, rotation: 0 }, time, null, Laya.Handler.create(this, function () {
                     Laya.Tween.to(node, { scaleX: firstScale + (scale1 - firstScale) * 0.5, scaleY: firstScale + (scale1 - firstScale) * 0.5, rotation: 0 }, time * 0.5, null, Laya.Handler.create(this, function () {
                         Laya.Tween.to(node, { scaleX: firstScale, scaleY: firstScale, rotation: 0 }, time, null, Laya.Handler.create(this, function () {
@@ -379,7 +255,174 @@
             }), delayed);
         }
         Animation.deform_Move = deform_Move;
+        function blink(node, minAlpha, maXalpha, time, delayed, func) {
+            node.alpha = minAlpha;
+            Laya.Tween.to(node, { alpha: maXalpha }, time, null, Laya.Handler.create(this, function () {
+                Laya.Tween.to(node, { alpha: minAlpha }, time, null, Laya.Handler.create(this, function () {
+                    if (func !== null) {
+                        func();
+                    }
+                }), 0);
+            }), delayed);
+        }
+        Animation.blink = blink;
     })(Animation || (Animation = {}));
+
+    class backGround extends Laya.Script {
+        constructor() {
+            super();
+            this.intType = 1000;
+            this.numType = 1000;
+            this.strType = "hello laya";
+            this.boolType = true;
+        }
+        onEnable() {
+            this.self = this.owner;
+            this.timer = 0;
+            this.selectSwitch = true;
+            this.blinkSwicth = false;
+            console.log('11');
+            for (let index = 0; index < this.self._children.length; index++) {
+                const element = this.self._children[index];
+                element.alpha = 0;
+            }
+        }
+        onUpdate() {
+            if (this.selectSwitch) {
+                this.selectSwitch = false;
+                let index = Math.floor(Math.random() * 7);
+                Animation.blink(this.self._children[index], 0, 1, 300, 0, f => {
+                    this.selectSwitch = true;
+                });
+            }
+        }
+        onDisable() {
+        }
+    }
+
+    class Levels extends Laya.Script {
+        constructor() { super(); }
+        onEnable() {
+            this.self = this.owner;
+            this.self['LevelsNode'] = this;
+            this.gameControl = this.self.scene['GameControl'];
+        }
+        adaptive() {
+            let len = this.Levels.value.length;
+            switch (len) {
+                case 1:
+                    this.guan.x = 64;
+                    break;
+                case 2:
+                    this.guan.x = 72;
+                    break;
+                default:
+                    this.guan.x = 72;
+                    break;
+            }
+        }
+        onDisable() {
+        }
+    }
+
+    var Clicks;
+    (function (Clicks) {
+        function clicksOn(effect, audioUrl, target, caller, down, move, up, out) {
+            let btnEffect;
+            Clicks.audioUrl = audioUrl;
+            switch (effect) {
+                case 'largen':
+                    btnEffect = new Btn_LargenEffect();
+                    break;
+                case 'balloon':
+                    btnEffect = new Btn_Balloon();
+                    break;
+                case 'beetle':
+                    btnEffect = new Btn_Beetle();
+                    break;
+                default:
+                    btnEffect = new Btn_LargenEffect();
+                    break;
+            }
+            target.on(Laya.Event.MOUSE_DOWN, caller, down === null ? btnEffect.down : down);
+            target.on(Laya.Event.MOUSE_MOVE, caller, move === null ? btnEffect.move : move);
+            target.on(Laya.Event.MOUSE_UP, caller, up === null ? btnEffect.up : up);
+            target.on(Laya.Event.MOUSE_OUT, caller, out === null ? btnEffect.out : out);
+        }
+        Clicks.clicksOn = clicksOn;
+        function clicksOff(effect, target, caller, down, move, up, out) {
+            let btnEffect;
+            switch (effect) {
+                case 'largen':
+                    btnEffect = new Btn_LargenEffect();
+                    break;
+                case 'balloon':
+                    btnEffect = new Btn_Balloon();
+                    break;
+                case 'beetle':
+                    btnEffect = new Btn_Beetle();
+                    break;
+                default:
+                    break;
+            }
+            target.off(Laya.Event.MOUSE_DOWN, caller, down === null ? btnEffect.down : down);
+            target.off(Laya.Event.MOUSE_MOVE, caller, move === null ? btnEffect.move : move);
+            target.off(Laya.Event.MOUSE_UP, caller, up === null ? btnEffect.up : up);
+            target.off(Laya.Event.MOUSE_OUT, caller, out === null ? btnEffect.out : out);
+        }
+        Clicks.clicksOff = clicksOff;
+    })(Clicks || (Clicks = {}));
+    class Btn_LargenEffect {
+        constructor() {
+        }
+        down(event) {
+            event.currentTarget.scale(1.1, 1.1);
+            Laya.SoundManager.playSound(Clicks.audioUrl, 1, Laya.Handler.create(this, function () { }));
+        }
+        up(event) {
+            event.currentTarget.scale(1, 1);
+        }
+        move(event) {
+            event.currentTarget.scale(1, 1);
+        }
+        out(event) {
+            event.currentTarget.scale(1, 1);
+        }
+    }
+    class Btn_Balloon {
+        constructor() {
+        }
+        down(event) {
+            event.currentTarget.scale(Clicks.balloonScale + 0.06, Clicks.balloonScale + 0.06);
+            Laya.SoundManager.playSound(Clicks.audioUrl, 1, Laya.Handler.create(this, function () { }));
+        }
+        up(event) {
+            event.currentTarget.scale(Clicks.balloonScale, Clicks.balloonScale);
+        }
+        move(event) {
+            event.currentTarget.scale(Clicks.balloonScale, Clicks.balloonScale);
+        }
+        out(event) {
+            event.currentTarget.scale(Clicks.balloonScale, Clicks.balloonScale);
+        }
+    }
+    class Btn_Beetle {
+        constructor() {
+        }
+        down(event) {
+            event.currentTarget.scale(Clicks.beetleScale + 0.06, Clicks.beetleScale + 0.06);
+            Laya.SoundManager.playSound(Clicks.audioUrl, 1, Laya.Handler.create(this, function () { }));
+        }
+        up(event) {
+            event.currentTarget.scale(Clicks.beetleScale, Clicks.beetleScale);
+        }
+        move(event) {
+            event.currentTarget.scale(Clicks.beetleScale, Clicks.beetleScale);
+        }
+        out(event) {
+            event.currentTarget.scale(Clicks.beetleScale, Clicks.beetleScale);
+        }
+    }
 
     class Props extends Laya.Script {
         constructor() { super(); }
@@ -413,14 +456,16 @@
         eliminateBeetle() {
             let len = this.beetleParent._children.length;
             if (len === 0) {
-                return;
+                console.log('没有小甲虫');
             }
-            let beetle = this.beetleParent._children[0];
-            beetle['Beetle'].playSkeletonAni(1, 'death');
-            beetle['Beetle'].clicksOffBtn();
-            Animation.drop(beetle, beetle.y + 1600, 0, 1000, 0, f => {
-                beetle.removeSelf();
-            });
+            else {
+                let beetle = this.beetleParent._children[0];
+                beetle['Beetle'].playSkeletonAni(1, 'death');
+                beetle['Beetle'].clicksOffBtn();
+                Animation.drop(beetle, beetle.y + 1600, 0, 1000, 0, f => {
+                    beetle.removeSelf();
+                });
+            }
         }
         clicksOnBtn() {
             Clicks.clicksOn('largen', '音效/按钮点击.mp3', this.self, this, null, null, this.up, null);
@@ -437,6 +482,11 @@
                 this.prop_skeleton.playbackRate(3);
                 this.propNum.value = 'x' + (number - 1).toString();
                 this.eliminateBeetle();
+                this.clicksOffBtn();
+                Animation.leftRight_Shake(this.gameControl.BalloonVessel, 20, 50, 100, f => {
+                    this.clicksOnBtn();
+                });
+                this.gameControl.explodeAni(this.self, 0, 100, 'lightWave', 6, 10);
             }
             else {
                 this.gameControl.createHint();
@@ -567,6 +617,27 @@
         Advertising.bannerAd_01_Lode = bannerAd_01_Lode;
     })(Advertising || (Advertising = {}));
 
+    var SkTemplete;
+    (function (SkTemplete) {
+        function createBaoolonTemplet() {
+            Laya.loader.load([{ url: "Skeleton/balloon.png" }, { url: "Skeleton/balloon.sk" }], Laya.Handler.create(this, function () {
+                SkTemplete.baoolonTemplet = new Laya.Templet();
+                SkTemplete.baoolonTemplet.on(Laya.Event.COMPLETE, this, parseComplete_Balloon);
+                SkTemplete.baoolonTemplet.on(Laya.Event.ERROR, this, onError_Balloon);
+                SkTemplete.baoolonTemplet.loadAni("Skeleton/balloon.sk");
+            }));
+        }
+        SkTemplete.createBaoolonTemplet = createBaoolonTemplet;
+        function onError_Balloon() {
+            console.log('模板气球骨骼动画加载错误！');
+        }
+        SkTemplete.onError_Balloon = onError_Balloon;
+        function parseComplete_Balloon() {
+            console.log('模板气球骨骼动画加载成功！');
+        }
+        SkTemplete.parseComplete_Balloon = parseComplete_Balloon;
+    })(SkTemplete || (SkTemplete = {}));
+
     class GameControl extends Laya.Script {
         constructor() {
             super();
@@ -579,6 +650,7 @@
             this.adaptive();
             Advertising.videoAd_01_Lode(f => this.watchAdsFunc('yes'), f => this.watchAdsFunc('no'));
             Advertising.bannerAd_01_Lode();
+            SkTemplete.createBaoolonTemplet();
         }
         watchAdsFunc(type) {
             if (type === 'yes') {
@@ -618,8 +690,8 @@
         }
         readyStart(type) {
             this.time.value = 1;
-            this.row = 5;
-            this.line = 6;
+            this.row = 4;
+            this.line = 5;
             this.spacing = 5;
             this.colorCategory = 3;
             if (type === 'nextLevel') {
@@ -664,9 +736,9 @@
             Animation.deform_Move(plug_01, 1550, 555, scaleX3, scaleY3, time, delayed, null);
             let plug_02 = this.Tip.getChildByName('plug_02');
             Animation.deform_Move(plug_02, -800, 171, scaleX3, scaleY3, time, delayed, fun => {
-                Animation.leftRight_Shake(this.Tip, 60, 15, 100, null);
-                Animation.leftRight_Shake(this.PropsNode, 60, 15, 160, null);
-                Animation.leftRight_Shake(this.LevelsNode, 60, 15, 160, null);
+                Animation.leftRight_Shake(this.Tip, 15, 60, 100, null);
+                Animation.leftRight_Shake(this.PropsNode, 15, 60, 160, null);
+                Animation.leftRight_Shake(this.LevelsNode, 15, 60, 160, null);
             });
         }
         leaveAnimation() {
@@ -680,17 +752,20 @@
             Animation.bombs_Vanish(this.TimeNode, 0, 0, 0, time1, delayed * 2, null);
             Animation.bombs_Vanish(this.PropsNode, 0, 0, 0, time1, delayed * 2, null);
             Animation.bombs_Vanish(this.LevelsNode, 0, 0, 0, time1, delayed * 2, null);
+            this.pligAni(delayed * 3);
+            this.createStartGame();
+            this.clearAllBallon('startGame');
+        }
+        pligAni(delayed) {
             let time2 = 800;
             let scaleX3 = 0.85;
             let scaleY3 = 1.15;
             let plug_01 = this.Tip.getChildByName('plug_01');
             let firstX_01 = plug_01.x;
-            Animation.deform_Move(plug_01, firstX_01, 1550, scaleX3, scaleY3, time2, delayed * 3, null);
+            Animation.deform_Move(plug_01, firstX_01, 1550, scaleX3, scaleY3, time2, delayed, null);
             let plug_02 = this.Tip.getChildByName('plug_02');
             let firstX_02 = plug_02.x;
-            Animation.deform_Move(plug_02, firstX_02, -800, scaleX3, scaleY3, time2, delayed * 3, null);
-            this.createStartGame();
-            this.clearAllBallon('startGame');
+            Animation.deform_Move(plug_02, firstX_02, -800, scaleX3, scaleY3, time2, delayed, null);
         }
         createBalloonCollection() {
             let widthP = this.BalloonParent.width;
@@ -722,6 +797,7 @@
             let time1 = 300;
             let time2 = 100;
             let delayed = 250;
+            this.pligAni(delayed);
             Animation.bombs_Vanish(this.LevelsNode, 0, 0, 0, 100, delayed, f => {
                 this.readyStart('nextLevel');
                 Animation.bombs_Appear(this.LevelsNode, 0, 1, 1.1, 0, time1, time2, delayed, f => {
@@ -730,7 +806,6 @@
             Animation.bombs_Vanish(this.TimeNode, 0, 0, 0, time1, delayed * 2, f => {
                 this.time.value = 1;
                 Animation.bombs_Appear(this.TimeNode, 0, 1, 1.1, 0, time1, time2, delayed, f => {
-                    this.taskTipShake(0);
                 });
             });
             this.clearAllBallon('restartAndNextLevel');
@@ -739,6 +814,7 @@
             let time1 = 200;
             let time2 = 100;
             let delayed = 250;
+            this.pligAni(delayed);
             Animation.swell_shrink(this.LevelsNode, 1, 1.3, time1 * 0.5, 0, f => {
                 Animation.swell_shrink(this.LevelsNode, 1, 1.3, time1 * 0.5, 0, f => {
                 });
@@ -746,7 +822,6 @@
             Animation.bombs_Vanish(this.TimeNode, 0, 0, 0, time1, delayed * 2, f => {
                 this.time.value = 1;
                 Animation.bombs_Appear(this.TimeNode, 0, 1, 1.1, 0, time1, time2, delayed * 5, f => {
-                    this.taskTipShake(0);
                 });
             });
             this.clearAllBallon('restartAndNextLevel');
@@ -793,10 +868,9 @@
             let balloon = Laya.Pool.getItemByCreateFun('balloon', this.balloon.create, this.balloon);
             this.BalloonParent.addChild(balloon);
             balloon.pos(x, y);
-            let img = balloon['Balloon'].img;
             let random = Math.floor(Math.random() * this.colorCategory);
-            img.skin = Enum.ColorSkin[random];
             balloon.name = Enum.ColorName[random];
+            balloon['Balloon'].skeletoninit();
             return balloon;
         }
         TaskBalloonParentSet() {
@@ -881,7 +955,6 @@
             for (let index = 0; index < this.BalloonParent._children.length; index++) {
                 const element = this.BalloonParent._children[index];
                 element['Balloon'].balloonClicksOn();
-                console.log('开启所有气球的点击事件');
             }
         }
         clicksAllOff() {
@@ -943,6 +1016,7 @@
                 explode.zOrder = zOrder;
                 explode.pos(x, y);
                 explode['Explode'].type = type;
+                explode['Explode'].line = i;
                 explode['Explode'].initProperty(type);
             }
         }
@@ -967,8 +1041,19 @@
         }
         onEnable() {
             this.self = this.owner;
-            this.gameControl = this.self.scene['GameControl'];
             this.self['Balloon'] = this;
+            this.gameControl = this.self.scene['GameControl'];
+        }
+        skeletoninit() {
+            this.skeleton = SkTemplete.baoolonTemplet.buildArmature(0);
+            this.skeleton.pos(150, 160);
+            this.skeleton.play('scale' + '_' + this.self.name, true);
+            this.self.addChild(this.skeleton);
+        }
+        playSkeletonAni(type, loop, speed) {
+            this.skeleton.play(type + '_' + this.self.name, loop);
+            this.skeleton.rotation = 0;
+            this.skeleton.playbackRate(speed);
         }
         clickRight() {
             this.self.removeSelf();
@@ -983,6 +1068,7 @@
         clickError() {
             Animation.leftRight_Shake(this.self, 20, 20, 50, f => {
                 this.gameControl.createGameOver('defeated');
+                this.playSkeletonAni('disdain', true, 1);
             });
         }
         balloonClicksOn() {
@@ -1297,8 +1383,11 @@
             if (this.effectsType === Enum.ColorName[0] || this.effectsType === Enum.ColorName[1] || this.effectsType === Enum.ColorName[2] || this.effectsType === Enum.ColorName[3]) {
                 this.explosionBalloon_P();
             }
-            else {
-                this.vanishProperty();
+            else if (type === 'vanish') {
+                this.vanish_P();
+            }
+            else if (type === 'lightWave') {
+                this.lightWave_P();
             }
             this.img.pivotX = this.img.width / 2;
             this.img.pivotY = this.img.height / 2;
@@ -1348,7 +1437,7 @@
                 this.self.removeSelf();
             }
         }
-        vanishProperty() {
+        vanish_P() {
             this.moveSwitch = true;
             this.randomSpeed = Math.random() * 2 + 2;
             this.initialAngle = Math.floor(Math.random() * 360);
@@ -1376,12 +1465,36 @@
                 }
             }
         }
+        lightWave_P() {
+            this.moveSwitch = true;
+            this.self.alpha = 1;
+            this.self.rotation = 0;
+            this.img.rotation = 0;
+            this.self.scale(1, 1);
+            this.initialAngle = 135;
+            this.randomSpeed = 10;
+            this.img.skin = '特效/喇叭光圈.png';
+        }
+        lightWave_Move() {
+            this.accelerated += 0.01;
+            if (this.timer > 0 && this.timer <= 50) {
+                this.commonSpeedXYByAngle(this.initialAngle, this.randomSpeed);
+                this.self.scaleX += 0.1;
+                this.self.scaleY += 0.1;
+            }
+            else if (this.timer > 50) {
+                this.self.removeSelf();
+            }
+        }
         move() {
             if (this.effectsType === Enum.ColorName[0] || this.effectsType === Enum.ColorName[1] || this.effectsType === Enum.ColorName[2] || this.effectsType === Enum.ColorName[3]) {
                 this.explosionBalloon_Move();
             }
             else if (this.effectsType === 'vanish') {
                 this.vanish_Move();
+            }
+            else if (this.effectsType === 'lightWave') {
+                this.lightWave_Move();
             }
         }
         commonSpeedXYByAngle(angle, speed) {
@@ -1575,6 +1688,8 @@
             this.self = this.owner;
             this.self['Hint'] = this;
             this.gameControl = this.self.scene['GameControl'];
+            Adaptive.interface_Center(this.self);
+            Adaptive.background_Center(this.background, this.self);
             this.appaer();
         }
         appaer() {
@@ -1914,11 +2029,11 @@
             this.templet.loadAni("Skeleton/beetle_01.sk");
         }
         onError() {
-            console.log('气球骨骼动画加载错误！');
+            console.log('装饰气球加载错误！');
         }
         parseComplete() {
             this.balloon_skeleton.play('rock', true);
-            console.log('气球骨骼动画加载错误！');
+            console.log('装饰气球加载成功！');
         }
         appaer() {
             let scale = 1.3;
@@ -2010,6 +2125,7 @@
         constructor() { }
         static init() {
             var reg = Laya.ClassUtils.regClass;
+            reg("Script/Project/Background.ts", backGround);
             reg("Script/Project/LevelsNode.ts", Levels);
             reg("Script/Project/Props.ts", Props);
             reg("Script/Project/GameControl.ts", GameControl);
@@ -2032,7 +2148,7 @@
     GameConfig.startScene = "Scenes/MainScene.scene";
     GameConfig.sceneRoot = "";
     GameConfig.debug = false;
-    GameConfig.stat = false;
+    GameConfig.stat = true;
     GameConfig.physicsDebug = false;
     GameConfig.exportSceneToJson = true;
     GameConfig.init();

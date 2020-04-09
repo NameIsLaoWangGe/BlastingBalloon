@@ -4,6 +4,8 @@ import { Clicks } from "../Template/Clicks";
 import { Animation } from "../Template/Animation";
 import { Advertising } from "../Template/Advertising";
 import Balloon from "./Balloon";
+import { SkTemplete } from "../Template/SkTemplete";
+
 
 export default class GameControl extends Laya.Script {
 
@@ -119,6 +121,9 @@ export default class GameControl extends Laya.Script {
         Advertising.videoAd_01_Lode(f => this.watchAdsFunc('yes'), f => this.watchAdsFunc('no'));
         // 加载01bannar广告
         Advertising.bannerAd_01_Lode();
+
+        // 骨骼动画加载
+        SkTemplete.createBaoolonTemplet();
     }
 
     /**
@@ -184,8 +189,8 @@ export default class GameControl extends Laya.Script {
     readyStart(type): void {
         // 其他参数设置
         this.time.value = 1;
-        this.row = 5;
-        this.line = 6;
+        this.row = 4;
+        this.line = 5;
         this.spacing = 5;
         this.colorCategory = 3;
         if (type === 'nextLevel') {
@@ -250,9 +255,9 @@ export default class GameControl extends Laya.Script {
 
         let plug_02 = this.Tip.getChildByName('plug_02') as Laya.Image;
         Animation.deform_Move(plug_02, -800, 171, scaleX3, scaleY3, time, delayed, fun => {
-            Animation.leftRight_Shake(this.Tip, 60, 15, 100, null);
-            Animation.leftRight_Shake(this.PropsNode, 60, 15, 160, null);
-            Animation.leftRight_Shake(this.LevelsNode, 60, 15, 160, null);
+            Animation.leftRight_Shake(this.Tip, 15, 60, 100, null);
+            Animation.leftRight_Shake(this.PropsNode, 15, 60, 160, null);
+            Animation.leftRight_Shake(this.LevelsNode, 15, 60, 160, null);
         });
     }
 
@@ -276,19 +281,26 @@ export default class GameControl extends Laya.Script {
         Animation.bombs_Vanish(this.PropsNode, 0, 0, 0, time1, delayed * 2, null);
         Animation.bombs_Vanish(this.LevelsNode, 0, 0, 0, time1, delayed * 2, null);
 
+        this.pligAni(delayed * 3);
+        this.createStartGame();
+        this.clearAllBallon('startGame');
+    }
+
+    /**拔掉插座动画*/
+    pligAni(delayed): void {
         // 拔掉插座
         let time2 = 800;
         let scaleX3 = 0.85;
         let scaleY3 = 1.15;
+
         let plug_01 = this.Tip.getChildByName('plug_01') as Laya.Image;
         let firstX_01 = plug_01.x;
-        Animation.deform_Move(plug_01, firstX_01, 1550, scaleX3, scaleY3, time2, delayed * 3, null);
+        Animation.deform_Move(plug_01, firstX_01, 1550, scaleX3, scaleY3, time2, delayed, null);
 
         let plug_02 = this.Tip.getChildByName('plug_02') as Laya.Image;
         let firstX_02 = plug_02.x;
-        Animation.deform_Move(plug_02, firstX_02, -800, scaleX3, scaleY3, time2, delayed * 3, null);
-        this.createStartGame();
-        this.clearAllBallon('startGame');
+
+        Animation.deform_Move(plug_02, firstX_02, -800, scaleX3, scaleY3, time2, delayed, null);
     }
 
     /**
@@ -330,6 +342,9 @@ export default class GameControl extends Laya.Script {
         let time1 = 300;
         let time2 = 100;
         let delayed = 250;
+
+        this.pligAni(delayed);
+
         Animation.bombs_Vanish(this.LevelsNode, 0, 0, 0, 100, delayed, f => {
             this.readyStart('nextLevel');
             Animation.bombs_Appear(this.LevelsNode, 0, 1, 1.1, 0, time1, time2, delayed, f => {
@@ -339,7 +354,6 @@ export default class GameControl extends Laya.Script {
         Animation.bombs_Vanish(this.TimeNode, 0, 0, 0, time1, delayed * 2, f => {
             this.time.value = 1;
             Animation.bombs_Appear(this.TimeNode, 0, 1, 1.1, 0, time1, time2, delayed, f => {
-                this.taskTipShake(0);
             });
         })
         this.clearAllBallon('restartAndNextLevel');
@@ -351,6 +365,7 @@ export default class GameControl extends Laya.Script {
         let time1 = 200;
         let time2 = 100;
         let delayed = 250;
+        this.pligAni(delayed);
         Animation.swell_shrink(this.LevelsNode, 1, 1.3, time1 * 0.5, 0, f => {
             Animation.swell_shrink(this.LevelsNode, 1, 1.3, time1 * 0.5, 0, f => {
             })
@@ -359,7 +374,6 @@ export default class GameControl extends Laya.Script {
         Animation.bombs_Vanish(this.TimeNode, 0, 0, 0, time1, delayed * 2, f => {
             this.time.value = 1;
             Animation.bombs_Appear(this.TimeNode, 0, 1, 1.1, 0, time1, time2, delayed * 5, f => {
-                this.taskTipShake(0);
             });
         })
         this.clearAllBallon('restartAndNextLevel');
@@ -424,10 +438,9 @@ export default class GameControl extends Laya.Script {
         balloon.pos(x, y);
 
         // 根据关卡数随机给与颜色和名字
-        let img = balloon['Balloon'].img as Laya.Image;
         let random = Math.floor(Math.random() * this.colorCategory);
-        img.skin = Enum.ColorSkin[random];
         balloon.name = Enum.ColorName[random];
+        balloon['Balloon'].skeletoninit();
 
         return balloon;
     }
@@ -546,7 +559,7 @@ export default class GameControl extends Laya.Script {
         for (let index = 0; index < this.BalloonParent._children.length; index++) {
             const element = this.BalloonParent._children[index];
             element['Balloon'].balloonClicksOn();
-            console.log('开启所有气球的点击事件');
+            // console.log('开启所有气球的点击事件');
         }
     }
 
@@ -645,6 +658,7 @@ export default class GameControl extends Laya.Script {
             explode.pos(x, y);
             // 类型
             explode['Explode'].type = type;
+            explode['Explode'].line = i;
             explode['Explode'].initProperty(type);
         }
     }

@@ -2,7 +2,6 @@
     "x":0,
     "type":"Sprite",
     "selectedBox":46,
-    "selecteID":48,
     "searchKey":"Sprite,beetle",
     "props":{"y":65,"x":75,"width":150,"scaleY":0.85,"scaleX":0.85,"presetID":1,"preset":"laya/pages/prefab/beetle.prefab","pivotY":65,"pivotX":75,"name":"beetle","isPresetRoot":true,"height":130},
     "nodeParent":-1,

@@ -80,12 +80,12 @@ export default class StartGame extends Laya.Script {
     }
 
     onError(): void {
-        console.log('气球骨骼动画加载错误！');
+        console.log('装饰气球加载错误！');
     }
 
     parseComplete(): void {
         this.balloon_skeleton.play('rock', true);
-        console.log('气球骨骼动画加载错误！');
+        console.log('装饰气球加载成功！');
     }
 
 
