@@ -4,31 +4,20 @@
  */
 export module WXDataManager {
 
-
     /**用户的微信里面的openid*/
     export let WXopenid
 
     /**用户在某个数据库集合下的记录上的_id，在数据库任何集合下都是个id*/
     export let user_id: string
 
-    /**玩家上次的关卡，从服务器拿取*/
-    export let _lastlevels: number
-
-    /**这次的关卡*/
-    export let _thislevels: number = 0
-
-
-    /**玩家上次剩余的道具数量，从服务器拿取*/
-    export let _lastPropNum;
-
-    /**这次的道具数量*/
-    export let _thisPropNum = 0;
-
+    /**需要上传的信息*/
+    export let _gameData = {
+        _levels: 1,
+        _propNum: 3,//初始化3个道具
+    }
 
     /**Laya中的微信引用，在当前模块可以直接使用，在其他模块需要加上模块名*/
     export let wx = Laya.Browser.window.wx;
-
-
 
     /**
      * 检测登录
@@ -116,7 +105,7 @@ export module WXDataManager {
                     // 如果没有登录，那么我们要上传起始关卡数0
                     wx.login({
                         success(res) {
-                            getUserinfo('loginAgain');
+                            getUserinfo('firstlogin');
                         },
                         fail() {
                             console.log('登录失败')
@@ -124,6 +113,8 @@ export module WXDataManager {
                     })
                 }
             })
+        } else {
+            console.log("登陆仅支持微信客户端");
         }
     }
 
@@ -149,30 +140,37 @@ export module WXDataManager {
                 console.log("WXopenid为：", WXopenid);
                 user_id = WXopenid;
 
-                if (type === 'loginAgain') {
+                if (type === 'firstlogin') {
                     // 这里有个问题，就是虽然你的登录失效了，但是可能原来的记录依然保留
                     // 那么我们也要找到原来的关卡，并且不报错
                     try {
-                        add_Levels();
+                        add_GameData();
+                    } catch (error) {
+                        console.log(error)
+                    }
+                    try {
+                        get_GameData();
                     } catch (error) {
                         console.log(error)
                     }
                 } else if (type === 'haveLogin') {
                     try {
-                        get_Levels();
+                        get_GameData();
                     } catch (error) {
                         console.log(error)
                     }
                 }
             })
+        } else {
+            console.log("获取玩家信息仅支持微信客户端");
         }
     }
 
     /**
-     * 增加一条记录
+     * 增加一条记录关卡数和道具数量数据
      * 这里增加一条记录说明是登录过期或者第一次登录，增加关卡分数为0
      * */
-    export function add_Levels() {
+    export function add_GameData() {
         if (Laya.Browser.onMiniGame) {
             // 云环境初始化
             wx.cloud.init({
@@ -188,7 +186,7 @@ export module WXDataManager {
                 data: {
                     // _id: 'todo-identifiant-aleatoire', // 可选自定义 _id，在此处场景下用数据库自动分配的就可以了
                     _id: user_id,
-                    _levels: _thislevels,
+                    gameData: _gameData,
                     due: new Date("2018-09-01"),
                     // 为待办事项添加一个地理位置（113°E，23°N）
                     location: new db.Geo.Point(113, 23),
@@ -197,14 +195,16 @@ export module WXDataManager {
             }).then(res => {
                 console.log('没有登录过重新上传：' + res)
             })
+        } else {
+            console.log("添加信息仅支持微信客户端");
         }
     }
 
     /**
-     * 查找玩家记录
+     * 查找玩家记录的关卡数和道具数量
      * 此时应用在玩家登录过了或者登录没有过期，那么直接查找到玩家的记录
     */
-    export function get_Levels() {
+    export function get_GameData() {
         if (Laya.Browser.onMiniGame) {
             // 云环境初始化
             wx.cloud.init({
@@ -217,18 +217,19 @@ export module WXDataManager {
             let user_info = db.collection('user_info');
             user_info.doc(user_id).get().then(res => {
                 console.log(res.data)
-                _lastlevels = res.data._levels
-                console.log('上次的关卡数为：' + _lastlevels)
-                _thislevels = _lastlevels;
+                _gameData = res.data.gameData;
+                _gameData = res.data.gameData;
+                console.log('上次的关卡数为：' + _gameData._levels, '上次的道具数为：' + _gameData._propNum)
             })
+        } else {
+            console.log("获取信息仅支持微信客户端");
         }
-
     }
 
     /**
-     * 更新当前关卡数
+     * 更新当前关卡数和道具数量
      */
-    export function update_Levels() {
+    export function update_GameData() {
         // 可以尝试在上传一次，防止玩家数据被毁后，因为登录后不会继续添加了
         try {
 
@@ -250,11 +251,13 @@ export module WXDataManager {
                 // data 传入需要局部更新的数据
                 data: {
                     // 表示将 done 字段置为 true
-                    _levels: _thislevels,
+                    gameData: _gameData,
                 },
             }).then(res => {
                 console.log(res)
             })
+        } else {
+            console.log("上传信息仅支持微信客户端");
         }
     }
 

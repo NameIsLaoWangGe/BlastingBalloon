@@ -3,6 +3,7 @@ import { Animation } from "../Template/Animation";
 import { PalyAudio } from "../Template/PlayAudio";
 import { Adaptive } from "../Template/Adaptive";
 import { WXDataManager } from "../Template/WXDataManager";
+import { Enum } from "../Template/Enum";
 
 export default class StartGame extends Laya.Script {
     /** @prop {name:logo, tips:"游戏结束标题", type:Node}*/
@@ -132,6 +133,7 @@ export default class StartGame extends Laya.Script {
     vanish(): void {
         let time = 250;
         let delayed = 100;
+        // PalyAudio.playSound(Enum.AudioName.commonPopup, 8);
         // logo
         for (let index = 0; index < this.logo._children.length; index++) {
             const element = this.logo._children[index];
@@ -176,6 +178,7 @@ export default class StartGame extends Laya.Script {
 
     /**抬起*/
     up(event): void {
+
         event.currentTarget.scale(1, 1);
         if (event.currentTarget.name === 'btn_start') {
             this.vanish();

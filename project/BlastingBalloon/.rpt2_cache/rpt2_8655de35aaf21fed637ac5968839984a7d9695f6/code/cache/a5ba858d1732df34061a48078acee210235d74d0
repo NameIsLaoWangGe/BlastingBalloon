@@ -1,0 +1,4 @@
+{
+  "code": "export var PalyAudio;\r\n(function (PalyAudio) {\r\n    function playSound(url, number) {\r\n        Laya.SoundManager.playSound(url, number, Laya.Handler.create(this, function () { }));\r\n    }\r\n    PalyAudio.playSound = playSound;\r\n    function playMusic(url, number, deley) {\r\n        Laya.SoundManager.playMusic(url, number, Laya.Handler.create(this, function () { }), deley);\r\n    }\r\n    PalyAudio.playMusic = playMusic;\r\n})(PalyAudio || (PalyAudio = {}));\r\nexport default PalyAudio;\r\n",
+  "references": []
+}

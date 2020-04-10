@@ -104,9 +104,16 @@ export module Enum {
     }
 
     export enum AudioName {
-
-
-        
+        button = '音效/按钮点击.mp3',
+        bgm = '音效/背景音乐.mp3',
+        victory = '音效/胜利.mp3',
+        defeated = '音效/失败.mp3',
+        balloonRight = '音效/气球点击正确.mp3',
+        balloonError = '音效/气球点击错误.mp3',
+        balloonPopup = '音效/气球弹出.mp3',
+        beetle = '音效/点击甲虫.mp3',
+        beetleMove = '音效/甲虫溜走.mp3',
+        commonPopup = '音效/通用弹出.mp3',
     }
 
 

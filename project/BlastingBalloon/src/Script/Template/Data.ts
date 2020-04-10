@@ -11,7 +11,6 @@ export module Data {
 
     export function onLoaded(): void {
         levelsData = Laya.loader.getRes("Data/levelsData.json")["RECORDS"];
-        console.log(levelsData);
     }
 }
 export default Data;

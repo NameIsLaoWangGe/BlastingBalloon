@@ -84,7 +84,7 @@ P 44A295BF 左边插头.png
 P F7F7323F 开始游戏按钮.png
 R 273530CF 指引底板.png
 P 9D9F0EA9 排行榜字.png
-R 89DBB6E8 排行榜底板.png
+R 46F00316 排行榜底板.png
 P 5FC8EDD3 排行榜按钮.png
 R 7681EAF1 气球陈列底板.png
 P 65B6ABBB 游戏内关卡数_关.png
@@ -131,11 +131,13 @@ P 135AE420 effect_黄色4.png
 P B0119B34 喇叭光圈.png
 P FFF8FF30 白色单元.png
 D 音效
-R 6D5BFA13 全体下落.mp3
-R A97C282E 单张发牌.mp3
-R CD190B07 单张牌旋转.mp3
-R 2ECE811A 按钮点击.mp3
-R EFC09A63 点击正确.mp3
-R C2A4CDAB 点击错误.mp3
-R A0753F90 结束.mp3
-R 31C4E9A5 连续发牌.mp3
+R C1E70F3C 失败.mp3
+R 0D5DCDA6 按钮点击.mp3
+R B73B1206 气球弹出.mp3
+R 0C84A1DB 气球点击正确.mp3
+R 151273E2 气球点击错误.mp3
+R 2D6531F3 点击甲虫.mp3
+R B33B7D0A 甲虫溜走.mp3
+R 579778F0 背景音乐.mp3
+R BD22EA1D 胜利.mp3
+R 873CE0E3 通用弹出.mp3

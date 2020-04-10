@@ -26,11 +26,11 @@ export default class Props extends Laya.Script {
 
     onEnable(): void {
         this.self = this.owner as Laya.Sprite;
-        this.self['Porps'] = this;
+        this.self['Props'] = this;
         this.gameControl = this.self.scene['GameControl'];
         this.prop_skeleton = this.self.getChildByName('prop_skeleton') as Laya.Skeleton;
         this.beetleParent = this.gameControl.beetleParent as Laya.Sprite;
-        this.clicksOnBtn();
+        // this.clicksOnBtn();
         this.createBoneAni();
     }
 

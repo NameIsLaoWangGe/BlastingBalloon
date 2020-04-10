@@ -40,7 +40,6 @@ export default class Hint extends Laya.Script {
         let time1 = 250;
         let time2 = 80;
         let delayed = 200;
-        PalyAudio.aAingleCard(3);
         Animation.fade_out(this.background, 0, 0.8, 200, 0, null);
 
         Animation.bombs_Appear(this.hintBox, 0, 1, scale - 0.2, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 0, null);

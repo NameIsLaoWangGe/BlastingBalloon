@@ -3,6 +3,7 @@ import { Clicks } from "../Template/Clicks";
 import { PalyAudio } from "../Template/PlayAudio";
 import { Adaptive } from "../Template/Adaptive";
 import { Advertising } from "../Template/Advertising";
+import { Enum } from "../Template/Enum";
 
 export default class GameOver extends Laya.Script {
     /** @prop {name:logo, tips:"游戏结束标题", type:Node}*/
@@ -61,12 +62,13 @@ export default class GameOver extends Laya.Script {
             this.btn_again.loadImage('UI/下一关按钮.png');
             this.settlementType = 'victory';
             this.logo.loadImage('UI/闯关成功logo.png');
-            PalyAudio.gameOver(1);
+            PalyAudio.playMusic(Enum.AudioName.victory, 1, 0);
+
         } else if (type === 'defeated') {
             this.btn_again.loadImage('UI/重来按钮.png');
             this.settlementType = 'defeated';
             this.logo.loadImage('UI/闯关失败logo.png');
-            PalyAudio.gameOver(1);
+            PalyAudio.playMusic(Enum.AudioName.defeated, 1, 0);
         }
         let score = this.scoreNode.getChildByName('score') as Laya.FontClip;
         score.value = this.Levels.value;
@@ -80,7 +82,6 @@ export default class GameOver extends Laya.Script {
         let time1 = 250;
         let time2 = 60;
         let delayed = 200;
-        PalyAudio.aAingleCard(3);
         Animation.fade_out(this.background, 0, 0.8, 200, 0, null);
 
         Animation.bombs_Appear(this.scoreNode, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 0, null);

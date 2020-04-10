@@ -4,52 +4,69 @@
  */
 export module PalyAudio {
 
-    /**单张发牌音效
+    // /**单张发牌音效
+    //  * @param number 播放次数
+    // */
+    // export function aAingleCard(number): void {
+    //     Laya.SoundManager.playSound('音效/单张发牌.mp3', number, Laya.Handler.create(this, function () { }));
+    // }
+
+    // /**连续发牌音效
+    //  * @param number 播放次数
+    // */
+    // export function groupUp(number): void {
+    //     Laya.SoundManager.playSound('音效/连续发牌.mp3', number, Laya.Handler.create(this, function () { }));
+    // }
+    // /**群体下落音效
+    //  * @param number 播放次数 
+    // */
+    // export function groupDrop(number): void {
+    //     Laya.SoundManager.playSound('音效/全体下落.mp3', number, Laya.Handler.create(this, function () { }));
+    // }
+
+    // /**播放单张卡牌旋转音效
+    //  * @param number 播放次数
+    // */
+    // export function cardRotate(number): void {
+    //     Laya.SoundManager.playSound('音效/单张牌旋转.mp3', number, Laya.Handler.create(this, function () { }));
+    // }
+
+    // /**游戏结束音效
+    //  * @param number 播放次数
+    // */
+    // export function gameOver(number): void {
+    //     Laya.SoundManager.playSound('音效/结束.mp3', number, Laya.Handler.create(this, function () { }));
+    // }
+
+    // /**点击正确音效
+    // * @param number 播放次数
+    // */
+    // export function clickRight(number): void {
+    //     Laya.SoundManager.playSound('音效/点击正确.mp3', number, Laya.Handler.create(this, function () { }));
+    // }
+
+    // /**点击正确音效
+    //  * @param number 播放次数
+    // */
+    // export function clickError(number): void {
+    //     Laya.SoundManager.playSound('音效/点击错误.mp3', number, Laya.Handler.create(this, function () { }));
+    // }
+
+    /**通用音效播放
+     * @param url 音效地址
      * @param number 播放次数
-    */
-    export function aAingleCard(number): void {
-        Laya.SoundManager.playSound('音效/单张发牌.mp3', number, Laya.Handler.create(this, function () { }));
+     */
+    export function playSound(url, number) {
+        Laya.SoundManager.playSound(url, number, Laya.Handler.create(this, function () { }));
     }
 
-    /**连续发牌音效
-     * @param number 播放次数
+    /**通用背景音乐播放
+    * @param url 音效地址
+    * @param number 循环次数，0表示无限循环
+    * @param deley 延时时间
     */
-    export function groupUp(number): void {
-        Laya.SoundManager.playSound('音效/连续发牌.mp3', number, Laya.Handler.create(this, function () { }));
-    }
-    /**群体下落音效
-     * @param number 播放次数 
-    */
-    export function groupDrop(number): void {
-        Laya.SoundManager.playSound('音效/全体下落.mp3', number, Laya.Handler.create(this, function () { }));
-    }
-
-    /**播放单张卡牌旋转音效
-     * @param number 播放次数
-    */
-    export function cardRotate(number): void {
-        Laya.SoundManager.playSound('音效/单张牌旋转.mp3', number, Laya.Handler.create(this, function () { }));
-    }
-
-    /**游戏结束音效
-     * @param number 播放次数
-    */
-    export function gameOver(number): void {
-        Laya.SoundManager.playSound('音效/结束.mp3', number, Laya.Handler.create(this, function () { }));
-    }
-
-    /**点击正确音效
-    * @param number 播放次数
-    */
-    export function clickRight(number): void {
-        Laya.SoundManager.playSound('音效/点击正确.mp3', number, Laya.Handler.create(this, function () { }));
-    }
-
-    /**点击正确音效
-     * @param number 播放次数
-    */
-    export function clickError(number): void {
-        Laya.SoundManager.playSound('音效/点击错误.mp3', number, Laya.Handler.create(this, function () { }));
+    export function playMusic(url, number, deley) {
+        Laya.SoundManager.playMusic(url, number, Laya.Handler.create(this, function () { }), deley);
     }
 
 }

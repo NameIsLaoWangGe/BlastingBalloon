@@ -1,5 +1,7 @@
 import { Clicks } from "../Template/Clicks";
 import { Animation } from "../Template/Animation";
+import { Enum } from "../Template/Enum";
+import { PalyAudio } from "../Template/PlayAudio";
 
 export default class Beetle extends Laya.Script {
 
@@ -110,10 +112,21 @@ export default class Beetle extends Laya.Script {
     }
     /**抬起*/
     up(event): void {
+        PalyAudio.playSound(Enum.AudioName.beetle, 1);
         this.clicksOffBtn();
         event.currentTarget.scale(Clicks.beetleScale, Clicks.beetleScale);
+
+        // 气球全部播放鄙视动画
+        let parentArr = this.gameControl.BalloonParent._children;
+        for (let index = 0; index < parentArr.length; index++) {
+            const element = parentArr[index];
+            element['Balloon'].skeleton.play(Enum.Sk_Ballon_Type.disdain + '_' + element.name, true);
+        }
+        // 创建失败界面
         Animation.leftRight_Shake(this.self, 20, 30, 50, f => {
-            this.gameControl.createGameOver('defeated');
+            Animation.leftRight_Shake(this.self, 20, 30, 50, f => {
+                this.gameControl.createGameOver('defeated');
+            })
         })
     }
 

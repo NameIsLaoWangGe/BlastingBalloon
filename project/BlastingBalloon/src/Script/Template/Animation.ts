@@ -1,3 +1,6 @@
+import { PalyAudio } from "./PlayAudio";
+import { Enum } from "./Enum";
+
 /**
  * 1.这里导出的是模块不是类，没有this，所以此模块的回调函数要写成func=>{}这种箭头函数，箭头函数会把{}里面的this指向原来的this。
  * 2.动画模块
@@ -342,6 +345,8 @@ export module Animation {
         Laya.Tween.to(node, { scaleX: scale1, scaleY: scale1, alpha: 1, rotation: rotation }, time1, Laya.Ease.cubicInOut, Laya.Handler.create(this, function () {
 
             Laya.Tween.to(node, { scaleX: firstScale, scaleY: firstScale, rotation: 0 }, time2, null, Laya.Handler.create(this, function () {
+
+                PalyAudio.playSound(Enum.AudioName.commonPopup, 1);
 
                 Laya.Tween.to(node, { scaleX: firstScale + (scale1 - firstScale) * 0.2, scaleY: firstScale + (scale1 - firstScale) * 0.2, rotation: 0 }, time2, null, Laya.Handler.create(this, function () {
 

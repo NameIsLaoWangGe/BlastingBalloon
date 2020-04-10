@@ -1,6 +1,110 @@
 (function () {
     'use strict';
 
+    var PalyAudio;
+    (function (PalyAudio) {
+        function playSound(url, number) {
+            Laya.SoundManager.playSound(url, number, Laya.Handler.create(this, function () { }));
+        }
+        PalyAudio.playSound = playSound;
+        function playMusic(url, number, deley) {
+            Laya.SoundManager.playMusic(url, number, Laya.Handler.create(this, function () { }), deley);
+        }
+        PalyAudio.playMusic = playMusic;
+    })(PalyAudio || (PalyAudio = {}));
+
+    var Enum;
+    (function (Enum) {
+        let ColorSkin;
+        (function (ColorSkin) {
+            ColorSkin[ColorSkin["UI/balloon_\u6DE1\u9EC4.png"] = 0] = "UI/balloon_\u6DE1\u9EC4.png";
+            ColorSkin[ColorSkin["UI/balloon_\u7C89\u8272.png"] = 1] = "UI/balloon_\u7C89\u8272.png";
+            ColorSkin[ColorSkin["UI/balloon_\u9EC4\u8272.png"] = 2] = "UI/balloon_\u9EC4\u8272.png";
+            ColorSkin[ColorSkin["UI/balloon_\u9752\u8272.png"] = 3] = "UI/balloon_\u9752\u8272.png";
+            ColorSkin[ColorSkin["UI/balloon_\u7D2B\u8272.png"] = 4] = "UI/balloon_\u7D2B\u8272.png";
+        })(ColorSkin = Enum.ColorSkin || (Enum.ColorSkin = {}));
+        let BalloonName;
+        (function (BalloonName) {
+            BalloonName[BalloonName["yellowish"] = 0] = "yellowish";
+            BalloonName[BalloonName["pink"] = 1] = "pink";
+            BalloonName[BalloonName["yellow"] = 2] = "yellow";
+            BalloonName[BalloonName["cyan"] = 3] = "cyan";
+            BalloonName[BalloonName["purple"] = 4] = "purple";
+        })(BalloonName = Enum.BalloonName || (Enum.BalloonName = {}));
+        let IconSkin_01;
+        (function (IconSkin_01) {
+            IconSkin_01[IconSkin_01["UI/icon_\u6DE1\u9EC4.png"] = 0] = "UI/icon_\u6DE1\u9EC4.png";
+            IconSkin_01[IconSkin_01["UI/icon_\u7C89\u8272.png"] = 1] = "UI/icon_\u7C89\u8272.png";
+            IconSkin_01[IconSkin_01["UI/icon_\u9EC4\u8272.png"] = 2] = "UI/icon_\u9EC4\u8272.png";
+            IconSkin_01[IconSkin_01["UI/icon_\u9752\u8272.png"] = 3] = "UI/icon_\u9752\u8272.png";
+            IconSkin_01[IconSkin_01["UI/icon_\u7D2B\u8272.png"] = 4] = "UI/icon_\u7D2B\u8272.png";
+        })(IconSkin_01 = Enum.IconSkin_01 || (Enum.IconSkin_01 = {}));
+        let IconSkin_02;
+        (function (IconSkin_02) {
+            IconSkin_02[IconSkin_02["UI/icon_\u6DE1\u9EC4_pitch.png"] = 0] = "UI/icon_\u6DE1\u9EC4_pitch.png";
+            IconSkin_02[IconSkin_02["UI/icon_\u7C89\u8272_pitch.png"] = 1] = "UI/icon_\u7C89\u8272_pitch.png";
+            IconSkin_02[IconSkin_02["UI/icon_\u9EC4\u8272_pitch.png"] = 2] = "UI/icon_\u9EC4\u8272_pitch.png";
+            IconSkin_02[IconSkin_02["UI/icon_\u9752\u8272_pitch.png"] = 3] = "UI/icon_\u9752\u8272_pitch.png";
+            IconSkin_02[IconSkin_02["UI/icon_\u7D2B\u8272_pitch.png"] = 4] = "UI/icon_\u7D2B\u8272_pitch.png";
+        })(IconSkin_02 = Enum.IconSkin_02 || (Enum.IconSkin_02 = {}));
+        let Explode_Yellowish;
+        (function (Explode_Yellowish) {
+            Explode_Yellowish[Explode_Yellowish["\u7279\u6548/effect_\u6DE1\u9EC41.png"] = 0] = "\u7279\u6548/effect_\u6DE1\u9EC41.png";
+            Explode_Yellowish[Explode_Yellowish["\u7279\u6548/effect_\u6DE1\u9EC42.png"] = 1] = "\u7279\u6548/effect_\u6DE1\u9EC42.png";
+            Explode_Yellowish[Explode_Yellowish["\u7279\u6548/effect_\u6DE1\u9EC43.png"] = 2] = "\u7279\u6548/effect_\u6DE1\u9EC43.png";
+            Explode_Yellowish[Explode_Yellowish["\u7279\u6548/effect_\u6DE1\u9EC44.png"] = 3] = "\u7279\u6548/effect_\u6DE1\u9EC44.png";
+        })(Explode_Yellowish = Enum.Explode_Yellowish || (Enum.Explode_Yellowish = {}));
+        let Explode_Pink;
+        (function (Explode_Pink) {
+            Explode_Pink[Explode_Pink["\u7279\u6548/effect_\u7C89\u82721.png"] = 0] = "\u7279\u6548/effect_\u7C89\u82721.png";
+            Explode_Pink[Explode_Pink["\u7279\u6548/effect_\u7C89\u82722.png"] = 1] = "\u7279\u6548/effect_\u7C89\u82722.png";
+            Explode_Pink[Explode_Pink["\u7279\u6548/effect_\u7C89\u82723.png"] = 2] = "\u7279\u6548/effect_\u7C89\u82723.png";
+            Explode_Pink[Explode_Pink["\u7279\u6548/effect_\u7C89\u82724.png"] = 3] = "\u7279\u6548/effect_\u7C89\u82724.png";
+        })(Explode_Pink = Enum.Explode_Pink || (Enum.Explode_Pink = {}));
+        let Explode_Yellow;
+        (function (Explode_Yellow) {
+            Explode_Yellow[Explode_Yellow["\u7279\u6548/effect_\u9EC4\u82721.png"] = 0] = "\u7279\u6548/effect_\u9EC4\u82721.png";
+            Explode_Yellow[Explode_Yellow["\u7279\u6548/effect_\u9EC4\u82722.png"] = 1] = "\u7279\u6548/effect_\u9EC4\u82722.png";
+            Explode_Yellow[Explode_Yellow["\u7279\u6548/effect_\u9EC4\u82723.png"] = 2] = "\u7279\u6548/effect_\u9EC4\u82723.png";
+            Explode_Yellow[Explode_Yellow["\u7279\u6548/effect_\u9EC4\u82724.png"] = 3] = "\u7279\u6548/effect_\u9EC4\u82724.png";
+        })(Explode_Yellow = Enum.Explode_Yellow || (Enum.Explode_Yellow = {}));
+        let Explode_Cyan;
+        (function (Explode_Cyan) {
+            Explode_Cyan[Explode_Cyan["\u7279\u6548/effect_\u9752\u82721.png"] = 0] = "\u7279\u6548/effect_\u9752\u82721.png";
+            Explode_Cyan[Explode_Cyan["\u7279\u6548/effect_\u9752\u82722.png"] = 1] = "\u7279\u6548/effect_\u9752\u82722.png";
+            Explode_Cyan[Explode_Cyan["\u7279\u6548/effect_\u9752\u82723.png"] = 2] = "\u7279\u6548/effect_\u9752\u82723.png";
+            Explode_Cyan[Explode_Cyan["\u7279\u6548/effect_\u9752\u82724.png"] = 3] = "\u7279\u6548/effect_\u9752\u82724.png";
+        })(Explode_Cyan = Enum.Explode_Cyan || (Enum.Explode_Cyan = {}));
+        let Explode_Purple;
+        (function (Explode_Purple) {
+            Explode_Purple[Explode_Purple["\u7279\u6548/effect_\u7D2B\u82721.png"] = 0] = "\u7279\u6548/effect_\u7D2B\u82721.png";
+            Explode_Purple[Explode_Purple["\u7279\u6548/effect_\u7D2B\u82722.png"] = 1] = "\u7279\u6548/effect_\u7D2B\u82722.png";
+            Explode_Purple[Explode_Purple["\u7279\u6548/effect_\u7D2B\u82723.png"] = 2] = "\u7279\u6548/effect_\u7D2B\u82723.png";
+            Explode_Purple[Explode_Purple["\u7279\u6548/effect_\u7D2B\u82724.png"] = 3] = "\u7279\u6548/effect_\u7D2B\u82724.png";
+        })(Explode_Purple = Enum.Explode_Purple || (Enum.Explode_Purple = {}));
+        let Sk_Ballon_Type;
+        (function (Sk_Ballon_Type) {
+            Sk_Ballon_Type["death"] = "death";
+            Sk_Ballon_Type["error"] = "error";
+            Sk_Ballon_Type["disdain"] = "disdain";
+            Sk_Ballon_Type["static"] = "static";
+            Sk_Ballon_Type["scale"] = "scale";
+        })(Sk_Ballon_Type = Enum.Sk_Ballon_Type || (Enum.Sk_Ballon_Type = {}));
+        let AudioName;
+        (function (AudioName) {
+            AudioName["button"] = "\u97F3\u6548/\u6309\u94AE\u70B9\u51FB.mp3";
+            AudioName["bgm"] = "\u97F3\u6548/\u80CC\u666F\u97F3\u4E50.mp3";
+            AudioName["victory"] = "\u97F3\u6548/\u80DC\u5229.mp3";
+            AudioName["defeated"] = "\u97F3\u6548/\u5931\u8D25.mp3";
+            AudioName["balloonRight"] = "\u97F3\u6548/\u6C14\u7403\u70B9\u51FB\u6B63\u786E.mp3";
+            AudioName["balloonError"] = "\u97F3\u6548/\u6C14\u7403\u70B9\u51FB\u9519\u8BEF.mp3";
+            AudioName["balloonPopup"] = "\u97F3\u6548/\u6C14\u7403\u5F39\u51FA.mp3";
+            AudioName["beetle"] = "\u97F3\u6548/\u70B9\u51FB\u7532\u866B.mp3";
+            AudioName["beetleMove"] = "\u97F3\u6548/\u7532\u866B\u6E9C\u8D70.mp3";
+            AudioName["commonPopup"] = "\u97F3\u6548/\u901A\u7528\u5F39\u51FA.mp3";
+        })(AudioName = Enum.AudioName || (Enum.AudioName = {}));
+    })(Enum || (Enum = {}));
+
     var Animation;
     (function (Animation) {
         function upDown_Rotate(node, time, func) {
@@ -201,6 +305,7 @@
             node.alpha = firstAlpha;
             Laya.Tween.to(node, { scaleX: scale1, scaleY: scale1, alpha: 1, rotation: rotation }, time1, Laya.Ease.cubicInOut, Laya.Handler.create(this, function () {
                 Laya.Tween.to(node, { scaleX: firstScale, scaleY: firstScale, rotation: 0 }, time2, null, Laya.Handler.create(this, function () {
+                    PalyAudio.playSound(Enum.AudioName.commonPopup, 1);
                     Laya.Tween.to(node, { scaleX: firstScale + (scale1 - firstScale) * 0.2, scaleY: firstScale + (scale1 - firstScale) * 0.2, rotation: 0 }, time2, null, Laya.Handler.create(this, function () {
                         Laya.Tween.to(node, { scaleX: firstScale, scaleY: firstScale, rotation: 0 }, time2, null, Laya.Handler.create(this, function () {
                             if (func !== null) {
@@ -428,11 +533,10 @@
         constructor() { super(); }
         onEnable() {
             this.self = this.owner;
-            this.self['Porps'] = this;
+            this.self['Props'] = this;
             this.gameControl = this.self.scene['GameControl'];
             this.prop_skeleton = this.self.getChildByName('prop_skeleton');
             this.beetleParent = this.gameControl.beetleParent;
-            this.clicksOnBtn();
             this.createBoneAni();
         }
         createBoneAni() {
@@ -510,87 +614,238 @@
         }
     }
 
-    var Enum;
-    (function (Enum) {
-        let ColorSkin;
-        (function (ColorSkin) {
-            ColorSkin[ColorSkin["UI/balloon_\u6DE1\u9EC4.png"] = 0] = "UI/balloon_\u6DE1\u9EC4.png";
-            ColorSkin[ColorSkin["UI/balloon_\u7C89\u8272.png"] = 1] = "UI/balloon_\u7C89\u8272.png";
-            ColorSkin[ColorSkin["UI/balloon_\u9EC4\u8272.png"] = 2] = "UI/balloon_\u9EC4\u8272.png";
-            ColorSkin[ColorSkin["UI/balloon_\u9752\u8272.png"] = 3] = "UI/balloon_\u9752\u8272.png";
-            ColorSkin[ColorSkin["UI/balloon_\u7D2B\u8272.png"] = 4] = "UI/balloon_\u7D2B\u8272.png";
-        })(ColorSkin = Enum.ColorSkin || (Enum.ColorSkin = {}));
-        let BalloonName;
-        (function (BalloonName) {
-            BalloonName[BalloonName["yellowish"] = 0] = "yellowish";
-            BalloonName[BalloonName["pink"] = 1] = "pink";
-            BalloonName[BalloonName["yellow"] = 2] = "yellow";
-            BalloonName[BalloonName["cyan"] = 3] = "cyan";
-            BalloonName[BalloonName["purple"] = 4] = "purple";
-        })(BalloonName = Enum.BalloonName || (Enum.BalloonName = {}));
-        let IconSkin_01;
-        (function (IconSkin_01) {
-            IconSkin_01[IconSkin_01["UI/icon_\u6DE1\u9EC4.png"] = 0] = "UI/icon_\u6DE1\u9EC4.png";
-            IconSkin_01[IconSkin_01["UI/icon_\u7C89\u8272.png"] = 1] = "UI/icon_\u7C89\u8272.png";
-            IconSkin_01[IconSkin_01["UI/icon_\u9EC4\u8272.png"] = 2] = "UI/icon_\u9EC4\u8272.png";
-            IconSkin_01[IconSkin_01["UI/icon_\u9752\u8272.png"] = 3] = "UI/icon_\u9752\u8272.png";
-            IconSkin_01[IconSkin_01["UI/icon_\u7D2B\u8272.png"] = 4] = "UI/icon_\u7D2B\u8272.png";
-        })(IconSkin_01 = Enum.IconSkin_01 || (Enum.IconSkin_01 = {}));
-        let IconSkin_02;
-        (function (IconSkin_02) {
-            IconSkin_02[IconSkin_02["UI/icon_\u6DE1\u9EC4_pitch.png"] = 0] = "UI/icon_\u6DE1\u9EC4_pitch.png";
-            IconSkin_02[IconSkin_02["UI/icon_\u7C89\u8272_pitch.png"] = 1] = "UI/icon_\u7C89\u8272_pitch.png";
-            IconSkin_02[IconSkin_02["UI/icon_\u9EC4\u8272_pitch.png"] = 2] = "UI/icon_\u9EC4\u8272_pitch.png";
-            IconSkin_02[IconSkin_02["UI/icon_\u9752\u8272_pitch.png"] = 3] = "UI/icon_\u9752\u8272_pitch.png";
-            IconSkin_02[IconSkin_02["UI/icon_\u7D2B\u8272_pitch.png"] = 4] = "UI/icon_\u7D2B\u8272_pitch.png";
-        })(IconSkin_02 = Enum.IconSkin_02 || (Enum.IconSkin_02 = {}));
-        let Explode_Yellowish;
-        (function (Explode_Yellowish) {
-            Explode_Yellowish[Explode_Yellowish["\u7279\u6548/effect_\u6DE1\u9EC41.png"] = 0] = "\u7279\u6548/effect_\u6DE1\u9EC41.png";
-            Explode_Yellowish[Explode_Yellowish["\u7279\u6548/effect_\u6DE1\u9EC42.png"] = 1] = "\u7279\u6548/effect_\u6DE1\u9EC42.png";
-            Explode_Yellowish[Explode_Yellowish["\u7279\u6548/effect_\u6DE1\u9EC43.png"] = 2] = "\u7279\u6548/effect_\u6DE1\u9EC43.png";
-            Explode_Yellowish[Explode_Yellowish["\u7279\u6548/effect_\u6DE1\u9EC44.png"] = 3] = "\u7279\u6548/effect_\u6DE1\u9EC44.png";
-        })(Explode_Yellowish = Enum.Explode_Yellowish || (Enum.Explode_Yellowish = {}));
-        let Explode_Pink;
-        (function (Explode_Pink) {
-            Explode_Pink[Explode_Pink["\u7279\u6548/effect_\u7C89\u82721.png"] = 0] = "\u7279\u6548/effect_\u7C89\u82721.png";
-            Explode_Pink[Explode_Pink["\u7279\u6548/effect_\u7C89\u82722.png"] = 1] = "\u7279\u6548/effect_\u7C89\u82722.png";
-            Explode_Pink[Explode_Pink["\u7279\u6548/effect_\u7C89\u82723.png"] = 2] = "\u7279\u6548/effect_\u7C89\u82723.png";
-            Explode_Pink[Explode_Pink["\u7279\u6548/effect_\u7C89\u82724.png"] = 3] = "\u7279\u6548/effect_\u7C89\u82724.png";
-        })(Explode_Pink = Enum.Explode_Pink || (Enum.Explode_Pink = {}));
-        let Explode_Yellow;
-        (function (Explode_Yellow) {
-            Explode_Yellow[Explode_Yellow["\u7279\u6548/effect_\u9EC4\u82721.png"] = 0] = "\u7279\u6548/effect_\u9EC4\u82721.png";
-            Explode_Yellow[Explode_Yellow["\u7279\u6548/effect_\u9EC4\u82722.png"] = 1] = "\u7279\u6548/effect_\u9EC4\u82722.png";
-            Explode_Yellow[Explode_Yellow["\u7279\u6548/effect_\u9EC4\u82723.png"] = 2] = "\u7279\u6548/effect_\u9EC4\u82723.png";
-            Explode_Yellow[Explode_Yellow["\u7279\u6548/effect_\u9EC4\u82724.png"] = 3] = "\u7279\u6548/effect_\u9EC4\u82724.png";
-        })(Explode_Yellow = Enum.Explode_Yellow || (Enum.Explode_Yellow = {}));
-        let Explode_Cyan;
-        (function (Explode_Cyan) {
-            Explode_Cyan[Explode_Cyan["\u7279\u6548/effect_\u9752\u82721.png"] = 0] = "\u7279\u6548/effect_\u9752\u82721.png";
-            Explode_Cyan[Explode_Cyan["\u7279\u6548/effect_\u9752\u82722.png"] = 1] = "\u7279\u6548/effect_\u9752\u82722.png";
-            Explode_Cyan[Explode_Cyan["\u7279\u6548/effect_\u9752\u82723.png"] = 2] = "\u7279\u6548/effect_\u9752\u82723.png";
-            Explode_Cyan[Explode_Cyan["\u7279\u6548/effect_\u9752\u82724.png"] = 3] = "\u7279\u6548/effect_\u9752\u82724.png";
-        })(Explode_Cyan = Enum.Explode_Cyan || (Enum.Explode_Cyan = {}));
-        let Explode_Purple;
-        (function (Explode_Purple) {
-            Explode_Purple[Explode_Purple["\u7279\u6548/effect_\u7D2B\u82721.png"] = 0] = "\u7279\u6548/effect_\u7D2B\u82721.png";
-            Explode_Purple[Explode_Purple["\u7279\u6548/effect_\u7D2B\u82722.png"] = 1] = "\u7279\u6548/effect_\u7D2B\u82722.png";
-            Explode_Purple[Explode_Purple["\u7279\u6548/effect_\u7D2B\u82723.png"] = 2] = "\u7279\u6548/effect_\u7D2B\u82723.png";
-            Explode_Purple[Explode_Purple["\u7279\u6548/effect_\u7D2B\u82724.png"] = 3] = "\u7279\u6548/effect_\u7D2B\u82724.png";
-        })(Explode_Purple = Enum.Explode_Purple || (Enum.Explode_Purple = {}));
-        let Sk_Ballon_Type;
-        (function (Sk_Ballon_Type) {
-            Sk_Ballon_Type["death"] = "death";
-            Sk_Ballon_Type["error"] = "error";
-            Sk_Ballon_Type["disdain"] = "disdain";
-            Sk_Ballon_Type["static"] = "static";
-            Sk_Ballon_Type["scale"] = "scale";
-        })(Sk_Ballon_Type = Enum.Sk_Ballon_Type || (Enum.Sk_Ballon_Type = {}));
-        let AudioName;
-        (function (AudioName) {
-        })(AudioName = Enum.AudioName || (Enum.AudioName = {}));
-    })(Enum || (Enum = {}));
+    var WXDataManager;
+    (function (WXDataManager) {
+        WXDataManager._gameData = {
+            _levels: 1,
+            _propNum: 3,
+        };
+        WXDataManager.wx = Laya.Browser.window.wx;
+        function WXcheckSession() {
+            if (Laya.Browser.onMiniGame) {
+                WXDataManager.wx.checkSession({
+                    success() {
+                        console.log('已经登录过了！');
+                    },
+                    fail() {
+                        authorizedWXLogin();
+                        console.log('重新登录');
+                    }
+                });
+            }
+        }
+        WXDataManager.WXcheckSession = WXcheckSession;
+        function authorizedWXLogin() {
+            if (Laya.Browser.onMiniGame) {
+                WXDataManager.wx.login({
+                    success: function (res) {
+                        if (res.code) {
+                            console.log("登录成功，获取到code", res.code);
+                        }
+                        var button = WXDataManager.wx.createUserInfoButton({
+                            type: 'text',
+                            text: '开始游戏',
+                            style: {
+                                left: WXDataManager.wx.getSystemInfoSync().screenWidth / 2 - 60,
+                                bottom: WXDataManager.wx.getSystemInfoSync().screenHeight / 2 - 60,
+                                width: 120,
+                                height: 40,
+                                lineHeight: 40,
+                                backgroundColor: '#fb94a9',
+                                color: '#ffffff',
+                                textAlign: 'center',
+                                fontSize: 16,
+                                borderRadius: 20
+                            }
+                        });
+                        button.show();
+                        button.onTap((res) => {
+                            console.log(res);
+                            if (res.errMsg === "getUserInfo:ok") {
+                                console.log("已经授权");
+                                button.destroy();
+                                getUserinfo(null);
+                            }
+                            else {
+                                console.log("没有授权");
+                            }
+                        });
+                    }
+                });
+            }
+        }
+        WXDataManager.authorizedWXLogin = authorizedWXLogin;
+        function normalWXLogin() {
+            if (Laya.Browser.onMiniGame) {
+                WXDataManager.wx.checkSession({
+                    success() {
+                        console.log('已经登录过了！');
+                        getUserinfo('haveLogin');
+                    },
+                    fail() {
+                        console.log('重新登录');
+                        WXDataManager.wx.login({
+                            success(res) {
+                                getUserinfo('firstlogin');
+                            },
+                            fail() {
+                                console.log('登录失败');
+                            }
+                        });
+                    }
+                });
+            }
+            else {
+                console.log("登陆仅支持微信客户端");
+            }
+        }
+        WXDataManager.normalWXLogin = normalWXLogin;
+        function getUserinfo(type) {
+            if (Laya.Browser.onMiniGame) {
+                WXDataManager.wx.cloud.init({
+                    env: 'release-lwg'
+                });
+                WXDataManager.wx.cloud.callFunction({
+                    name: "login",
+                }).then(res => {
+                    console.log("登录成功回调：", res);
+                    WXDataManager.WXopenid = res.result.openid;
+                    console.log("WXopenid为：", WXDataManager.WXopenid);
+                    WXDataManager.user_id = WXDataManager.WXopenid;
+                    if (type === 'firstlogin') {
+                        try {
+                            add_GameData();
+                        }
+                        catch (error) {
+                            console.log(error);
+                        }
+                        try {
+                            get_GameData();
+                        }
+                        catch (error) {
+                            console.log(error);
+                        }
+                    }
+                    else if (type === 'haveLogin') {
+                        try {
+                            get_GameData();
+                        }
+                        catch (error) {
+                            console.log(error);
+                        }
+                    }
+                });
+            }
+            else {
+                console.log("获取玩家信息仅支持微信客户端");
+            }
+        }
+        WXDataManager.getUserinfo = getUserinfo;
+        function add_GameData() {
+            if (Laya.Browser.onMiniGame) {
+                WXDataManager.wx.cloud.init({
+                    env: 'release-lwg'
+                });
+                let db = WXDataManager.wx.cloud.database();
+                let user_info = db.collection('user_info');
+                user_info.add({
+                    data: {
+                        _id: WXDataManager.user_id,
+                        gameData: WXDataManager._gameData,
+                        due: new Date("2018-09-01"),
+                        location: new db.Geo.Point(113, 23),
+                        done: false
+                    },
+                }).then(res => {
+                    console.log('没有登录过重新上传：' + res);
+                });
+            }
+            else {
+                console.log("添加信息仅支持微信客户端");
+            }
+        }
+        WXDataManager.add_GameData = add_GameData;
+        function get_GameData() {
+            if (Laya.Browser.onMiniGame) {
+                WXDataManager.wx.cloud.init({
+                    env: 'release-lwg'
+                });
+                let db = WXDataManager.wx.cloud.database();
+                let user_info = db.collection('user_info');
+                user_info.doc(WXDataManager.user_id).get().then(res => {
+                    console.log(res.data);
+                    WXDataManager._gameData = res.data.gameData;
+                    WXDataManager._gameData = res.data.gameData;
+                    console.log('上次的关卡数为：' + WXDataManager._gameData._levels, '上次的道具数为：' + WXDataManager._gameData._propNum);
+                });
+            }
+            else {
+                console.log("获取信息仅支持微信客户端");
+            }
+        }
+        WXDataManager.get_GameData = get_GameData;
+        function update_GameData() {
+            if (Laya.Browser.onMiniGame) {
+                WXDataManager.wx.cloud.init({
+                    env: 'release-lwg'
+                });
+                let db = WXDataManager.wx.cloud.database();
+                let user_info = db.collection('user_info');
+                user_info.doc(WXDataManager.user_id).update({
+                    data: {
+                        gameData: WXDataManager._gameData,
+                    },
+                }).then(res => {
+                    console.log(res);
+                });
+            }
+            else {
+                console.log("上传信息仅支持微信客户端");
+            }
+        }
+        WXDataManager.update_GameData = update_GameData;
+        function wxPostInit() {
+            if (Laya.Browser.onMiniGame) {
+                Laya.loader.load(["res/atlas/rank.atlas"], Laya.Handler.create(null, function () {
+                    Laya.MiniAdpter.sendAtlasToOpenDataContext("res/atlas/rank.atlas");
+                    let wx = Laya.Browser.window.wx;
+                    let openDataContext = wx.getOpenDataContext();
+                    openDataContext.postMessage({ action: 'init' });
+                }));
+            }
+        }
+        WXDataManager.wxPostInit = wxPostInit;
+        function wxPostData(score) {
+            if (Laya.Browser.onMiniGame) {
+                let args = {
+                    type: 'scores', data: { scores: score }
+                };
+                let wx = Laya.Browser.window.wx;
+                let openDataContext = wx.getOpenDataContext();
+                openDataContext.postMessage(args);
+                console.log('上传了');
+            }
+            else {
+                console.log('没有上传');
+            }
+        }
+        WXDataManager.wxPostData = wxPostData;
+        function wxShare() {
+            if (Laya.Browser.onMiniGame) {
+                let wx = Laya.Browser.window.wx;
+                wx.shareAppMessage({
+                    title: '你的手速够快吗？',
+                    imageUrlId: 'CRYATpcgSFGkeB4Hs75jOQ',
+                    imageUrl: 'https://mmocgame.qpic.cn/wechatgame/9zdKibmXJ3RsmFpXn6UAV4ScT8ulA4wzqUUNicKWDIaODZbuv38lkBBOBQv8XbxOI0/0'
+                });
+                console.log("主动进行了转发");
+            }
+            else {
+                console.log("仅支持微信客户端");
+            }
+        }
+        WXDataManager.wxShare = wxShare;
+    })(WXDataManager || (WXDataManager = {}));
 
     var Advertising;
     (function (Advertising) {
@@ -671,7 +926,6 @@
         Data.dataLoading_Levels = dataLoading_Levels;
         function onLoaded() {
             Data.levelsData = Laya.loader.getRes("Data/levelsData.json")["RECORDS"];
-            console.log(Data.levelsData);
         }
         Data.onLoaded = onLoaded;
     })(Data || (Data = {}));
@@ -686,10 +940,13 @@
             this.noStart();
             this.createStartGame();
             this.adaptive();
+            WXDataManager.wxPostInit();
             Advertising.videoAd_01_Lode(f => this.watchAdsFunc('yes'), f => this.watchAdsFunc('no'));
             Advertising.bannerAd_01_Lode();
             SkTemplete.createBaoolonTemplet();
             Data.dataLoading_Levels();
+            WXDataManager.normalWXLogin();
+            PalyAudio.playMusic(Enum.AudioName.bgm, 0, 1000);
         }
         watchAdsFunc(type) {
             if (type === 'yes') {
@@ -733,11 +990,15 @@
                 this.Levels.value = (Number(this.Levels.value) + 1).toString();
             }
             else if (type === 'startGame') {
+                this.Levels.value = WXDataManager._gameData._levels.toString();
+                this.propNum.value = 'x' + WXDataManager._gameData._propNum;
                 this.openingAnimation();
             }
             this.time.value = 1;
             let level = Number(this.Levels.value);
-            console.log(level);
+            if (level >= 40) {
+                level = 40;
+            }
             this.row = Data.levelsData[level - 1].row;
             this.line = Data.levelsData[level - 1].line;
             this.colorCategory = Data.levelsData[level - 1].colorCategory;
@@ -746,13 +1007,15 @@
             let sub = this.line - this.row;
             switch (sub) {
                 case 0:
-                    this.spacing = 5;
+                    this.spacing = 5 - (this.line * 0.2);
                     break;
                 case 1:
-                    this.spacing = 10;
-                    break;
-                case 2:
-                    this.spacing = 25;
+                    if (this.line === 4 && this.row == 3) {
+                        this.spacing = 27;
+                    }
+                    else {
+                        this.spacing = 26 - (this.line - 2) * 3.1;
+                    }
                     break;
                 default:
                     break;
@@ -793,9 +1056,9 @@
             Animation.deform_Move(plug_01, 1550, 555, scaleX3, scaleY3, time, delayed, null);
             let plug_02 = this.Tip.getChildByName('plug_02');
             Animation.deform_Move(plug_02, -800, 171, scaleX3, scaleY3, time, delayed, fun => {
-                Animation.leftRight_Shake(this.Tip, 15, 60, 100, null);
-                Animation.leftRight_Shake(this.PropsNode, 15, 60, 160, null);
-                Animation.leftRight_Shake(this.LevelsNode, 15, 60, 160, null);
+                Animation.leftRight_Shake(this.Tip, 15, 60, 0, null);
+                Animation.leftRight_Shake(this.PropsNode, 15, 60, 100, null);
+                Animation.leftRight_Shake(this.LevelsNode, 15, 60, 100, null);
             });
         }
         leaveAnimation() {
@@ -840,9 +1103,8 @@
                     balloon.pivotX = balloon.width / 2;
                     balloon.pivotY = balloon.height / 2;
                     Animation.bombs_Appear(balloon, 0, scale, scale + 0.1, 0, 200, 100, delayed, f => {
-                        this.explodeAni(this.BalloonVessel, balloon.x + (1 - scale) * balloon.pivotX / 2, balloon.y + (1 - scale) * balloon.pivotY / 2, 'vanish', 10, 10);
+                        this.explodeAni(this.BalloonVessel, balloon.x + (1 - scale) * balloon.pivotX / 2, balloon.y + (1 - scale) * balloon.pivotY / 2, 'vanish', 6, 10);
                         if (i === this.row - 1 && j === this.line - 1) {
-                            console.log('开始');
                             this.createBeetle();
                             this.TaskBalloonParentSet();
                             this.taskTipShake(0);
@@ -898,7 +1160,7 @@
                         this.clearAllTaskBallon(type);
                         this.BalloonParent.removeChildren(0, len - 1);
                     }
-                    this.explodeAni(this.BalloonVessel, element.x + (1 - Clicks.balloonScale) * element.pivotX / 2, element.y + (1 - Clicks.balloonScale) * element.pivotY / 2, 'vanish', 10, 10);
+                    this.explodeAni(this.BalloonVessel, element.x + (1 - Clicks.balloonScale) * element.pivotX / 2, element.y + (1 - Clicks.balloonScale) * element.pivotY / 2, 'vanish', 6, 10);
                 });
                 delayed += 60;
             }
@@ -913,9 +1175,6 @@
                     if (index === len - 1) {
                         if (type === 'restartAndNextLevel') {
                             this.createBalloonCollection();
-                        }
-                        else if (type === 'startGame') {
-                            console.log('类型是返回主界面的清除');
                         }
                     }
                 });
@@ -932,7 +1191,6 @@
             return balloon;
         }
         TaskBalloonParentSet() {
-            console.log('开始创建任务气球提示');
             let arr1 = [];
             for (let i = 0; i < this.BalloonParent._children.length; i++) {
                 const balloon = this.BalloonParent._children[i];
@@ -958,8 +1216,8 @@
                 }
                 let ballon_Icon = this.createBallon_Icon(x, y, colorSkin, name);
                 Animation.bombs_Appear(ballon_Icon, 0, 1, 1.1, 0, 200, 200, delayed, f => {
-                    console.log('j');
                     if (j === len - 1) {
+                        this.PropsNode['Props'].clicksOnBtn();
                         this.balloonCount();
                         this.balloonClickOrder();
                         this.clicksAllOn();
@@ -1025,7 +1283,17 @@
         }
         createGameOver(type) {
             let gameOver = Laya.Pool.getItemByCreateFun('gameOver', this.gameOver.create, this.gameOver);
+            WXDataManager.wxPostData(this.Levels.value);
+            if (type === 'defeated') {
+                WXDataManager._gameData._levels = Number(this.Levels.value);
+            }
+            else if (type === 'victory') {
+                WXDataManager._gameData._levels = Number(this.Levels.value) + 1;
+            }
+            WXDataManager._gameData._propNum = Number(this.propNum.value.substring(1, 3));
+            WXDataManager.update_GameData();
             this.clicksAllOff();
+            this.PropsNode['Props'].clicksOffBtn();
             this.timeSwicth = false;
             let len = this.beetleParent._children.length;
             if (len === 0) {
@@ -1086,7 +1354,9 @@
                     this.time.value -= this.timeVelocity;
                 }
                 else if (this.time.value <= 0) {
-                    this.createGameOver('defeated');
+                    Animation.leftRight_Shake(this.TimeNode, 20, 60, 50, f => {
+                        this.createGameOver('defeated');
+                    });
                     this.timeSwicth = false;
                 }
             }
@@ -1146,15 +1416,16 @@
             event.currentTarget.scale(Clicks.balloonScale, Clicks.balloonScale);
             if (this.self.name === this.gameControl.clickOrderArr[0]) {
                 this.gameControl.explodeAni(this.gameControl.BalloonVessel, this.self.x + (1 - Clicks.balloonScale) * this.self.pivotX / 2, this.self.y + (1 - Clicks.balloonScale) * this.self.pivotY / 2, this.self.name, 20, 10);
-                console.log('点击正确1');
+                PalyAudio.playSound(Enum.AudioName.balloonRight, 1);
                 this.clickRight();
             }
             else {
                 this.clickError();
-                console.log('点击错误！');
+                PalyAudio.playSound(Enum.AudioName.balloonError, 1);
             }
         }
         onDisable() {
+            this.skeleton.removeSelf();
         }
         onUpdate() {
         }
@@ -1233,10 +1504,18 @@
             Clicks.clicksOff('beetle', this.self, this, null, null, this.up, null);
         }
         up(event) {
+            PalyAudio.playSound(Enum.AudioName.beetle, 1);
             this.clicksOffBtn();
             event.currentTarget.scale(Clicks.beetleScale, Clicks.beetleScale);
+            let parentArr = this.gameControl.BalloonParent._children;
+            for (let index = 0; index < parentArr.length; index++) {
+                const element = parentArr[index];
+                element['Balloon'].skeleton.play(Enum.Sk_Ballon_Type.disdain + '_' + element.name, true);
+            }
             Animation.leftRight_Shake(this.self, 20, 30, 50, f => {
-                this.gameControl.createGameOver('defeated');
+                Animation.leftRight_Shake(this.self, 20, 30, 50, f => {
+                    this.gameControl.createGameOver('defeated');
+                });
             });
         }
         moveRule() {
@@ -1593,38 +1872,6 @@
         }
     }
 
-    var PalyAudio;
-    (function (PalyAudio) {
-        function aAingleCard(number) {
-            Laya.SoundManager.playSound('音效/单张发牌.mp3', number, Laya.Handler.create(this, function () { }));
-        }
-        PalyAudio.aAingleCard = aAingleCard;
-        function groupUp(number) {
-            Laya.SoundManager.playSound('音效/连续发牌.mp3', number, Laya.Handler.create(this, function () { }));
-        }
-        PalyAudio.groupUp = groupUp;
-        function groupDrop(number) {
-            Laya.SoundManager.playSound('音效/全体下落.mp3', number, Laya.Handler.create(this, function () { }));
-        }
-        PalyAudio.groupDrop = groupDrop;
-        function cardRotate(number) {
-            Laya.SoundManager.playSound('音效/单张牌旋转.mp3', number, Laya.Handler.create(this, function () { }));
-        }
-        PalyAudio.cardRotate = cardRotate;
-        function gameOver(number) {
-            Laya.SoundManager.playSound('音效/结束.mp3', number, Laya.Handler.create(this, function () { }));
-        }
-        PalyAudio.gameOver = gameOver;
-        function clickRight(number) {
-            Laya.SoundManager.playSound('音效/点击正确.mp3', number, Laya.Handler.create(this, function () { }));
-        }
-        PalyAudio.clickRight = clickRight;
-        function clickError(number) {
-            Laya.SoundManager.playSound('音效/点击错误.mp3', number, Laya.Handler.create(this, function () { }));
-        }
-        PalyAudio.clickError = clickError;
-    })(PalyAudio || (PalyAudio = {}));
-
     var Adaptive;
     (function (Adaptive) {
         function interface_Center(self) {
@@ -1664,13 +1911,13 @@
                 this.btn_again.loadImage('UI/下一关按钮.png');
                 this.settlementType = 'victory';
                 this.logo.loadImage('UI/闯关成功logo.png');
-                PalyAudio.gameOver(1);
+                PalyAudio.playMusic(Enum.AudioName.victory, 1, 0);
             }
             else if (type === 'defeated') {
                 this.btn_again.loadImage('UI/重来按钮.png');
                 this.settlementType = 'defeated';
                 this.logo.loadImage('UI/闯关失败logo.png');
-                PalyAudio.gameOver(1);
+                PalyAudio.playMusic(Enum.AudioName.defeated, 1, 0);
             }
             let score = this.scoreNode.getChildByName('score');
             score.value = this.Levels.value;
@@ -1681,7 +1928,6 @@
             let time1 = 250;
             let time2 = 60;
             let delayed = 200;
-            PalyAudio.aAingleCard(3);
             Animation.fade_out(this.background, 0, 0.8, 200, 0, null);
             Animation.bombs_Appear(this.scoreNode, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 0, null);
             Animation.bombs_Appear(this.logo, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 1, null);
@@ -1778,7 +2024,6 @@
             let time1 = 250;
             let time2 = 80;
             let delayed = 200;
-            PalyAudio.aAingleCard(3);
             Animation.fade_out(this.background, 0, 0.8, 200, 0, null);
             Animation.bombs_Appear(this.hintBox, 0, 1, scale - 0.2, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 0, null);
             Animation.bombs_Appear(this.btn_not, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 1, null);
@@ -1875,216 +2120,6 @@
         onDisable() {
         }
     }
-
-    var WXDataManager;
-    (function (WXDataManager) {
-        WXDataManager._thislevels = 0;
-        WXDataManager._thisPropNum = 0;
-        WXDataManager.wx = Laya.Browser.window.wx;
-        function WXcheckSession() {
-            if (Laya.Browser.onMiniGame) {
-                WXDataManager.wx.checkSession({
-                    success() {
-                        console.log('已经登录过了！');
-                    },
-                    fail() {
-                        authorizedWXLogin();
-                        console.log('重新登录');
-                    }
-                });
-            }
-        }
-        WXDataManager.WXcheckSession = WXcheckSession;
-        function authorizedWXLogin() {
-            if (Laya.Browser.onMiniGame) {
-                WXDataManager.wx.login({
-                    success: function (res) {
-                        if (res.code) {
-                            console.log("登录成功，获取到code", res.code);
-                        }
-                        var button = WXDataManager.wx.createUserInfoButton({
-                            type: 'text',
-                            text: '开始游戏',
-                            style: {
-                                left: WXDataManager.wx.getSystemInfoSync().screenWidth / 2 - 60,
-                                bottom: WXDataManager.wx.getSystemInfoSync().screenHeight / 2 - 60,
-                                width: 120,
-                                height: 40,
-                                lineHeight: 40,
-                                backgroundColor: '#fb94a9',
-                                color: '#ffffff',
-                                textAlign: 'center',
-                                fontSize: 16,
-                                borderRadius: 20
-                            }
-                        });
-                        button.show();
-                        button.onTap((res) => {
-                            console.log(res);
-                            if (res.errMsg === "getUserInfo:ok") {
-                                console.log("已经授权");
-                                button.destroy();
-                                getUserinfo(null);
-                            }
-                            else {
-                                console.log("没有授权");
-                            }
-                        });
-                    }
-                });
-            }
-        }
-        WXDataManager.authorizedWXLogin = authorizedWXLogin;
-        function normalWXLogin() {
-            if (Laya.Browser.onMiniGame) {
-                WXDataManager.wx.checkSession({
-                    success() {
-                        console.log('已经登录过了！');
-                        getUserinfo('haveLogin');
-                    },
-                    fail() {
-                        console.log('重新登录');
-                        WXDataManager.wx.login({
-                            success(res) {
-                                getUserinfo('loginAgain');
-                            },
-                            fail() {
-                                console.log('登录失败');
-                            }
-                        });
-                    }
-                });
-            }
-        }
-        WXDataManager.normalWXLogin = normalWXLogin;
-        function getUserinfo(type) {
-            if (Laya.Browser.onMiniGame) {
-                WXDataManager.wx.cloud.init({
-                    env: 'release-lwg'
-                });
-                WXDataManager.wx.cloud.callFunction({
-                    name: "login",
-                }).then(res => {
-                    console.log("登录成功回调：", res);
-                    WXDataManager.WXopenid = res.result.openid;
-                    console.log("WXopenid为：", WXDataManager.WXopenid);
-                    WXDataManager.user_id = WXDataManager.WXopenid;
-                    if (type === 'loginAgain') {
-                        try {
-                            add_Levels();
-                        }
-                        catch (error) {
-                            console.log(error);
-                        }
-                    }
-                    else if (type === 'haveLogin') {
-                        try {
-                            get_Levels();
-                        }
-                        catch (error) {
-                            console.log(error);
-                        }
-                    }
-                });
-            }
-        }
-        WXDataManager.getUserinfo = getUserinfo;
-        function add_Levels() {
-            if (Laya.Browser.onMiniGame) {
-                WXDataManager.wx.cloud.init({
-                    env: 'release-lwg'
-                });
-                let db = WXDataManager.wx.cloud.database();
-                let user_info = db.collection('user_info');
-                user_info.add({
-                    data: {
-                        _id: WXDataManager.user_id,
-                        _levels: WXDataManager._thislevels,
-                        due: new Date("2018-09-01"),
-                        location: new db.Geo.Point(113, 23),
-                        done: false
-                    },
-                }).then(res => {
-                    console.log('没有登录过重新上传：' + res);
-                });
-            }
-        }
-        WXDataManager.add_Levels = add_Levels;
-        function get_Levels() {
-            if (Laya.Browser.onMiniGame) {
-                WXDataManager.wx.cloud.init({
-                    env: 'release-lwg'
-                });
-                let db = WXDataManager.wx.cloud.database();
-                let user_info = db.collection('user_info');
-                user_info.doc(WXDataManager.user_id).get().then(res => {
-                    console.log(res.data);
-                    WXDataManager._lastlevels = res.data._levels;
-                    console.log('上次的关卡数为：' + WXDataManager._lastlevels);
-                    WXDataManager._thislevels = WXDataManager._lastlevels;
-                });
-            }
-        }
-        WXDataManager.get_Levels = get_Levels;
-        function update_Levels() {
-            if (Laya.Browser.onMiniGame) {
-                WXDataManager.wx.cloud.init({
-                    env: 'release-lwg'
-                });
-                let db = WXDataManager.wx.cloud.database();
-                let user_info = db.collection('user_info');
-                user_info.doc(WXDataManager.user_id).update({
-                    data: {
-                        _levels: WXDataManager._thislevels,
-                    },
-                }).then(res => {
-                    console.log(res);
-                });
-            }
-        }
-        WXDataManager.update_Levels = update_Levels;
-        function wxPostInit() {
-            if (Laya.Browser.onMiniGame) {
-                Laya.loader.load(["res/atlas/rank.atlas"], Laya.Handler.create(null, function () {
-                    Laya.MiniAdpter.sendAtlasToOpenDataContext("res/atlas/rank.atlas");
-                    let wx = Laya.Browser.window.wx;
-                    let openDataContext = wx.getOpenDataContext();
-                    openDataContext.postMessage({ action: 'init' });
-                }));
-            }
-        }
-        WXDataManager.wxPostInit = wxPostInit;
-        function wxPostData(score) {
-            if (Laya.Browser.onMiniGame) {
-                let args = {
-                    type: 'scores', data: { scores: score }
-                };
-                let wx = Laya.Browser.window.wx;
-                let openDataContext = wx.getOpenDataContext();
-                openDataContext.postMessage(args);
-                console.log('上传了');
-            }
-            else {
-                console.log('没有上传');
-            }
-        }
-        WXDataManager.wxPostData = wxPostData;
-        function wxShare() {
-            if (Laya.Browser.onMiniGame) {
-                let wx = Laya.Browser.window.wx;
-                wx.shareAppMessage({
-                    title: '你的手速够快吗？',
-                    imageUrlId: 'CRYATpcgSFGkeB4Hs75jOQ',
-                    imageUrl: 'https://mmocgame.qpic.cn/wechatgame/9zdKibmXJ3RsmFpXn6UAV4ScT8ulA4wzqUUNicKWDIaODZbuv38lkBBOBQv8XbxOI0/0'
-                });
-                console.log("主动进行了转发");
-            }
-            else {
-                console.log("仅支持微信客户端");
-            }
-        }
-        WXDataManager.wxShare = wxShare;
-    })(WXDataManager || (WXDataManager = {}));
 
     class StartGame extends Laya.Script {
         constructor() { super(); }
@@ -2230,7 +2265,7 @@
     GameConfig.startScene = "Scenes/MainScene.scene";
     GameConfig.sceneRoot = "";
     GameConfig.debug = false;
-    GameConfig.stat = true;
+    GameConfig.stat = false;
     GameConfig.physicsDebug = false;
     GameConfig.exportSceneToJson = true;
     GameConfig.init();

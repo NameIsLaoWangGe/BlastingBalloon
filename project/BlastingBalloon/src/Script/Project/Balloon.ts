@@ -3,6 +3,7 @@ import { Clicks } from "../Template/Clicks";
 import { Animation } from "../Template/Animation";
 import { SkTemplete } from "../Template/SkTemplete";
 import { Enum } from "../Template/Enum";
+import { PalyAudio } from "../Template/PlayAudio";
 
 export default class Balloon extends Laya.Script {
     /** @prop {name:img, tips:"气球的皮肤", type:Node}*/
@@ -71,6 +72,7 @@ export default class Balloon extends Laya.Script {
 
     /**
      * 点击错误
+     * 气球全部播放摇头动画，自己播放鄙视动画
      */
     clickError(): void {
         this.gameControl.createGameOver('defeated');
@@ -100,16 +102,16 @@ export default class Balloon extends Laya.Script {
         if (this.self.name === this.gameControl.clickOrderArr[0]) {
             // 特效表现
             this.gameControl.explodeAni(this.gameControl.BalloonVessel, this.self.x + (1 - Clicks.balloonScale) * this.self.pivotX / 2, this.self.y + (1 - Clicks.balloonScale) * this.self.pivotY / 2, this.self.name, 20, 10)
-            console.log('点击正确1');
+            PalyAudio.playSound(Enum.AudioName.balloonRight, 1);
             this.clickRight();
         } else {
             this.clickError();
-            console.log('点击错误！');
+            PalyAudio.playSound(Enum.AudioName.balloonError, 1);
         }
     }
 
     onDisable(): void {
-
+        this.skeleton.removeSelf();
     }
     onUpdate() {
 
