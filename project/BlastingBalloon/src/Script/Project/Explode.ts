@@ -45,7 +45,7 @@ export default class Explode extends Laya.Script {
     /**初始化设置*/
     initProperty(type): void {
         this.effectsType = type;
-        if (this.effectsType === Enum.ColorName[0] || this.effectsType === Enum.ColorName[1] || this.effectsType === Enum.ColorName[2] || this.effectsType === Enum.ColorName[3]) {
+        if (this.effectsType === Enum.BalloonName[0] || this.effectsType === Enum.BalloonName[1] || this.effectsType === Enum.BalloonName[2] || this.effectsType === Enum.BalloonName[3]) {
             this.explosionBalloon_P();
         } else if (type === 'vanish') {
             this.vanish_P();
@@ -69,19 +69,19 @@ export default class Explode extends Laya.Script {
         // 图片
         let number = Math.floor(Math.random() * 4);
         switch (this.effectsType) {
-            case Enum.ColorName[0]:
+            case Enum.BalloonName[0]:
                 this.img.skin = Enum.Explode_Yellowish[number];
                 break;
-            case Enum.ColorName[1]:
+            case Enum.BalloonName[1]:
                 this.img.skin = Enum.Explode_Pink[number];
                 break;
-            case Enum.ColorName[2]:
+            case Enum.BalloonName[2]:
                 this.img.skin = Enum.Explode_Yellow[number];
                 break;
-            case Enum.ColorName[3]:
+            case Enum.BalloonName[3]:
                 this.img.skin = Enum.Explode_Cyan[number];
                 break;
-            case Enum.ColorName[4]:
+            case Enum.BalloonName[4]:
                 this.img.skin = Enum.Explode_Purple[number];
                 break;
             default:
@@ -138,10 +138,9 @@ export default class Explode extends Laya.Script {
         }
     }
 
-
     /**移动规则*/
     move(): void {
-        if (this.effectsType === Enum.ColorName[0] || this.effectsType === Enum.ColorName[1] || this.effectsType === Enum.ColorName[2] || this.effectsType === Enum.ColorName[3]) {
+        if (this.effectsType === Enum.BalloonName[0] || this.effectsType === Enum.BalloonName[1] || this.effectsType === Enum.BalloonName[2] || this.effectsType === Enum.BalloonName[3]) {
             this.explosionBalloon_Move();
         } else if (this.effectsType === 'vanish') {
             this.vanish_Move();

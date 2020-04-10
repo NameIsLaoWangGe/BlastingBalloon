@@ -93,7 +93,7 @@ export default class StartGame extends Laya.Script {
     appaer(): void {
         let scale = 1.3;
         let time1 = 250;
-        let time2 = 60;
+        let time2 = 100;
         let delayed = 300;
 
         // logo

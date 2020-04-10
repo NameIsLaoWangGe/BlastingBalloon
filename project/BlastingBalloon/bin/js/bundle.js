@@ -237,7 +237,7 @@
         function simple_Move(node, firstX, firstY, targetX, targetY, time, delayed, func) {
             node.x = firstX;
             node.y = firstY;
-            Laya.Tween.to(node, { x: targetX, y: targetY }, time, Laya.Ease.cubicOut, Laya.Handler.create(this, function () {
+            Laya.Tween.to(node, { x: targetX, y: targetY }, time, null, Laya.Handler.create(this, function () {
                 if (func !== null) {
                     func();
                 }
@@ -520,14 +520,14 @@
             ColorSkin[ColorSkin["UI/balloon_\u9752\u8272.png"] = 3] = "UI/balloon_\u9752\u8272.png";
             ColorSkin[ColorSkin["UI/balloon_\u7D2B\u8272.png"] = 4] = "UI/balloon_\u7D2B\u8272.png";
         })(ColorSkin = Enum.ColorSkin || (Enum.ColorSkin = {}));
-        let ColorName;
-        (function (ColorName) {
-            ColorName[ColorName["yellowish"] = 0] = "yellowish";
-            ColorName[ColorName["pink"] = 1] = "pink";
-            ColorName[ColorName["yellow"] = 2] = "yellow";
-            ColorName[ColorName["cyan"] = 3] = "cyan";
-            ColorName[ColorName["purple"] = 4] = "purple";
-        })(ColorName = Enum.ColorName || (Enum.ColorName = {}));
+        let BalloonName;
+        (function (BalloonName) {
+            BalloonName[BalloonName["yellowish"] = 0] = "yellowish";
+            BalloonName[BalloonName["pink"] = 1] = "pink";
+            BalloonName[BalloonName["yellow"] = 2] = "yellow";
+            BalloonName[BalloonName["cyan"] = 3] = "cyan";
+            BalloonName[BalloonName["purple"] = 4] = "purple";
+        })(BalloonName = Enum.BalloonName || (Enum.BalloonName = {}));
         let IconSkin_01;
         (function (IconSkin_01) {
             IconSkin_01[IconSkin_01["UI/icon_\u6DE1\u9EC4.png"] = 0] = "UI/icon_\u6DE1\u9EC4.png";
@@ -579,6 +579,17 @@
             Explode_Purple[Explode_Purple["\u7279\u6548/effect_\u7D2B\u82723.png"] = 2] = "\u7279\u6548/effect_\u7D2B\u82723.png";
             Explode_Purple[Explode_Purple["\u7279\u6548/effect_\u7D2B\u82724.png"] = 3] = "\u7279\u6548/effect_\u7D2B\u82724.png";
         })(Explode_Purple = Enum.Explode_Purple || (Enum.Explode_Purple = {}));
+        let Sk_Ballon_Type;
+        (function (Sk_Ballon_Type) {
+            Sk_Ballon_Type["death"] = "death";
+            Sk_Ballon_Type["error"] = "error";
+            Sk_Ballon_Type["disdain"] = "disdain";
+            Sk_Ballon_Type["static"] = "static";
+            Sk_Ballon_Type["scale"] = "scale";
+        })(Sk_Ballon_Type = Enum.Sk_Ballon_Type || (Enum.Sk_Ballon_Type = {}));
+        let AudioName;
+        (function (AudioName) {
+        })(AudioName = Enum.AudioName || (Enum.AudioName = {}));
     })(Enum || (Enum = {}));
 
     var Advertising;
@@ -652,6 +663,19 @@
         SkTemplete.parseComplete_Balloon = parseComplete_Balloon;
     })(SkTemplete || (SkTemplete = {}));
 
+    var Data;
+    (function (Data) {
+        function dataLoading_Levels() {
+            Laya.loader.load("Data/levelsData.json", Laya.Handler.create(this, this.onLoaded), null, Laya.Loader.JSON);
+        }
+        Data.dataLoading_Levels = dataLoading_Levels;
+        function onLoaded() {
+            Data.levelsData = Laya.loader.getRes("Data/levelsData.json")["RECORDS"];
+            console.log(Data.levelsData);
+        }
+        Data.onLoaded = onLoaded;
+    })(Data || (Data = {}));
+
     class GameControl extends Laya.Script {
         constructor() {
             super();
@@ -665,6 +689,7 @@
             Advertising.videoAd_01_Lode(f => this.watchAdsFunc('yes'), f => this.watchAdsFunc('no'));
             Advertising.bannerAd_01_Lode();
             SkTemplete.createBaoolonTemplet();
+            Data.dataLoading_Levels();
         }
         watchAdsFunc(type) {
             if (type === 'yes') {
@@ -701,18 +726,36 @@
         noStart() {
             this.Tip.alpha = 0;
             this.BalloonVessel.alpha = 0;
+            this.Levels.value = '1';
         }
         readyStart(type) {
-            this.time.value = 1;
-            this.row = 4;
-            this.line = 5;
-            this.spacing = 5;
-            this.colorCategory = 3;
             if (type === 'nextLevel') {
                 this.Levels.value = (Number(this.Levels.value) + 1).toString();
             }
             else if (type === 'startGame') {
                 this.openingAnimation();
+            }
+            this.time.value = 1;
+            let level = Number(this.Levels.value);
+            console.log(level);
+            this.row = Data.levelsData[level - 1].row;
+            this.line = Data.levelsData[level - 1].line;
+            this.colorCategory = Data.levelsData[level - 1].colorCategory;
+            this.beetleSpeed = Data.levelsData[level - 1].beetleSpeed;
+            this.timeVelocity = Data.levelsData[level - 1].timeVelocity;
+            let sub = this.line - this.row;
+            switch (sub) {
+                case 0:
+                    this.spacing = 5;
+                    break;
+                case 1:
+                    this.spacing = 10;
+                    break;
+                case 2:
+                    this.spacing = 25;
+                    break;
+                default:
+                    break;
             }
             this.levelsNodeAdaptive();
         }
@@ -799,6 +842,7 @@
                     Animation.bombs_Appear(balloon, 0, scale, scale + 0.1, 0, 200, 100, delayed, f => {
                         this.explodeAni(this.BalloonVessel, balloon.x + (1 - scale) * balloon.pivotX / 2, balloon.y + (1 - scale) * balloon.pivotY / 2, 'vanish', 10, 10);
                         if (i === this.row - 1 && j === this.line - 1) {
+                            console.log('开始');
                             this.createBeetle();
                             this.TaskBalloonParentSet();
                             this.taskTipShake(0);
@@ -814,6 +858,7 @@
             this.pligAni(delayed);
             Animation.bombs_Vanish(this.LevelsNode, 0, 0, 0, 100, delayed, f => {
                 this.readyStart('nextLevel');
+                this.clearAllBallon('restartAndNextLevel');
                 Animation.bombs_Appear(this.LevelsNode, 0, 1, 1.1, 0, time1, time2, delayed, f => {
                 });
             });
@@ -822,7 +867,6 @@
                 Animation.bombs_Appear(this.TimeNode, 0, 1, 1.1, 0, time1, time2, delayed, f => {
                 });
             });
-            this.clearAllBallon('restartAndNextLevel');
         }
         againCurrentlevel() {
             let time1 = 200;
@@ -856,7 +900,7 @@
                     }
                     this.explodeAni(this.BalloonVessel, element.x + (1 - Clicks.balloonScale) * element.pivotX / 2, element.y + (1 - Clicks.balloonScale) * element.pivotY / 2, 'vanish', 10, 10);
                 });
-                delayed += 80;
+                delayed += 60;
             }
         }
         clearAllTaskBallon(type) {
@@ -883,11 +927,12 @@
             this.BalloonParent.addChild(balloon);
             balloon.pos(x, y);
             let random = Math.floor(Math.random() * this.colorCategory);
-            balloon.name = Enum.ColorName[random];
+            balloon.name = Enum.BalloonName[random];
             balloon['Balloon'].skeletoninit();
             return balloon;
         }
         TaskBalloonParentSet() {
+            console.log('开始创建任务气球提示');
             let arr1 = [];
             for (let i = 0; i < this.BalloonParent._children.length; i++) {
                 const balloon = this.BalloonParent._children[i];
@@ -906,13 +951,14 @@
                 let y = heightP / 2;
                 let colorSkin;
                 if (j === 0) {
-                    colorSkin = Enum.IconSkin_02[Enum.ColorName[name]];
+                    colorSkin = Enum.IconSkin_02[Enum.BalloonName[name]];
                 }
                 else {
-                    colorSkin = Enum.IconSkin_01[Enum.ColorName[name]];
+                    colorSkin = Enum.IconSkin_01[Enum.BalloonName[name]];
                 }
                 let ballon_Icon = this.createBallon_Icon(x, y, colorSkin, name);
                 Animation.bombs_Appear(ballon_Icon, 0, 1, 1.1, 0, 200, 200, delayed, f => {
+                    console.log('j');
                     if (j === len - 1) {
                         this.balloonCount();
                         this.balloonClickOrder();
@@ -932,11 +978,11 @@
                 if (name === this.clickOrderArr[0]) {
                     Animation.swell_shrink(taskBallon, 1.1, 1.3, 50, 0, f => {
                     });
-                    img.skin = Enum.IconSkin_02[Enum.ColorName[name]];
+                    img.skin = Enum.IconSkin_02[Enum.BalloonName[name]];
                 }
                 else {
                     taskBallon.scale(1, 1);
-                    img.skin = Enum.IconSkin_01[Enum.ColorName[name]];
+                    img.skin = Enum.IconSkin_01[Enum.BalloonName[name]];
                 }
             }
         }
@@ -994,7 +1040,7 @@
                 beetle['Beetle'].clicksOffBtn();
                 if (type === 'defeated') {
                     beetle['Beetle'].playSkeletonAni(1, 'move');
-                    Animation.simple_Move(beetle, beetle.x, beetle.y, beetle.x, -300, 1500, 0, f => {
+                    Animation.simple_Move(beetle, beetle.x, beetle.y, beetle.x, beetle.y - 1400, 2000, 0, f => {
                         beetle.removeSelf();
                         this.self.addChild(gameOver);
                         gameOver['GameOver'].gameOverType(type);
@@ -1037,7 +1083,7 @@
         onUpdate() {
             if (this.timeSwicth) {
                 if (this.time.value > 0) {
-                    this.time.value -= 0.001;
+                    this.time.value -= this.timeVelocity;
                 }
                 else if (this.time.value <= 0) {
                     this.createGameOver('defeated');
@@ -1061,7 +1107,7 @@
         skeletoninit() {
             this.skeleton = SkTemplete.baoolonTemplet.buildArmature(0);
             this.skeleton.pos(150, 160);
-            this.skeleton.play('scale' + '_' + this.self.name, true);
+            this.skeleton.play(Enum.Sk_Ballon_Type.scale + '_' + this.self.name, true);
             this.self.addChild(this.skeleton);
         }
         playSkeletonAni(type, loop, speed) {
@@ -1080,9 +1126,14 @@
             }
         }
         clickError() {
+            this.gameControl.createGameOver('defeated');
             Animation.leftRight_Shake(this.self, 20, 20, 50, f => {
-                this.gameControl.createGameOver('defeated');
-                this.playSkeletonAni('disdain', true, 1);
+                let parentArr = this.self.parent._children;
+                for (let index = 0; index < parentArr.length; index++) {
+                    const element = parentArr[index];
+                    element['Balloon'].skeleton.play(Enum.Sk_Ballon_Type.error + '_' + element.name, true);
+                }
+                this.playSkeletonAni(Enum.Sk_Ballon_Type.disdain, true, 1);
             });
         }
         balloonClicksOn() {
@@ -1137,7 +1188,7 @@
             this.skeleton = this.self.getChildByName('skeleton');
             this.createBoneAni();
             this.birthLocation();
-            this.speed = 10;
+            this.speed = this.gameControl.beetleSpeed;
             this.clicksOnBtn();
         }
         birthLocation() {
@@ -1195,7 +1246,7 @@
             this.self.y += point.y * this.speed;
             let differenceX = Math.abs(this.self.x - this.moveX);
             let differenceY = Math.abs(this.self.y - this.moveY);
-            if (differenceX < 10 && differenceY < 10) {
+            if (differenceX < 30 && differenceY < 30) {
                 this.playSkeletonAni(1, 'stand');
                 this.moveSwitch = false;
                 this.remainTime = 0;
@@ -1437,7 +1488,7 @@
         }
         initProperty(type) {
             this.effectsType = type;
-            if (this.effectsType === Enum.ColorName[0] || this.effectsType === Enum.ColorName[1] || this.effectsType === Enum.ColorName[2] || this.effectsType === Enum.ColorName[3]) {
+            if (this.effectsType === Enum.BalloonName[0] || this.effectsType === Enum.BalloonName[1] || this.effectsType === Enum.BalloonName[2] || this.effectsType === Enum.BalloonName[3]) {
                 this.explosionBalloon_P();
             }
             else if (type === 'vanish') {
@@ -1459,19 +1510,19 @@
             this.rotationD = Math.floor(Math.random() * 2) === 1 ? -10 : 10;
             let number = Math.floor(Math.random() * 4);
             switch (this.effectsType) {
-                case Enum.ColorName[0]:
+                case Enum.BalloonName[0]:
                     this.img.skin = Enum.Explode_Yellowish[number];
                     break;
-                case Enum.ColorName[1]:
+                case Enum.BalloonName[1]:
                     this.img.skin = Enum.Explode_Pink[number];
                     break;
-                case Enum.ColorName[2]:
+                case Enum.BalloonName[2]:
                     this.img.skin = Enum.Explode_Yellow[number];
                     break;
-                case Enum.ColorName[3]:
+                case Enum.BalloonName[3]:
                     this.img.skin = Enum.Explode_Cyan[number];
                     break;
-                case Enum.ColorName[4]:
+                case Enum.BalloonName[4]:
                     this.img.skin = Enum.Explode_Purple[number];
                     break;
                 default:
@@ -1520,7 +1571,7 @@
             }
         }
         move() {
-            if (this.effectsType === Enum.ColorName[0] || this.effectsType === Enum.ColorName[1] || this.effectsType === Enum.ColorName[2] || this.effectsType === Enum.ColorName[3]) {
+            if (this.effectsType === Enum.BalloonName[0] || this.effectsType === Enum.BalloonName[1] || this.effectsType === Enum.BalloonName[2] || this.effectsType === Enum.BalloonName[3]) {
                 this.explosionBalloon_Move();
             }
             else if (this.effectsType === 'vanish') {
@@ -1650,10 +1701,10 @@
             let time = 250;
             let delayed = 100;
             Animation.fade_out(this.background, 0.8, 0, time, delayed * 4, null);
-            Animation.bombs_Vanish(this.scoreNode, 0, 0, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time, delayed * 0, null);
-            Animation.bombs_Vanish(this.logo, 0, 0, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time, delayed * 1, null);
-            Animation.bombs_Vanish(this.btn_again, 0, 0, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time, delayed * 2, null);
-            Animation.bombs_Vanish(this.btn_return, 0, 0, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time, delayed * 3, f => {
+            Animation.bombs_Vanish(this.scoreNode, 0, 0, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time, delayed * 1, null);
+            Animation.bombs_Vanish(this.logo, 0, 0, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time, delayed * 2, null);
+            Animation.bombs_Vanish(this.btn_again, 0, 0, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time, delayed * 3, null);
+            Animation.bombs_Vanish(this.btn_return, 0, 0, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time, delayed * 4, f => {
                 this.vanishFunc(type);
             });
         }
@@ -2068,7 +2119,7 @@
         appaer() {
             let scale = 1.3;
             let time1 = 250;
-            let time2 = 60;
+            let time2 = 100;
             let delayed = 300;
             for (let index = 0; index < this.logo._children.length; index++) {
                 const element = this.logo._children[index];

@@ -42,7 +42,7 @@ export default class Beetle extends Laya.Script {
         this.skeleton = this.self.getChildByName('skeleton') as Laya.Skeleton;
         this.createBoneAni();
         this.birthLocation();
-        this.speed = 10;
+        this.speed = this.gameControl.beetleSpeed;
         this.clicksOnBtn();
     }
 
@@ -132,7 +132,7 @@ export default class Beetle extends Laya.Script {
 
         let differenceX = Math.abs(this.self.x - this.moveX);
         let differenceY = Math.abs(this.self.y - this.moveY);
-        if (differenceX < 10 && differenceY < 10) {
+        if (differenceX < 30 && differenceY < 30) {
             this.playSkeletonAni(1, 'stand');
             this.moveSwitch = false;
             this.remainTime = 0;

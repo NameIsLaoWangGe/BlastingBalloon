@@ -1,0 +1,4 @@
+{
+  "code": "export var Data;\r\n(function (Data) {\r\n    function dataLoading_Levels() {\r\n        Laya.loader.load(\"Data/levelsData.json\", Laya.Handler.create(this, this.onLoaded), null, Laya.Loader.JSON);\r\n    }\r\n    Data.dataLoading_Levels = dataLoading_Levels;\r\n    function onLoaded() {\r\n        Data.levelsData = Laya.loader.getRes(\"Data/levelsData.json\")[\"RECORDS\"];\r\n        console.log(Data.levelsData);\r\n    }\r\n    Data.onLoaded = onLoaded;\r\n})(Data || (Data = {}));\r\nexport default Data;\r\n",
+  "references": []
+}

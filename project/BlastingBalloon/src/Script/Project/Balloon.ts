@@ -2,6 +2,7 @@ import GameControl from "./GameControl";
 import { Clicks } from "../Template/Clicks";
 import { Animation } from "../Template/Animation";
 import { SkTemplete } from "../Template/SkTemplete";
+import { Enum } from "../Template/Enum";
 
 export default class Balloon extends Laya.Script {
     /** @prop {name:img, tips:"气球的皮肤", type:Node}*/
@@ -37,7 +38,7 @@ export default class Balloon extends Laya.Script {
     skeletoninit() {
         this.skeleton = SkTemplete.baoolonTemplet.buildArmature(0);
         this.skeleton.pos(150, 160);
-        this.skeleton.play('scale' + '_' + this.self.name, true);
+        this.skeleton.play(Enum.Sk_Ballon_Type.scale + '_' + this.self.name, true);
         this.self.addChild(this.skeleton);
     }
 
@@ -72,9 +73,14 @@ export default class Balloon extends Laya.Script {
      * 点击错误
      */
     clickError(): void {
+        this.gameControl.createGameOver('defeated');
         Animation.leftRight_Shake(this.self, 20, 20, 50, f => {
-            this.gameControl.createGameOver('defeated');
-            this.playSkeletonAni('disdain', true, 1);//自己鄙视动画
+            let parentArr = this.self.parent._children;
+            for (let index = 0; index < parentArr.length; index++) {
+                const element = parentArr[index];
+                element['Balloon'].skeleton.play(Enum.Sk_Ballon_Type.error + '_' + element.name, true);
+            }
+            this.playSkeletonAni(Enum.Sk_Ballon_Type.disdain, true, 1);//自己鄙视动画
         })
     }
 

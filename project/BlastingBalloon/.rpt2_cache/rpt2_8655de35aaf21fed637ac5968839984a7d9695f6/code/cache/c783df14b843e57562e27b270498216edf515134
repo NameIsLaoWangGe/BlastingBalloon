@@ -1,0 +1,18 @@
+{
+  "code": "import Background from \"./Script/Project/Background\";\r\nimport LevelsNode from \"./Script/Project/LevelsNode\";\r\nimport Props from \"./Script/Project/Props\";\r\nimport GameControl from \"./Script/Project/GameControl\";\r\nimport Balloon from \"./Script/Project/Balloon\";\r\nimport Balloon_Icon from \"./Script/Project/Balloon_Icon\";\r\nimport Beetle from \"./Script/Project/Beetle\";\r\nimport Bullet from \"./Script/Project/Bullet\";\r\nimport Explode from \"./Script/Project/Explode\";\r\nimport GameOver from \"./Script/Project/GameOver\";\r\nimport Hint from \"./Script/Project/Hint\";\r\nimport Ranking from \"./Script/Project/Ranking\";\r\nimport StartGame from \"./Script/Project/StartGame\";\r\nexport default class GameConfig {\r\n    constructor() { }\r\n    static init() {\r\n        var reg = Laya.ClassUtils.regClass;\r\n        reg(\"Script/Project/Background.ts\", Background);\r\n        reg(\"Script/Project/LevelsNode.ts\", LevelsNode);\r\n        reg(\"Script/Project/Props.ts\", Props);\r\n        reg(\"Script/Project/GameControl.ts\", GameControl);\r\n        reg(\"Script/Project/Balloon.ts\", Balloon);\r\n        reg(\"Script/Project/Balloon_Icon.ts\", Balloon_Icon);\r\n        reg(\"Script/Project/Beetle.ts\", Beetle);\r\n        reg(\"Script/Project/Bullet.ts\", Bullet);\r\n        reg(\"Script/Project/Explode.ts\", Explode);\r\n        reg(\"Script/Project/GameOver.ts\", GameOver);\r\n        reg(\"Script/Project/Hint.ts\", Hint);\r\n        reg(\"Script/Project/Ranking.ts\", Ranking);\r\n        reg(\"Script/Project/StartGame.ts\", StartGame);\r\n    }\r\n}\r\nGameConfig.width = 750;\r\nGameConfig.height = 1334;\r\nGameConfig.scaleMode = \"fixedwidth\";\r\nGameConfig.screenMode = \"none\";\r\nGameConfig.alignV = \"top\";\r\nGameConfig.alignH = \"left\";\r\nGameConfig.startScene = \"Scenes/MainScene.scene\";\r\nGameConfig.sceneRoot = \"\";\r\nGameConfig.debug = false;\r\nGameConfig.stat = true;\r\nGameConfig.physicsDebug = false;\r\nGameConfig.exportSceneToJson = true;\r\nGameConfig.init();\r\n",
+  "references": [
+    "F:/Work/Game/03_BlastingBalloon/project/BlastingBalloon/src/Script/Project/Background.ts",
+    "F:/Work/Game/03_BlastingBalloon/project/BlastingBalloon/src/Script/Project/LevelsNode.ts",
+    "F:/Work/Game/03_BlastingBalloon/project/BlastingBalloon/src/Script/Project/Props.ts",
+    "F:/Work/Game/03_BlastingBalloon/project/BlastingBalloon/src/Script/Project/GameControl.ts",
+    "F:/Work/Game/03_BlastingBalloon/project/BlastingBalloon/src/Script/Project/Balloon.ts",
+    "F:/Work/Game/03_BlastingBalloon/project/BlastingBalloon/src/Script/Project/Balloon_Icon.ts",
+    "F:/Work/Game/03_BlastingBalloon/project/BlastingBalloon/src/Script/Project/Beetle.ts",
+    "F:/Work/Game/03_BlastingBalloon/project/BlastingBalloon/src/Script/Project/Bullet.ts",
+    "F:/Work/Game/03_BlastingBalloon/project/BlastingBalloon/src/Script/Project/Explode.ts",
+    "F:/Work/Game/03_BlastingBalloon/project/BlastingBalloon/src/Script/Project/GameOver.ts",
+    "F:/Work/Game/03_BlastingBalloon/project/BlastingBalloon/src/Script/Project/Hint.ts",
+    "F:/Work/Game/03_BlastingBalloon/project/BlastingBalloon/src/Script/Project/Ranking.ts",
+    "F:/Work/Game/03_BlastingBalloon/project/BlastingBalloon/src/Script/Project/StartGame.ts"
+  ]
+}

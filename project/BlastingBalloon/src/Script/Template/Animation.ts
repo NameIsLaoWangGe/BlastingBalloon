@@ -415,7 +415,7 @@ export module Animation {
     export function simple_Move(node, firstX, firstY, targetX, targetY, time, delayed, func): void {
         node.x = firstX;
         node.y = firstY;
-        Laya.Tween.to(node, { x: targetX, y: targetY }, time, Laya.Ease.cubicOut, Laya.Handler.create(this, function () {
+        Laya.Tween.to(node, { x: targetX, y: targetY }, time, null, Laya.Handler.create(this, function () {
             if (func !== null) {
                 func()
             }

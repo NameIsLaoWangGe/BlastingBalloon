@@ -41,8 +41,8 @@ P 01BAE7F5 vslider.png
 D Skeleton
 R A76BD817 balloon.png
 R 8E8527AB balloon.sk
-R C69E7A5E beetle_01.png
-R 0531EF8A beetle_01.sk
+R E69E2D62 beetle_01.png
+R 65F25644 beetle_01.sk
 R 53232328 logoBallon.png
 R 3F9617D1 logoBallon.sk
 R BA1F5F9B trumpet.png
@@ -92,7 +92,7 @@ P 51E0AB12 游戏内关卡数数字.png
 R 1D5BA304 游戏结束关卡字.png
 P 2846EE25 游戏结束第几关字.png
 P F707F2F3 灯光闪烁.png
-R AACF2751 背景图.png
+R 3E70A35F 背景图.png
 P 8F7CA724 观看一次广告可以获得一个 “小喇叭”道具，“小喇叭”道 具可以驱赶虫子,是否立即观看_.png
 P 555B278D 观看按钮.png
 P C4DC6A0C 返回按钮.png

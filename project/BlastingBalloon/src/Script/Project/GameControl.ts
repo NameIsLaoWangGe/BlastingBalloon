@@ -5,6 +5,7 @@ import { Animation } from "../Template/Animation";
 import { Advertising } from "../Template/Advertising";
 import Balloon from "./Balloon";
 import { SkTemplete } from "../Template/SkTemplete";
+import { Data } from "../Template/Data";
 
 
 export default class GameControl extends Laya.Script {
@@ -94,6 +95,14 @@ export default class GameControl extends Laya.Script {
      * 当前关卡的气球颜色种类数量,根据关卡手动操作
      */
     private colorCategory: number
+    /**
+     * 当前关卡小甲虫的移动速度
+     * */
+    private beetleSpeed: number;
+    /**
+     * 时间减少的速度
+     * */
+    private timeVelocity: number;
 
     /**
      * 气球点击顺序集合
@@ -117,6 +126,9 @@ export default class GameControl extends Laya.Script {
         this.createStartGame();
         this.adaptive();
 
+        // // 关闭多点触控
+        // Laya.MouseManager.multiTouchEnabled = false;
+
         // 加载01视频广告
         Advertising.videoAd_01_Lode(f => this.watchAdsFunc('yes'), f => this.watchAdsFunc('no'));
         // 加载01bannar广告
@@ -124,6 +136,8 @@ export default class GameControl extends Laya.Script {
 
         // 骨骼动画加载
         SkTemplete.createBaoolonTemplet();
+        // 加载数据表
+        Data.dataLoading_Levels();
     }
 
     /**
@@ -179,6 +193,7 @@ export default class GameControl extends Laya.Script {
     noStart(): void {
         this.Tip.alpha = 0;
         this.BalloonVessel.alpha = 0;
+        this.Levels.value = '1';
     }
 
     /**
@@ -187,12 +202,6 @@ export default class GameControl extends Laya.Script {
      * @param type 一类型是从开始界面进入游戏，一种是下一关
      */
     readyStart(type): void {
-        // 其他参数设置
-        this.time.value = 1;
-        this.row = 4;
-        this.line = 5;
-        this.spacing = 5;
-        this.colorCategory = 3;
         if (type === 'nextLevel') {
             this.Levels.value = (Number(this.Levels.value) + 1).toString();
         } else if (type === 'startGame') {
@@ -202,6 +211,30 @@ export default class GameControl extends Laya.Script {
             // this.Levels.value = WXDataManager._lastPropNum;
             this.openingAnimation();
         }
+        // 其他参数设置
+        this.time.value = 1;
+        let level = Number(this.Levels.value);
+        console.log(level);
+        // 通过关卡从数据表中取其他数据
+        this.row = Data.levelsData[level - 1].row;
+        this.line = Data.levelsData[level - 1].line;
+        this.colorCategory = Data.levelsData[level - 1].colorCategory;
+        this.beetleSpeed = Data.levelsData[level - 1].beetleSpeed;
+        this.timeVelocity = Data.levelsData[level - 1].timeVelocity;
+
+        // 计算间距
+        let sub = this.line - this.row;
+        switch (sub) {
+            case 0:
+                this.spacing = 5;
+                break;
+            case 1:
+                this.spacing = 10;
+                break;
+            default:
+                break;
+        }
+
         this.levelsNodeAdaptive();
     }
 
@@ -327,6 +360,7 @@ export default class GameControl extends Laya.Script {
                 Animation.bombs_Appear(balloon, 0, scale, scale + 0.1, 0, 200, 100, delayed, f => {
                     this.explodeAni(this.BalloonVessel, balloon.x + (1 - scale) * balloon.pivotX / 2, balloon.y + (1 - scale) * balloon.pivotY / 2, 'vanish', 10, 10)
                     if (i === this.row - 1 && j === this.line - 1) {
+                        console.log('开始')
                         this.createBeetle();
                         this.TaskBalloonParentSet();
                         this.taskTipShake(0);
@@ -347,6 +381,7 @@ export default class GameControl extends Laya.Script {
 
         Animation.bombs_Vanish(this.LevelsNode, 0, 0, 0, 100, delayed, f => {
             this.readyStart('nextLevel');
+            this.clearAllBallon('restartAndNextLevel');
             Animation.bombs_Appear(this.LevelsNode, 0, 1, 1.1, 0, time1, time2, delayed, f => {
             });
         })
@@ -356,7 +391,7 @@ export default class GameControl extends Laya.Script {
             Animation.bombs_Appear(this.TimeNode, 0, 1, 1.1, 0, time1, time2, delayed, f => {
             });
         })
-        this.clearAllBallon('restartAndNextLevel');
+
     }
 
     /**重玩当前关卡*/
@@ -400,7 +435,7 @@ export default class GameControl extends Laya.Script {
                 }
                 this.explodeAni(this.BalloonVessel, element.x + (1 - Clicks.balloonScale) * element.pivotX / 2, element.y + (1 - Clicks.balloonScale) * element.pivotY / 2, 'vanish', 10, 10)
             })
-            delayed += 80;
+            delayed += 60;
         }
     }
 
@@ -439,7 +474,7 @@ export default class GameControl extends Laya.Script {
 
         // 根据关卡数随机给与颜色和名字
         let random = Math.floor(Math.random() * this.colorCategory);
-        balloon.name = Enum.ColorName[random];
+        balloon.name = Enum.BalloonName[random];
         balloon['Balloon'].skeletoninit();
 
         return balloon;
@@ -449,6 +484,7 @@ export default class GameControl extends Laya.Script {
      * 任务位置的气球提示
      */
     TaskBalloonParentSet(): void {
+        console.log('开始创建任务气球提示')
         // 气球的名称集合
         let arr1 = [];
         for (let i = 0; i < this.BalloonParent._children.length; i++) {
@@ -474,12 +510,13 @@ export default class GameControl extends Laya.Script {
             // 第一个直接改变成提示样式的skin
             let colorSkin;
             if (j === 0) {
-                colorSkin = Enum.IconSkin_02[Enum.ColorName[name]];
+                colorSkin = Enum.IconSkin_02[Enum.BalloonName[name]];
             } else {
-                colorSkin = Enum.IconSkin_01[Enum.ColorName[name]];
+                colorSkin = Enum.IconSkin_01[Enum.BalloonName[name]];
             }
             let ballon_Icon = this.createBallon_Icon(x, y, colorSkin, name);
             Animation.bombs_Appear(ballon_Icon, 0, 1, 1.1, 0, 200, 200, delayed, f => {
+                console.log('j')
                 if (j === len - 1) {
                     this.balloonCount();
                     this.balloonClickOrder();
@@ -508,10 +545,10 @@ export default class GameControl extends Laya.Script {
             if (name === this.clickOrderArr[0]) {
                 Animation.swell_shrink(taskBallon, 1.1, 1.3, 50, 0, f => {
                 });
-                img.skin = Enum.IconSkin_02[Enum.ColorName[name]];//当前点击的用另一个图片
+                img.skin = Enum.IconSkin_02[Enum.BalloonName[name]];//当前点击的用另一个图片
             } else {
                 taskBallon.scale(1, 1);
-                img.skin = Enum.IconSkin_01[Enum.ColorName[name]];
+                img.skin = Enum.IconSkin_01[Enum.BalloonName[name]];
             }
         }
     }
@@ -596,7 +633,7 @@ export default class GameControl extends Laya.Script {
             beetle['Beetle'].clicksOffBtn()//点击事件关闭
             if (type === 'defeated') {
                 beetle['Beetle'].playSkeletonAni(1, 'move');
-                Animation.simple_Move(beetle, beetle.x, beetle.y, beetle.x, -300, 1500, 0, f => {
+                Animation.simple_Move(beetle, beetle.x, beetle.y, beetle.x, beetle.y - 1400, 2000, 0, f => {
                     beetle.removeSelf();
                     this.self.addChild(gameOver);
                     gameOver['GameOver'].gameOverType(type);
@@ -666,7 +703,7 @@ export default class GameControl extends Laya.Script {
     onUpdate(): void {
         if (this.timeSwicth) {
             if (this.time.value > 0) {
-                this.time.value -= 0.001;
+                this.time.value -= this.timeVelocity;
             } else if (this.time.value <= 0) {
                 this.createGameOver('defeated');
                 this.timeSwicth = false;
