@@ -8,7 +8,6 @@ import { SkTemplete } from "../Template/SkTemplete";
 import { Data } from "../Template/Data";
 import { PalyAudio } from "../Template/PlayAudio";
 
-
 export default class GameControl extends Laya.Script {
 
     /** @prop {name:Background, tips:"背景图", type:Node}*/
@@ -116,6 +115,13 @@ export default class GameControl extends Laya.Script {
     /**开始游戏界面的复赋值*/
     private startNode
 
+    /**游戏结束界面的复赋值*/
+    private gameOverNode
+
+    /**排行榜界面赋值*/
+    private rankingNode
+
+
     constructor() {
         super();
     }
@@ -130,10 +136,10 @@ export default class GameControl extends Laya.Script {
         //发送微信排行榜接受信息
         WXDataManager.wxPostInit();
 
-        // // 加载01视频广告
-        // Advertising.videoAd_01_Lode(f => this.watchAdsFunc('yes'), f => this.watchAdsFunc('no'));
-        // // 加载01bannar广告
-        // Advertising.bannerAd_01_Lode();
+        // 加载01视频广告
+        Advertising.videoAd_01_Lode(f => this.watchAdsFunc('yes'), f => this.watchAdsFunc('no'));
+        // 加载01bannar广告
+        Advertising.bannerAd_01_Lode();
 
         // 骨骼动画加载
         SkTemplete.createBaoolonTemplet();
@@ -142,8 +148,11 @@ export default class GameControl extends Laya.Script {
         // 微信登陆
         WXDataManager.normalWXLogin();
 
-        // 播放背景音乐
-        PalyAudio.playMusic(Enum.AudioName.bgm, 0, 1000);
+    }
+
+    /**新手引导创建的气球*/
+    guideBalloonCollection(): void {
+
     }
 
     /**
@@ -256,6 +265,7 @@ export default class GameControl extends Laya.Script {
     createStartGame(): void {
         let startGame = Laya.Pool.getItemByCreateFun('startGame', this.startGame.create, this.startGame) as Laya.Sprite;
         this.self.addChild(startGame);
+        this.startNode = startGame;
     }
 
     /**开始游戏时的开场动画*/
@@ -277,6 +287,8 @@ export default class GameControl extends Laya.Script {
         let parentBoard = this.BalloonVessel.getChildByName('parentBoard') as Laya.Image;
         Animation.bombs_Appear(parentBoard, 0, 1, scale1, 0, time1, time2, delayed * 1, 'common', f => {
             this.createBalloonCollection();
+            // 播放背景音乐
+            PalyAudio.playMusic(Enum.AudioName.bgm, 0, 0);
         });
         // 任务栏的动画
         let scale2 = 1.2;
@@ -363,7 +375,17 @@ export default class GameControl extends Laya.Script {
                 // 缩放大小和位置用切宫格的方法，放入气球，分为row*line块，让移动缩放到宫格中间位置
                 let x = widthP / this.row * (i + 1) - widthP / (this.row * 2);
                 let y = heightP / this.line * (j + 1) - heightP / (this.line * 2);
-                let balloon = this.createBallon(x, y);
+
+                let balloon;
+                // 第一关需要引导
+                if (Number(this.Levels.value) === 1) {
+                    // 初始化气球节点的个数和颜色
+                    let guideBalloonColor = this.self['Guidance'].guideBalloonColor;
+                    balloon = this.createBallon(x, y, guideBalloonColor[i][j]);
+                } else {
+                    balloon = this.createBallon(x, y, null);
+                }
+
                 // 缩放大小,目前取决spacing
                 let scale = (widthP / this.row - this.spacing * 2) / balloon.width;
                 balloon.scale(scale, scale);
@@ -371,7 +393,7 @@ export default class GameControl extends Laya.Script {
                 balloon.pivotX = balloon.width / 2;
                 balloon.pivotY = balloon.height / 2;
 
-                Animation.bombs_Appear(balloon, 0, scale, scale + 0.1, 0, 200, 100, delayed, 'balloon', f => {
+                Animation.bombs_Appear(balloon, 0, scale, scale + 0.1, 0, 200, 100, delayed, null, f => {
                     this.explodeAni(this.BalloonVessel, balloon.x + (1 - scale) * balloon.pivotX / 2, balloon.y + (1 - scale) * balloon.pivotY / 2, 'vanish', 6, 10)
                     if (i === this.row - 1 && j === this.line - 1) {
                         this.createBeetle();
@@ -382,6 +404,31 @@ export default class GameControl extends Laya.Script {
             }
         }
     }
+
+    /**
+    * 构建单个气球
+    * @param x 
+    * @param y 
+    * @param nameOrder //气球名字在枚举中的顺序
+   */
+    createBallon(x, y, colorNumber): Laya.Sprite {
+        let balloon = Laya.Pool.getItemByCreateFun('balloon', this.balloon.create, this.balloon) as Laya.Sprite;
+        this.BalloonParent.addChild(balloon);
+        balloon.pos(x, y);
+
+        // 根据关卡数随机给与颜色和名字
+        let random;
+        if (colorNumber === null) {
+            random = Math.floor(Math.random() * this.colorCategory);
+        } else {
+            random = colorNumber;
+        }
+        balloon.name = Enum.BalloonName[random];
+        balloon['Balloon'].skeletoninit();
+
+        return balloon;
+    }
+
 
     /**前往下一关*/
     moveToNextLevel(): void {
@@ -474,23 +521,6 @@ export default class GameControl extends Laya.Script {
         }
     }
 
-    /**
-     * 构建单个气球
-     * @param x 
-     * @param y 
-     */
-    createBallon(x, y): Laya.Sprite {
-        let balloon = Laya.Pool.getItemByCreateFun('balloon', this.balloon.create, this.balloon) as Laya.Sprite;
-        this.BalloonParent.addChild(balloon);
-        balloon.pos(x, y);
-
-        // 根据关卡数随机给与颜色和名字
-        let random = Math.floor(Math.random() * this.colorCategory);
-        balloon.name = Enum.BalloonName[random];
-        balloon['Balloon'].skeletoninit();
-
-        return balloon;
-    }
 
     /**
      * 任务位置的气球提示
@@ -533,7 +563,15 @@ export default class GameControl extends Laya.Script {
                     this.balloonCount();
                     this.balloonClickOrder();
                     this.clicksAllOn();
-                    this.timeSwicth = true;
+
+                    if (Number(this.Levels.value) === 1) {
+                        // 第一关不打开倒计时
+                        this.timeSwicth = false;
+                        // 创建新手引导遮罩
+
+                    } else {
+                        this.timeSwicth = true;
+                    }
                 }
             });
         }
@@ -542,6 +580,9 @@ export default class GameControl extends Laya.Script {
         this.TaskBalloonParent.pivotX = this.TaskBalloonParent.width / 2;
         this.TaskBalloonParent.x = 375;
     }
+
+    /**创建新手引导遮罩*/
+
 
     /**
      * 点击指引提示现在应该点击哪个气球
@@ -677,6 +718,7 @@ export default class GameControl extends Laya.Script {
                 });
             }
         }
+        this.gameOverNode = gameOver;
     }
 
     /**
@@ -685,6 +727,7 @@ export default class GameControl extends Laya.Script {
     createRanking(): void {
         let ranking = Laya.Pool.getItemByCreateFun('ranking', this.ranking.create, this.ranking) as Laya.Sprite;
         this.self.addChild(ranking);
+        this.rankingNode = ranking;
     }
 
     /**

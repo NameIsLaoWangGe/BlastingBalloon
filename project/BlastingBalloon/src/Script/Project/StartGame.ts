@@ -58,7 +58,6 @@ export default class StartGame extends Laya.Script {
 
         this.gameControl = this.self.scene['GameControl'];
         this.LevelsNode = this.gameControl.LevelsNode as Laya.Sprite;
-        this.gameControl.startNode = this.self;
 
         this.startSwitch = false;
         this.startChange = 'appear';
@@ -100,7 +99,11 @@ export default class StartGame extends Laya.Script {
         // logo
         for (let index = 0; index < this.logo._children.length; index++) {
             const element = this.logo._children[index];
-            Animation.bombs_Appear(element, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * index, 'common', null);
+            let type = 'common';
+            if (index === 4) {
+                type = 'balloon';
+            }
+            Animation.bombs_Appear(element, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * index, type, null);
         }
 
         // 开始按钮

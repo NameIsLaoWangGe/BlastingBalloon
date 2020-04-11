@@ -3,6 +3,7 @@ import Background from "./Script/Project/Background"
 import LevelsNode from "./Script/Project/LevelsNode"
 import Props from "./Script/Project/Props"
 import GameControl from "./Script/Project/GameControl"
+import Guidance from "./Script/Project/Guidance"
 import Balloon from "./Script/Project/Balloon"
 import Balloon_Icon from "./Script/Project/Balloon_Icon"
 import Beetle from "./Script/Project/Beetle"
@@ -35,6 +36,7 @@ export default class GameConfig{
         reg("Script/Project/LevelsNode.ts",LevelsNode);
         reg("Script/Project/Props.ts",Props);
         reg("Script/Project/GameControl.ts",GameControl);
+        reg("Script/Project/Guidance.ts",Guidance);
         reg("Script/Project/Balloon.ts",Balloon);
         reg("Script/Project/Balloon_Icon.ts",Balloon_Icon);
         reg("Script/Project/Beetle.ts",Beetle);

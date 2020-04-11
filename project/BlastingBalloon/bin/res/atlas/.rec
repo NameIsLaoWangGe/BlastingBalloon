@@ -126,6 +126,7 @@ P B0119B34 喇叭光圈.png
 P FFF8FF30 白色单元.png
 D 音效
 R C1E70F3C 失败.mp3
+R 2C8BF91F 抖动.mp3
 R 0D5DCDA6 按钮点击.mp3
 R 06278E6E 气球弹出.mp3
 R 0C84A1DB 气球点击正确.mp3
@@ -135,4 +136,3 @@ R B33B7D0A 甲虫溜走.mp3
 R 579778F0 背景音乐.mp3
 R BD22EA1D 胜利.mp3
 R 873CE0E3 通用弹出.mp3
-R 90CFD74C 通用消失.mp3

@@ -102,7 +102,7 @@
             AudioName["beetle"] = "\u97F3\u6548/\u70B9\u51FB\u7532\u866B.mp3";
             AudioName["beetleMove"] = "\u97F3\u6548/\u7532\u866B\u6E9C\u8D70.mp3";
             AudioName["commonPopup"] = "\u97F3\u6548/\u901A\u7528\u5F39\u51FA.mp3";
-            AudioName["commonVanish"] = "\u97F3\u6548/\u901A\u7528\u6D88\u5931.mp3";
+            AudioName["commonShake"] = "\u97F3\u6548/\u6296\u52A8.mp3";
         })(AudioName = Enum.AudioName || (Enum.AudioName = {}));
     })(Enum || (Enum = {}));
 
@@ -138,7 +138,9 @@
         Animation.leftRight_Rotate = leftRight_Rotate;
         function leftRight_Shake(node, range, time, delayed, func) {
             Laya.Tween.to(node, { x: node.x - range }, time, null, Laya.Handler.create(this, function () {
+                PalyAudio.playSound(Enum.AudioName.commonShake, 1);
                 Laya.Tween.to(node, { x: node.x + range * 2 }, time, null, Laya.Handler.create(this, function () {
+                    PalyAudio.playSound(Enum.AudioName.commonShake, 1);
                     Laya.Tween.to(node, { x: node.x - range }, time, null, Laya.Handler.create(this, function () {
                         if (func !== null) {
                             func();
@@ -305,17 +307,16 @@
             node.scale(0, 0);
             node.alpha = firstAlpha;
             Laya.Tween.to(node, { scaleX: scale1, scaleY: scale1, alpha: 1, rotation: rotation }, time1, Laya.Ease.cubicInOut, Laya.Handler.create(this, function () {
+                switch (audioType) {
+                    case 'balloon':
+                        PalyAudio.playSound(Enum.AudioName.commonPopup, 1);
+                        break;
+                    case 'common':
+                        break;
+                    default:
+                        break;
+                }
                 Laya.Tween.to(node, { scaleX: firstScale, scaleY: firstScale, rotation: 0 }, time2, null, Laya.Handler.create(this, function () {
-                    switch (audioType) {
-                        case 'balloon':
-                            PalyAudio.playSound(Enum.AudioName.balloonPopup, 1);
-                            break;
-                        case 'common':
-                            PalyAudio.playSound(Enum.AudioName.commonPopup, 1);
-                            break;
-                        default:
-                            break;
-                    }
                     Laya.Tween.to(node, { scaleX: firstScale + (scale1 - firstScale) * 0.2, scaleY: firstScale + (scale1 - firstScale) * 0.2, rotation: 0 }, time2, null, Laya.Handler.create(this, function () {
                         Laya.Tween.to(node, { scaleX: firstScale, scaleY: firstScale, rotation: 0 }, time2, null, Laya.Handler.create(this, function () {
                             if (func !== null) {
@@ -329,7 +330,6 @@
         Animation.bombs_Appear = bombs_Appear;
         function bombs_Vanish(node, scale, alpha, rotation, time, delayed, func) {
             Laya.Tween.to(node, { scaleX: scale, scaleY: scale, alpha: alpha, rotation: rotation }, time, Laya.Ease.cubicOut, Laya.Handler.create(this, function () {
-                PalyAudio.playSound(Enum.AudioName.commonVanish, 1);
                 if (func !== null) {
                     func();
                 }
@@ -337,6 +337,7 @@
         }
         Animation.bombs_Vanish = bombs_Vanish;
         function swell_shrink(node, firstScale, scale1, time, delayed, func) {
+            PalyAudio.playSound(Enum.AudioName.commonPopup, 1);
             Laya.Tween.to(node, { scaleX: scale1, scaleY: scale1, alpha: 1, }, time, Laya.Ease.cubicInOut, Laya.Handler.create(this, function () {
                 Laya.Tween.to(node, { scaleX: firstScale, scaleY: firstScale, rotation: 0 }, time, null, Laya.Handler.create(this, function () {
                     Laya.Tween.to(node, { scaleX: firstScale + (scale1 - firstScale) * 0.5, scaleY: firstScale + (scale1 - firstScale) * 0.5, rotation: 0 }, time * 0.5, null, Laya.Handler.create(this, function () {
@@ -858,6 +859,56 @@
         WXDataManager.wxShare = wxShare;
     })(WXDataManager || (WXDataManager = {}));
 
+    var Advertising;
+    (function (Advertising) {
+        Advertising.wx = Laya.Browser.window.wx;
+        function videoAd_01_Lode(func_yes, func_no) {
+            if (Laya.Browser.onMiniGame) {
+                console.log('广告开始加载');
+                Advertising.videoAd_01 = Advertising.wx.createRewardedVideoAd({
+                    adUnitId: 'adunit-6de18c6de7b6d9ab'
+                });
+                Advertising.videoAd_01.onLoad(() => {
+                    console.log('激励视频 广告加载成功');
+                });
+                Advertising.videoAd_01.onError(err => {
+                    console.log(err);
+                });
+                Advertising.videoAd_01.onClose(res => {
+                    if (res && res.isEnded || res === undefined) {
+                        func_yes();
+                    }
+                    else {
+                        console.log('视频没有看望不会开始游戏');
+                        func_no();
+                    }
+                });
+            }
+        }
+        Advertising.videoAd_01_Lode = videoAd_01_Lode;
+        function bannerAd_01_Lode() {
+            if (Laya.Browser.onMiniGame) {
+                console.log('广告开始加载');
+                Advertising.bannarAd_01 = Advertising.wx.createBannerAd({
+                    adUnitId: 'adunit-5329937f4349b0ea',
+                    adIntervals: 30,
+                    style: {
+                        left: 0,
+                        top: 0,
+                        width: 750
+                    }
+                });
+                Advertising.bannarAd_01.onLoad(() => {
+                    console.log('banner 广告加载成功');
+                });
+                Advertising.bannarAd_01.onError(err => {
+                    console.log(err);
+                });
+            }
+        }
+        Advertising.bannerAd_01_Lode = bannerAd_01_Lode;
+    })(Advertising || (Advertising = {}));
+
     var SkTemplete;
     (function (SkTemplete) {
         function createBaoolonTemplet() {
@@ -902,10 +953,13 @@
             this.createStartGame();
             this.adaptive();
             WXDataManager.wxPostInit();
+            Advertising.videoAd_01_Lode(f => this.watchAdsFunc('yes'), f => this.watchAdsFunc('no'));
+            Advertising.bannerAd_01_Lode();
             SkTemplete.createBaoolonTemplet();
             Data.dataLoading_Levels();
             WXDataManager.normalWXLogin();
-            PalyAudio.playMusic(Enum.AudioName.bgm, 0, 1000);
+        }
+        guideBalloonCollection() {
         }
         watchAdsFunc(type) {
             if (type === 'yes') {
@@ -984,6 +1038,7 @@
         createStartGame() {
             let startGame = Laya.Pool.getItemByCreateFun('startGame', this.startGame.create, this.startGame);
             this.self.addChild(startGame);
+            this.startNode = startGame;
         }
         openingAnimation() {
             this.Tip.alpha = 1;
@@ -999,6 +1054,7 @@
             let parentBoard = this.BalloonVessel.getChildByName('parentBoard');
             Animation.bombs_Appear(parentBoard, 0, 1, scale1, 0, time1, time2, delayed * 1, 'common', f => {
                 this.createBalloonCollection();
+                PalyAudio.playMusic(Enum.AudioName.bgm, 0, 0);
             });
             let scale2 = 1.2;
             let tipboard = this.Tip.getChildByName('tipboard');
@@ -1055,13 +1111,20 @@
                     delayed += 50;
                     let x = widthP / this.row * (i + 1) - widthP / (this.row * 2);
                     let y = heightP / this.line * (j + 1) - heightP / (this.line * 2);
-                    let balloon = this.createBallon(x, y);
+                    let balloon;
+                    if (Number(this.Levels.value) === 1) {
+                        let guideBalloonColor = this.self['Guidance'].guideBalloonColor;
+                        balloon = this.createBallon(x, y, guideBalloonColor[i][j]);
+                    }
+                    else {
+                        balloon = this.createBallon(x, y, null);
+                    }
                     let scale = (widthP / this.row - this.spacing * 2) / balloon.width;
                     balloon.scale(scale, scale);
                     Clicks.balloonScale = scale;
                     balloon.pivotX = balloon.width / 2;
                     balloon.pivotY = balloon.height / 2;
-                    Animation.bombs_Appear(balloon, 0, scale, scale + 0.1, 0, 200, 100, delayed, 'balloon', f => {
+                    Animation.bombs_Appear(balloon, 0, scale, scale + 0.1, 0, 200, 100, delayed, null, f => {
                         this.explodeAni(this.BalloonVessel, balloon.x + (1 - scale) * balloon.pivotX / 2, balloon.y + (1 - scale) * balloon.pivotY / 2, 'vanish', 6, 10);
                         if (i === this.row - 1 && j === this.line - 1) {
                             this.createBeetle();
@@ -1071,6 +1134,21 @@
                     });
                 }
             }
+        }
+        createBallon(x, y, colorNumber) {
+            let balloon = Laya.Pool.getItemByCreateFun('balloon', this.balloon.create, this.balloon);
+            this.BalloonParent.addChild(balloon);
+            balloon.pos(x, y);
+            let random;
+            if (colorNumber === null) {
+                random = Math.floor(Math.random() * this.colorCategory);
+            }
+            else {
+                random = colorNumber;
+            }
+            balloon.name = Enum.BalloonName[random];
+            balloon['Balloon'].skeletoninit();
+            return balloon;
         }
         moveToNextLevel() {
             let time1 = 300;
@@ -1140,15 +1218,6 @@
                 delayed += 100;
             }
         }
-        createBallon(x, y) {
-            let balloon = Laya.Pool.getItemByCreateFun('balloon', this.balloon.create, this.balloon);
-            this.BalloonParent.addChild(balloon);
-            balloon.pos(x, y);
-            let random = Math.floor(Math.random() * this.colorCategory);
-            balloon.name = Enum.BalloonName[random];
-            balloon['Balloon'].skeletoninit();
-            return balloon;
-        }
         TaskBalloonParentSet() {
             let arr1 = [];
             for (let i = 0; i < this.BalloonParent._children.length; i++) {
@@ -1180,7 +1249,12 @@
                         this.balloonCount();
                         this.balloonClickOrder();
                         this.clicksAllOn();
-                        this.timeSwicth = true;
+                        if (Number(this.Levels.value) === 1) {
+                            this.timeSwicth = false;
+                        }
+                        else {
+                            this.timeSwicth = true;
+                        }
                     }
                 });
             }
@@ -1282,10 +1356,12 @@
                     });
                 }
             }
+            this.gameOverNode = gameOver;
         }
         createRanking() {
             let ranking = Laya.Pool.getItemByCreateFun('ranking', this.ranking.create, this.ranking);
             this.self.addChild(ranking);
+            this.rankingNode = ranking;
         }
         createHint() {
             let hint = Laya.Pool.getItemByCreateFun('hint', this.hint.create, this.hint);
@@ -1318,6 +1394,60 @@
                     });
                     this.timeSwicth = false;
                 }
+            }
+        }
+        onDisable() {
+        }
+    }
+
+    class Guidance extends Laya.Script {
+        constructor() {
+            super();
+            this.guideSteps = [
+                { x: 151, y: 575, radius: 150, tip: "UI/重来按钮.png", tipx: 200, tipy: 250 },
+                { x: 883, y: 620, radius: 100, tip: "UI/重来按钮.png", tipx: 730, tipy: 380 },
+                { x: 1128, y: 583, radius: 110, tip: "UI/重来按钮.png", tipx: 900, tipy: 300 }
+            ];
+            this.guideStep = 0;
+            Laya.init(1285, 727);
+            Laya.stage.alignH = Laya.Stage.ALIGN_CENTER;
+            Laya.stage.alignV = Laya.Stage.ALIGN_MIDDLE;
+            var gameContainer = new Laya.Sprite();
+            gameContainer.loadImage("UI/重来按钮.png");
+            Laya.stage.addChild(gameContainer);
+            this.guideContainer = new Laya.Sprite();
+            this.guideContainer.cacheAs = "bitmap";
+            Laya.stage.addChild(this.guideContainer);
+            this.guideContainer.zOrder = 100;
+            gameContainer.on("click", this, this.nextStep);
+            var maskArea = new Laya.Sprite();
+            maskArea.alpha = 0.5;
+            maskArea.graphics.drawRect(0, 0, Laya.stage.width, Laya.stage.height, "#000000");
+            this.guideContainer.addChild(maskArea);
+            this.interactionArea = new Laya.Sprite();
+            this.interactionArea.blendMode = "destination-out";
+            this.guideContainer.addChild(this.interactionArea);
+            this.tipContainer = new Laya.Sprite();
+            Laya.stage.addChild(this.tipContainer);
+            this.nextStep();
+        }
+        onEnable() {
+            console.log('我是新手引导脚本');
+            this.self = this.owner;
+            this.self['Guidance'] = this;
+            this.gameControl = this.self['GameControl'];
+            this.guideBalloonColor = [[1, 0, 1], [1, 0, 0], [1, 1, 0]];
+        }
+        nextStep() {
+            if (this.guideStep == this.guideSteps.length) {
+                Laya.stage.removeChild(this.guideContainer);
+                Laya.stage.removeChild(this.tipContainer);
+            }
+            else {
+                var step = this.guideSteps[this.guideStep++];
+                this.tipContainer.graphics.clear();
+                this.tipContainer.loadImage(step.tip);
+                this.tipContainer.pos(step.tipx, step.tipy);
             }
         }
         onDisable() {
@@ -1852,56 +1982,6 @@
         Adaptive.background_Center = background_Center;
     })(Adaptive || (Adaptive = {}));
 
-    var Advertising;
-    (function (Advertising) {
-        Advertising.wx = Laya.Browser.window.wx;
-        function videoAd_01_Lode(func_yes, func_no) {
-            if (Laya.Browser.onMiniGame) {
-                console.log('广告开始加载');
-                Advertising.videoAd_01 = Advertising.wx.createRewardedVideoAd({
-                    adUnitId: 'adunit-6de18c6de7b6d9ab'
-                });
-                Advertising.videoAd_01.onLoad(() => {
-                    console.log('激励视频 广告加载成功');
-                });
-                Advertising.videoAd_01.onError(err => {
-                    console.log(err);
-                });
-                Advertising.videoAd_01.onClose(res => {
-                    if (res && res.isEnded || res === undefined) {
-                        func_yes();
-                    }
-                    else {
-                        console.log('视频没有看望不会开始游戏');
-                        func_no();
-                    }
-                });
-            }
-        }
-        Advertising.videoAd_01_Lode = videoAd_01_Lode;
-        function bannerAd_01_Lode() {
-            if (Laya.Browser.onMiniGame) {
-                console.log('广告开始加载');
-                Advertising.bannarAd_01 = Advertising.wx.createBannerAd({
-                    adUnitId: 'adunit-5329937f4349b0ea',
-                    adIntervals: 30,
-                    style: {
-                        left: 0,
-                        top: 0,
-                        width: 750
-                    }
-                });
-                Advertising.bannarAd_01.onLoad(() => {
-                    console.log('banner 广告加载成功');
-                });
-                Advertising.bannarAd_01.onError(err => {
-                    console.log(err);
-                });
-            }
-        }
-        Advertising.bannerAd_01_Lode = bannerAd_01_Lode;
-    })(Advertising || (Advertising = {}));
-
     class GameOver extends Laya.Script {
         constructor() { super(); }
         onEnable() {
@@ -2139,7 +2219,6 @@
             this.balloon_skeleton = this.balloon.getChildByName('balloon_skeleton');
             this.gameControl = this.self.scene['GameControl'];
             this.LevelsNode = this.gameControl.LevelsNode;
-            this.gameControl.startNode = this.self;
             this.startSwitch = false;
             this.startChange = 'appear';
             Adaptive.interface_Center(this.self);
@@ -2168,7 +2247,11 @@
             let delayed = 300;
             for (let index = 0; index < this.logo._children.length; index++) {
                 const element = this.logo._children[index];
-                Animation.bombs_Appear(element, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * index, 'common', null);
+                let type = 'common';
+                if (index === 4) {
+                    type = 'balloon';
+                }
+                Animation.bombs_Appear(element, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * index, type, null);
             }
             Animation.bombs_Appear(this.btn_start, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 5, 'common', null);
             Animation.bombs_Appear(this.btn_ranking, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 6, 'common', null);
@@ -2255,6 +2338,7 @@
             reg("Script/Project/LevelsNode.ts", Levels);
             reg("Script/Project/Props.ts", Props);
             reg("Script/Project/GameControl.ts", GameControl);
+            reg("Script/Project/Guidance.ts", Guidance);
             reg("Script/Project/Balloon.ts", Balloon);
             reg("Script/Project/Balloon_Icon.ts", Balloon_Icon);
             reg("Script/Project/Beetle.ts", Beetle);
