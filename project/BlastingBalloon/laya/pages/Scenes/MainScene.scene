@@ -2,7 +2,7 @@
     "x":0,
     "type":"Scene",
     "selectedBox":2,
-    "selecteID":24,
+    "selecteID":17,
     "searchKey":"Scene",
     "props":{"width":750,"sceneColor":"#000000","height":1334},
     "nodeParent":-1,
@@ -144,13 +144,14 @@
             "props":{"y":355,"x":375,"width":706,"pivotX":353,"name":"BalloonVessel","height":930},
             "nodeParent":2,
             "label":"BalloonVessel",
-            "isOpen":false,
+            "isOpen":true,
             "isDirectory":true,
             "isAniNode":true,
             "hasChild":true,
             "compId":17,
             "child":[
                 {
+                    "x":30,
                     "type":"Image",
                     "searchKey":"Image,parentBoard",
                     "props":{"y":465,"x":353,"width":706,"skin":"UI/气球陈列底板.png","sizeGrid":"127,0,366,0","pivotY":465,"pivotX":353,"name":"parentBoard","height":930},
@@ -164,6 +165,7 @@
                         ]
                 },
                 {
+                    "x":30,
                     "type":"Sprite",
                     "searchKey":"Sprite,BalloonParent",
                     "props":{"y":48,"x":354,"width":647,"pivotX":324,"name":"BalloonParent","height":830},

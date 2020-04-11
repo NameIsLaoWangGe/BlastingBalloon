@@ -1251,6 +1251,8 @@
                         this.clicksAllOn();
                         if (Number(this.Levels.value) === 1) {
                             this.timeSwicth = false;
+                            this.self['Guidance'].guidanceInit();
+                            this.self['Guidance'].createGuidanceMask(Enum.BalloonName[1]);
                         }
                         else {
                             this.timeSwicth = true;
@@ -1404,32 +1406,11 @@
         constructor() {
             super();
             this.guideSteps = [
-                { x: 151, y: 575, radius: 150, tip: "UI/重来按钮.png", tipx: 200, tipy: 250 },
-                { x: 883, y: 620, radius: 100, tip: "UI/重来按钮.png", tipx: 730, tipy: 380 },
-                { x: 1128, y: 583, radius: 110, tip: "UI/重来按钮.png", tipx: 900, tipy: 300 }
+                { x: 375, y: 575, radius: 150, tip: "UI/重来按钮.png", tipx: 375, tipy: 250 },
+                { x: 375, y: 620, radius: 100, tip: "UI/重来按钮.png", tipx: 375, tipy: 500 },
+                { x: 375, y: 583, radius: 110, tip: "UI/重来按钮.png", tipx: 375, tipy: 800 }
             ];
             this.guideStep = 0;
-            Laya.init(1285, 727);
-            Laya.stage.alignH = Laya.Stage.ALIGN_CENTER;
-            Laya.stage.alignV = Laya.Stage.ALIGN_MIDDLE;
-            var gameContainer = new Laya.Sprite();
-            gameContainer.loadImage("UI/重来按钮.png");
-            Laya.stage.addChild(gameContainer);
-            this.guideContainer = new Laya.Sprite();
-            this.guideContainer.cacheAs = "bitmap";
-            Laya.stage.addChild(this.guideContainer);
-            this.guideContainer.zOrder = 100;
-            gameContainer.on("click", this, this.nextStep);
-            var maskArea = new Laya.Sprite();
-            maskArea.alpha = 0.5;
-            maskArea.graphics.drawRect(0, 0, Laya.stage.width, Laya.stage.height, "#000000");
-            this.guideContainer.addChild(maskArea);
-            this.interactionArea = new Laya.Sprite();
-            this.interactionArea.blendMode = "destination-out";
-            this.guideContainer.addChild(this.interactionArea);
-            this.tipContainer = new Laya.Sprite();
-            Laya.stage.addChild(this.tipContainer);
-            this.nextStep();
         }
         onEnable() {
             console.log('我是新手引导脚本');
@@ -1438,16 +1419,34 @@
             this.gameControl = this.self['GameControl'];
             this.guideBalloonColor = [[1, 0, 1], [1, 0, 0], [1, 1, 0]];
         }
-        nextStep() {
-            if (this.guideStep == this.guideSteps.length) {
-                Laya.stage.removeChild(this.guideContainer);
-                Laya.stage.removeChild(this.tipContainer);
-            }
-            else {
-                var step = this.guideSteps[this.guideStep++];
-                this.tipContainer.graphics.clear();
-                this.tipContainer.loadImage(step.tip);
-                this.tipContainer.pos(step.tipx, step.tipy);
+        guidanceInit() {
+            this.guideContainer = new Laya.Sprite();
+            this.guideContainer.cacheAs = "bitmap";
+            Laya.stage.addChild(this.guideContainer);
+            var maskArea = new Laya.Sprite();
+            maskArea.alpha = 0.5;
+            maskArea.graphics.drawRect(0, 0, Laya.stage.width, Laya.stage.height, "#000000");
+            this.guideContainer.addChild(maskArea);
+        }
+        createGuidanceMask(type) {
+            let BalloonParent = this.gameControl.BalloonParent;
+            let BalloonVessel = this.gameControl.BalloonVessel;
+            let TaskBalloonParent = this.gameControl.TaskBalloonParent;
+            for (let index = 0; index < BalloonParent._children.length; index++) {
+                const balloon = BalloonParent._children[index];
+                console.log(balloon.name, type);
+                if (balloon.name === type) {
+                    this.interactionArea = new Laya.Sprite();
+                    this.interactionArea.name = 'reverseMask';
+                    this.interactionArea.blendMode = "destination-out";
+                    this.guideContainer.addChild(this.interactionArea);
+                    let x = balloon.x + (BalloonParent.x - BalloonParent.width / 2) + (BalloonVessel.x - BalloonVessel.width / 2);
+                    let y = balloon.y + BalloonParent.y + BalloonVessel.y;
+                    this.interactionArea.graphics.drawCircle(x, y - balloon.height * 0.05, balloon.height / 2 - 30, "#000000");
+                }
+                else {
+                    balloon['Balloon'].balloonClicksOff();
+                }
             }
         }
         onDisable() {

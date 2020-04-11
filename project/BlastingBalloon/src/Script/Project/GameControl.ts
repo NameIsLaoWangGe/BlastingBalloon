@@ -568,7 +568,8 @@ export default class GameControl extends Laya.Script {
                         // 第一关不打开倒计时
                         this.timeSwicth = false;
                         // 创建新手引导遮罩
-
+                        this.self['Guidance'].guidanceInit();
+                        this.self['Guidance'].createGuidanceMask(Enum.BalloonName[1]);
                     } else {
                         this.timeSwicth = true;
                     }

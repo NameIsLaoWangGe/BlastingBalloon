@@ -1,3 +1,15 @@
-2020/04/11-18:53:51.506 6ec Reusing MANIFEST F:\Work\Game\03_BlastingBalloon\project\BlastingBalloon\.laya\chrome\Default\Local Storage\leveldb/MANIFEST-000001
-2020/04/11-18:53:51.507 6ec Recovering log #16
-2020/04/11-18:53:51.507 6ec Reusing old log F:\Work\Game\03_BlastingBalloon\project\BlastingBalloon\.laya\chrome\Default\Local Storage\leveldb/000016.log 
+2020/04/11-20:12:20.502 38f0 Reusing MANIFEST F:\Work\Game\03_BlastingBalloon\project\BlastingBalloon\.laya\chrome\Default\Local Storage\leveldb/MANIFEST-000001
+2020/04/11-20:12:20.502 38f0 Recovering log #16
+2020/04/11-20:12:20.503 38f0 Reusing old log F:\Work\Game\03_BlastingBalloon\project\BlastingBalloon\.laya\chrome\Default\Local Storage\leveldb/000016.log 
+2020/04/11-20:12:26.048 1898 Level-0 table #20: started
+2020/04/11-20:12:26.071 1898 Level-0 table #20: 9251 bytes OK
+2020/04/11-20:12:26.098 1898 Delete type=0 #16
+2020/04/11-20:12:26.099 1898 Compacting 4@0 + 1@1 files
+2020/04/11-20:12:26.128 1898 Generated table #21@0: 35 keys, 1519 bytes
+2020/04/11-20:12:26.128 1898 Compacted 4@0 + 1@1 files => 1519 bytes
+2020/04/11-20:12:26.146 1898 compacted to: files[ 0 1 1 0 0 0 0 ]
+2020/04/11-20:12:26.147 1898 Delete type=2 #8
+2020/04/11-20:12:26.147 1898 Delete type=2 #10
+2020/04/11-20:12:26.147 1898 Delete type=2 #14
+2020/04/11-20:12:26.147 1898 Delete type=2 #17
+2020/04/11-20:12:26.147 1898 Delete type=2 #20
