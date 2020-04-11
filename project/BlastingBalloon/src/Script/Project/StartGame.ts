@@ -100,17 +100,17 @@ export default class StartGame extends Laya.Script {
         // logo
         for (let index = 0; index < this.logo._children.length; index++) {
             const element = this.logo._children[index];
-            Animation.bombs_Appear(element, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * index, null);
+            Animation.bombs_Appear(element, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * index, 'common', null);
         }
 
         // 开始按钮
-        Animation.bombs_Appear(this.btn_start, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 2, null);
+        Animation.bombs_Appear(this.btn_start, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 5, 'common', null);
 
         // 排行按钮
-        Animation.bombs_Appear(this.btn_ranking, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 3, null);
+        Animation.bombs_Appear(this.btn_ranking, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 6, 'common', null);
 
         // 分享按钮
-        Animation.bombs_Appear(this.btn_share, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 4, f => {
+        Animation.bombs_Appear(this.btn_share, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 7, 'common', f => {
             this.appaerFunc();
         });
 
@@ -133,7 +133,6 @@ export default class StartGame extends Laya.Script {
     vanish(): void {
         let time = 250;
         let delayed = 100;
-        // PalyAudio.playSound(Enum.AudioName.commonPopup, 8);
         // logo
         for (let index = 0; index < this.logo._children.length; index++) {
             const element = this.logo._children[index];
@@ -178,7 +177,6 @@ export default class StartGame extends Laya.Script {
 
     /**抬起*/
     up(event): void {
-
         event.currentTarget.scale(1, 1);
         if (event.currentTarget.name === 'btn_start') {
             this.vanish();

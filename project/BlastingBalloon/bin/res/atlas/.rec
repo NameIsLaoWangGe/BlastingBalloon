@@ -48,11 +48,6 @@ R 3F9617D1 logoBallon.sk
 R BA1F5F9B trumpet.png
 R 6701DACE trumpet.sk
 D UI
-P 6EF3272D balloon_淡黄.png
-P 62772CCC balloon_粉色.png
-P 2FD5B7E6 balloon_紫色.png
-P C80103CD balloon_青色.png
-P 36486BA4 balloon_黄色.png
 P 570CD93F font_提示.png
 P 71506D9D icon_淡黄.png
 P 0B572F7E icon_淡黄_pitch.png
@@ -69,7 +64,6 @@ P 7DC67336 logo2.png
 P C42F0071 logo3.png
 P 61639734 logo4.png
 P 5840C1B4 logo气球装饰.png
-R AE92DB07 UI-123.png
 P 88C6E511 下一关按钮.png
 P 2556E2C1 不看按钮.png
 P D3803CD3 关卡数底板.png
@@ -133,7 +127,7 @@ P FFF8FF30 白色单元.png
 D 音效
 R C1E70F3C 失败.mp3
 R 0D5DCDA6 按钮点击.mp3
-R B73B1206 气球弹出.mp3
+R 06278E6E 气球弹出.mp3
 R 0C84A1DB 气球点击正确.mp3
 R 151273E2 气球点击错误.mp3
 R 2D6531F3 点击甲虫.mp3
@@ -141,3 +135,4 @@ R B33B7D0A 甲虫溜走.mp3
 R 579778F0 背景音乐.mp3
 R BD22EA1D 胜利.mp3
 R 873CE0E3 通用弹出.mp3
+R 90CFD74C 通用消失.mp3

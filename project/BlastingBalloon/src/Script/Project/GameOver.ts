@@ -84,13 +84,13 @@ export default class GameOver extends Laya.Script {
         let delayed = 200;
         Animation.fade_out(this.background, 0, 0.8, 200, 0, null);
 
-        Animation.bombs_Appear(this.scoreNode, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 0, null);
+        Animation.bombs_Appear(this.scoreNode, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 0, 'common', null);
 
-        Animation.bombs_Appear(this.logo, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 1, null);
+        Animation.bombs_Appear(this.logo, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 1, 'common', null);
 
-        Animation.bombs_Appear(this.btn_again, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 2, null);
+        Animation.bombs_Appear(this.btn_again, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 2, 'common', null);
 
-        Animation.bombs_Appear(this.btn_return, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 3, func => {
+        Animation.bombs_Appear(this.btn_return, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 3, 'common', func => {
             this.appearFunc()
         });
     }
@@ -151,6 +151,7 @@ export default class GameOver extends Laya.Script {
             }
         }
         this.self.removeSelf();
+        PalyAudio.playMusic(Enum.AudioName.bgm, 0, 0);
     }
 
     /**两个按钮的点击事件*/

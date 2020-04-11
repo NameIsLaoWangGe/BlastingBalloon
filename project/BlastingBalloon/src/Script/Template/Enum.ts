@@ -114,6 +114,7 @@ export module Enum {
         beetle = '音效/点击甲虫.mp3',
         beetleMove = '音效/甲虫溜走.mp3',
         commonPopup = '音效/通用弹出.mp3',
+        commonVanish = '音效/通用消失.mp3',
     }
 
 

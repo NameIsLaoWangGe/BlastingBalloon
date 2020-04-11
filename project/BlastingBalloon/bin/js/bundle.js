@@ -102,6 +102,7 @@
             AudioName["beetle"] = "\u97F3\u6548/\u70B9\u51FB\u7532\u866B.mp3";
             AudioName["beetleMove"] = "\u97F3\u6548/\u7532\u866B\u6E9C\u8D70.mp3";
             AudioName["commonPopup"] = "\u97F3\u6548/\u901A\u7528\u5F39\u51FA.mp3";
+            AudioName["commonVanish"] = "\u97F3\u6548/\u901A\u7528\u6D88\u5931.mp3";
         })(AudioName = Enum.AudioName || (Enum.AudioName = {}));
     })(Enum || (Enum = {}));
 
@@ -300,12 +301,21 @@
             }), 0);
         }
         Animation.move_changeRotate = move_changeRotate;
-        function bombs_Appear(node, firstAlpha, firstScale, scale1, rotation, time1, time2, delayed, func) {
+        function bombs_Appear(node, firstAlpha, firstScale, scale1, rotation, time1, time2, delayed, audioType, func) {
             node.scale(0, 0);
             node.alpha = firstAlpha;
             Laya.Tween.to(node, { scaleX: scale1, scaleY: scale1, alpha: 1, rotation: rotation }, time1, Laya.Ease.cubicInOut, Laya.Handler.create(this, function () {
                 Laya.Tween.to(node, { scaleX: firstScale, scaleY: firstScale, rotation: 0 }, time2, null, Laya.Handler.create(this, function () {
-                    PalyAudio.playSound(Enum.AudioName.commonPopup, 1);
+                    switch (audioType) {
+                        case 'balloon':
+                            PalyAudio.playSound(Enum.AudioName.balloonPopup, 1);
+                            break;
+                        case 'common':
+                            PalyAudio.playSound(Enum.AudioName.commonPopup, 1);
+                            break;
+                        default:
+                            break;
+                    }
                     Laya.Tween.to(node, { scaleX: firstScale + (scale1 - firstScale) * 0.2, scaleY: firstScale + (scale1 - firstScale) * 0.2, rotation: 0 }, time2, null, Laya.Handler.create(this, function () {
                         Laya.Tween.to(node, { scaleX: firstScale, scaleY: firstScale, rotation: 0 }, time2, null, Laya.Handler.create(this, function () {
                             if (func !== null) {
@@ -319,6 +329,7 @@
         Animation.bombs_Appear = bombs_Appear;
         function bombs_Vanish(node, scale, alpha, rotation, time, delayed, func) {
             Laya.Tween.to(node, { scaleX: scale, scaleY: scale, alpha: alpha, rotation: rotation }, time, Laya.Ease.cubicOut, Laya.Handler.create(this, function () {
+                PalyAudio.playSound(Enum.AudioName.commonVanish, 1);
                 if (func !== null) {
                     func();
                 }
@@ -847,56 +858,6 @@
         WXDataManager.wxShare = wxShare;
     })(WXDataManager || (WXDataManager = {}));
 
-    var Advertising;
-    (function (Advertising) {
-        Advertising.wx = Laya.Browser.window.wx;
-        function videoAd_01_Lode(func_yes, func_no) {
-            if (Laya.Browser.onMiniGame) {
-                console.log('广告开始加载');
-                Advertising.videoAd_01 = Advertising.wx.createRewardedVideoAd({
-                    adUnitId: 'adunit-6de18c6de7b6d9ab'
-                });
-                Advertising.videoAd_01.onLoad(() => {
-                    console.log('激励视频 广告加载成功');
-                });
-                Advertising.videoAd_01.onError(err => {
-                    console.log(err);
-                });
-                Advertising.videoAd_01.onClose(res => {
-                    if (res && res.isEnded || res === undefined) {
-                        func_yes();
-                    }
-                    else {
-                        console.log('视频没有看望不会开始游戏');
-                        func_no();
-                    }
-                });
-            }
-        }
-        Advertising.videoAd_01_Lode = videoAd_01_Lode;
-        function bannerAd_01_Lode() {
-            if (Laya.Browser.onMiniGame) {
-                console.log('广告开始加载');
-                Advertising.bannarAd_01 = Advertising.wx.createBannerAd({
-                    adUnitId: 'adunit-5329937f4349b0ea',
-                    adIntervals: 30,
-                    style: {
-                        left: 0,
-                        top: 0,
-                        width: 750
-                    }
-                });
-                Advertising.bannarAd_01.onLoad(() => {
-                    console.log('banner 广告加载成功');
-                });
-                Advertising.bannarAd_01.onError(err => {
-                    console.log(err);
-                });
-            }
-        }
-        Advertising.bannerAd_01_Lode = bannerAd_01_Lode;
-    })(Advertising || (Advertising = {}));
-
     var SkTemplete;
     (function (SkTemplete) {
         function createBaoolonTemplet() {
@@ -941,8 +902,6 @@
             this.createStartGame();
             this.adaptive();
             WXDataManager.wxPostInit();
-            Advertising.videoAd_01_Lode(f => this.watchAdsFunc('yes'), f => this.watchAdsFunc('no'));
-            Advertising.bannerAd_01_Lode();
             SkTemplete.createBaoolonTemplet();
             Data.dataLoading_Levels();
             WXDataManager.normalWXLogin();
@@ -1038,15 +997,15 @@
             let plug_02 = this.Tip.getChildByName('plug_02');
             plug_02.x = -800;
             let parentBoard = this.BalloonVessel.getChildByName('parentBoard');
-            Animation.bombs_Appear(parentBoard, 0, 1, scale1, 0, time1, time2, delayed * 1, f => {
+            Animation.bombs_Appear(parentBoard, 0, 1, scale1, 0, time1, time2, delayed * 1, 'common', f => {
                 this.createBalloonCollection();
             });
             let scale2 = 1.2;
             let tipboard = this.Tip.getChildByName('tipboard');
-            Animation.bombs_Appear(tipboard, 0, 1, scale2, 0, time1, time2, delayed * 2, null);
-            Animation.bombs_Appear(this.TimeNode, 0, 1, scale2, 0, time1, time2, delayed * 3, null);
-            Animation.bombs_Appear(this.PropsNode, 0, 1, scale2, 0, time1, time2, delayed * 4, null);
-            Animation.bombs_Appear(this.LevelsNode, 0, 1, scale2, 0, time1, time2, delayed * 5, null);
+            Animation.bombs_Appear(tipboard, 0, 1, scale2, 0, time1, time2, delayed * 2, 'common', null);
+            Animation.bombs_Appear(this.TimeNode, 0, 1, scale2, 0, time1, time2, delayed * 3, 'common', null);
+            Animation.bombs_Appear(this.PropsNode, 0, 1, scale2, 0, time1, time2, delayed * 4, 'common', null);
+            Animation.bombs_Appear(this.LevelsNode, 0, 1, scale2, 0, time1, time2, delayed * 5, 'common', null);
         }
         taskTipShake(delayed) {
             let time = 150;
@@ -1102,7 +1061,7 @@
                     Clicks.balloonScale = scale;
                     balloon.pivotX = balloon.width / 2;
                     balloon.pivotY = balloon.height / 2;
-                    Animation.bombs_Appear(balloon, 0, scale, scale + 0.1, 0, 200, 100, delayed, f => {
+                    Animation.bombs_Appear(balloon, 0, scale, scale + 0.1, 0, 200, 100, delayed, 'balloon', f => {
                         this.explodeAni(this.BalloonVessel, balloon.x + (1 - scale) * balloon.pivotX / 2, balloon.y + (1 - scale) * balloon.pivotY / 2, 'vanish', 6, 10);
                         if (i === this.row - 1 && j === this.line - 1) {
                             this.createBeetle();
@@ -1121,12 +1080,12 @@
             Animation.bombs_Vanish(this.LevelsNode, 0, 0, 0, 100, delayed, f => {
                 this.readyStart('nextLevel');
                 this.clearAllBallon('restartAndNextLevel');
-                Animation.bombs_Appear(this.LevelsNode, 0, 1, 1.1, 0, time1, time2, delayed, f => {
+                Animation.bombs_Appear(this.LevelsNode, 0, 1, 1.1, 0, time1, time2, delayed, 'common', f => {
                 });
             });
             Animation.bombs_Vanish(this.TimeNode, 0, 0, 0, time1, delayed * 2, f => {
                 this.time.value = 1;
-                Animation.bombs_Appear(this.TimeNode, 0, 1, 1.1, 0, time1, time2, delayed, f => {
+                Animation.bombs_Appear(this.TimeNode, 0, 1, 1.1, 0, time1, time2, delayed, 'common', f => {
                 });
             });
         }
@@ -1141,7 +1100,7 @@
             });
             Animation.bombs_Vanish(this.TimeNode, 0, 0, 0, time1, delayed * 2, f => {
                 this.time.value = 1;
-                Animation.bombs_Appear(this.TimeNode, 0, 1, 1.1, 0, time1, time2, delayed * 5, f => {
+                Animation.bombs_Appear(this.TimeNode, 0, 1, 1.1, 0, time1, time2, delayed * 5, 'common', f => {
                 });
             });
             this.clearAllBallon('restartAndNextLevel');
@@ -1215,7 +1174,7 @@
                     colorSkin = Enum.IconSkin_01[Enum.BalloonName[name]];
                 }
                 let ballon_Icon = this.createBallon_Icon(x, y, colorSkin, name);
-                Animation.bombs_Appear(ballon_Icon, 0, 1, 1.1, 0, 200, 200, delayed, f => {
+                Animation.bombs_Appear(ballon_Icon, 0, 1, 1.1, 0, 200, 200, delayed, 'common', f => {
                     if (j === len - 1) {
                         this.PropsNode['Props'].clicksOnBtn();
                         this.balloonCount();
@@ -1893,6 +1852,56 @@
         Adaptive.background_Center = background_Center;
     })(Adaptive || (Adaptive = {}));
 
+    var Advertising;
+    (function (Advertising) {
+        Advertising.wx = Laya.Browser.window.wx;
+        function videoAd_01_Lode(func_yes, func_no) {
+            if (Laya.Browser.onMiniGame) {
+                console.log('广告开始加载');
+                Advertising.videoAd_01 = Advertising.wx.createRewardedVideoAd({
+                    adUnitId: 'adunit-6de18c6de7b6d9ab'
+                });
+                Advertising.videoAd_01.onLoad(() => {
+                    console.log('激励视频 广告加载成功');
+                });
+                Advertising.videoAd_01.onError(err => {
+                    console.log(err);
+                });
+                Advertising.videoAd_01.onClose(res => {
+                    if (res && res.isEnded || res === undefined) {
+                        func_yes();
+                    }
+                    else {
+                        console.log('视频没有看望不会开始游戏');
+                        func_no();
+                    }
+                });
+            }
+        }
+        Advertising.videoAd_01_Lode = videoAd_01_Lode;
+        function bannerAd_01_Lode() {
+            if (Laya.Browser.onMiniGame) {
+                console.log('广告开始加载');
+                Advertising.bannarAd_01 = Advertising.wx.createBannerAd({
+                    adUnitId: 'adunit-5329937f4349b0ea',
+                    adIntervals: 30,
+                    style: {
+                        left: 0,
+                        top: 0,
+                        width: 750
+                    }
+                });
+                Advertising.bannarAd_01.onLoad(() => {
+                    console.log('banner 广告加载成功');
+                });
+                Advertising.bannarAd_01.onError(err => {
+                    console.log(err);
+                });
+            }
+        }
+        Advertising.bannerAd_01_Lode = bannerAd_01_Lode;
+    })(Advertising || (Advertising = {}));
+
     class GameOver extends Laya.Script {
         constructor() { super(); }
         onEnable() {
@@ -1929,10 +1938,10 @@
             let time2 = 60;
             let delayed = 200;
             Animation.fade_out(this.background, 0, 0.8, 200, 0, null);
-            Animation.bombs_Appear(this.scoreNode, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 0, null);
-            Animation.bombs_Appear(this.logo, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 1, null);
-            Animation.bombs_Appear(this.btn_again, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 2, null);
-            Animation.bombs_Appear(this.btn_return, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 3, func => {
+            Animation.bombs_Appear(this.scoreNode, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 0, 'common', null);
+            Animation.bombs_Appear(this.logo, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 1, 'common', null);
+            Animation.bombs_Appear(this.btn_again, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 2, 'common', null);
+            Animation.bombs_Appear(this.btn_return, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 3, 'common', func => {
                 this.appearFunc();
             });
         }
@@ -1970,6 +1979,7 @@
                 }
             }
             this.self.removeSelf();
+            PalyAudio.playMusic(Enum.AudioName.bgm, 0, 0);
         }
         clicksOnBtn() {
             Clicks.clicksOn('largen', '音效/按钮点击.mp3', this.btn_again, this, null, null, this.up, null);
@@ -2158,11 +2168,11 @@
             let delayed = 300;
             for (let index = 0; index < this.logo._children.length; index++) {
                 const element = this.logo._children[index];
-                Animation.bombs_Appear(element, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * index, null);
+                Animation.bombs_Appear(element, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * index, 'common', null);
             }
-            Animation.bombs_Appear(this.btn_start, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 2, null);
-            Animation.bombs_Appear(this.btn_ranking, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 3, null);
-            Animation.bombs_Appear(this.btn_share, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 4, f => {
+            Animation.bombs_Appear(this.btn_start, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 5, 'common', null);
+            Animation.bombs_Appear(this.btn_ranking, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 6, 'common', null);
+            Animation.bombs_Appear(this.btn_share, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 7, 'common', f => {
                 this.appaerFunc();
             });
             Animation.fade_out(this.anti_addiction, 0, 1, 1000, 0, null);

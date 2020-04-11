@@ -130,10 +130,10 @@ export default class GameControl extends Laya.Script {
         //发送微信排行榜接受信息
         WXDataManager.wxPostInit();
 
-        // 加载01视频广告
-        Advertising.videoAd_01_Lode(f => this.watchAdsFunc('yes'), f => this.watchAdsFunc('no'));
-        // 加载01bannar广告
-        Advertising.bannerAd_01_Lode();
+        // // 加载01视频广告
+        // Advertising.videoAd_01_Lode(f => this.watchAdsFunc('yes'), f => this.watchAdsFunc('no'));
+        // // 加载01bannar广告
+        // Advertising.bannerAd_01_Lode();
 
         // 骨骼动画加载
         SkTemplete.createBaoolonTemplet();
@@ -275,16 +275,16 @@ export default class GameControl extends Laya.Script {
         plug_02.x = -800;
         // 底板动画，以BalloonVessel为动画目标，否则影响适配
         let parentBoard = this.BalloonVessel.getChildByName('parentBoard') as Laya.Image;
-        Animation.bombs_Appear(parentBoard, 0, 1, scale1, 0, time1, time2, delayed * 1, f => {
+        Animation.bombs_Appear(parentBoard, 0, 1, scale1, 0, time1, time2, delayed * 1, 'common', f => {
             this.createBalloonCollection();
         });
         // 任务栏的动画
         let scale2 = 1.2;
         let tipboard = this.Tip.getChildByName('tipboard') as Laya.Sprite;
-        Animation.bombs_Appear(tipboard, 0, 1, scale2, 0, time1, time2, delayed * 2, null);
-        Animation.bombs_Appear(this.TimeNode, 0, 1, scale2, 0, time1, time2, delayed * 3, null);
-        Animation.bombs_Appear(this.PropsNode, 0, 1, scale2, 0, time1, time2, delayed * 4, null);
-        Animation.bombs_Appear(this.LevelsNode, 0, 1, scale2, 0, time1, time2, delayed * 5, null);
+        Animation.bombs_Appear(tipboard, 0, 1, scale2, 0, time1, time2, delayed * 2, 'common', null);
+        Animation.bombs_Appear(this.TimeNode, 0, 1, scale2, 0, time1, time2, delayed * 3, 'common', null);
+        Animation.bombs_Appear(this.PropsNode, 0, 1, scale2, 0, time1, time2, delayed * 4, 'common', null);
+        Animation.bombs_Appear(this.LevelsNode, 0, 1, scale2, 0, time1, time2, delayed * 5, 'common', null);
     }
 
     /**
@@ -371,7 +371,7 @@ export default class GameControl extends Laya.Script {
                 balloon.pivotX = balloon.width / 2;
                 balloon.pivotY = balloon.height / 2;
 
-                Animation.bombs_Appear(balloon, 0, scale, scale + 0.1, 0, 200, 100, delayed, f => {
+                Animation.bombs_Appear(balloon, 0, scale, scale + 0.1, 0, 200, 100, delayed, 'balloon', f => {
                     this.explodeAni(this.BalloonVessel, balloon.x + (1 - scale) * balloon.pivotX / 2, balloon.y + (1 - scale) * balloon.pivotY / 2, 'vanish', 6, 10)
                     if (i === this.row - 1 && j === this.line - 1) {
                         this.createBeetle();
@@ -395,13 +395,13 @@ export default class GameControl extends Laya.Script {
         Animation.bombs_Vanish(this.LevelsNode, 0, 0, 0, 100, delayed, f => {
             this.readyStart('nextLevel');
             this.clearAllBallon('restartAndNextLevel');
-            Animation.bombs_Appear(this.LevelsNode, 0, 1, 1.1, 0, time1, time2, delayed, f => {
+            Animation.bombs_Appear(this.LevelsNode, 0, 1, 1.1, 0, time1, time2, delayed, 'common', f => {
             });
         })
         // 抖动后开始游戏
         Animation.bombs_Vanish(this.TimeNode, 0, 0, 0, time1, delayed * 2, f => {
             this.time.value = 1;
-            Animation.bombs_Appear(this.TimeNode, 0, 1, 1.1, 0, time1, time2, delayed, f => {
+            Animation.bombs_Appear(this.TimeNode, 0, 1, 1.1, 0, time1, time2, delayed, 'common', f => {
             });
         })
 
@@ -421,7 +421,7 @@ export default class GameControl extends Laya.Script {
 
         Animation.bombs_Vanish(this.TimeNode, 0, 0, 0, time1, delayed * 2, f => {
             this.time.value = 1;
-            Animation.bombs_Appear(this.TimeNode, 0, 1, 1.1, 0, time1, time2, delayed * 5, f => {
+            Animation.bombs_Appear(this.TimeNode, 0, 1, 1.1, 0, time1, time2, delayed * 5, 'common', f => {
             });
         })
         this.clearAllBallon('restartAndNextLevel');
@@ -526,7 +526,7 @@ export default class GameControl extends Laya.Script {
                 colorSkin = Enum.IconSkin_01[Enum.BalloonName[name]];
             }
             let ballon_Icon = this.createBallon_Icon(x, y, colorSkin, name);
-            Animation.bombs_Appear(ballon_Icon, 0, 1, 1.1, 0, 200, 200, delayed, f => {
+            Animation.bombs_Appear(ballon_Icon, 0, 1, 1.1, 0, 200, 200, delayed, 'common', f => {
                 if (j === len - 1) {
                     // 喇叭只有动画完成之后才能点击
                     this.PropsNode['Props'].clicksOnBtn();

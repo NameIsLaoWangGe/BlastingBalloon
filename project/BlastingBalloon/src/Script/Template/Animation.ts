@@ -339,14 +339,22 @@ export module Animation {
      * @param delayed 延时时间
      * @param func 完成后的回调
      */
-    export function bombs_Appear(node, firstAlpha, firstScale, scale1, rotation, time1, time2, delayed, func): void {
+    export function bombs_Appear(node, firstAlpha, firstScale, scale1, rotation, time1, time2, delayed, audioType, func): void {
         node.scale(0, 0);
         node.alpha = firstAlpha;
         Laya.Tween.to(node, { scaleX: scale1, scaleY: scale1, alpha: 1, rotation: rotation }, time1, Laya.Ease.cubicInOut, Laya.Handler.create(this, function () {
 
             Laya.Tween.to(node, { scaleX: firstScale, scaleY: firstScale, rotation: 0 }, time2, null, Laya.Handler.create(this, function () {
-
-                PalyAudio.playSound(Enum.AudioName.commonPopup, 1);
+                switch (audioType) {
+                    case 'balloon':
+                        PalyAudio.playSound(Enum.AudioName.balloonPopup, 1);
+                        break;
+                    case 'common':
+                        PalyAudio.playSound(Enum.AudioName.commonPopup, 1);
+                        break;
+                    default:
+                        break;
+                }
 
                 Laya.Tween.to(node, { scaleX: firstScale + (scale1 - firstScale) * 0.2, scaleY: firstScale + (scale1 - firstScale) * 0.2, rotation: 0 }, time2, null, Laya.Handler.create(this, function () {
 
@@ -373,7 +381,9 @@ export module Animation {
      * @param func 完成后的回调
      */
     export function bombs_Vanish(node, scale, alpha, rotation, time, delayed, func): void {
+
         Laya.Tween.to(node, { scaleX: scale, scaleY: scale, alpha: alpha, rotation: rotation }, time, Laya.Ease.cubicOut, Laya.Handler.create(this, function () {
+            PalyAudio.playSound(Enum.AudioName.commonVanish, 1);
             if (func !== null) {
                 func()
             }
