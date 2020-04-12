@@ -13,7 +13,7 @@ export module WXDataManager {
     /**需要上传的信息*/
     export let _gameData = {
         _levels: 1,
-        _propNum: 5,//首次登陆给与的道具数量
+        _propNum: 10,//首次登陆给与的道具数量
     }
 
     /**Laya中的微信引用，在当前模块可以直接使用，在其他模块需要加上模块名*/
@@ -154,6 +154,12 @@ export module WXDataManager {
                         console.log(error)
                     }
                 } else if (type === 'haveLogin') {
+                    // 每次登陆都尝试重新上传，如果有了就不用上传了
+                    try {
+                        add_GameData();
+                    } catch (error) {
+                        console.log(error)
+                    }
                     try {
                         get_GameData();
                     } catch (error) {

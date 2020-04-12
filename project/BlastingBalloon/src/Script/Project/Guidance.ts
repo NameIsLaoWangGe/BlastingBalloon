@@ -156,8 +156,8 @@ export default class Guidance extends Laya.Script {
         let radius = 80;
         this.createCircleMask(x, y, radius);
 
-        /**道具执行动画提示*/
-       
+        /**道具执行动画提示开启*/
+        this.PropsNode['Props'].aniSwitch = true;
         // 道具可点击
         this.PropsNode['Props'].clicksOnBtn();
         this.createTipSet('beetle');
@@ -177,6 +177,9 @@ export default class Guidance extends Laya.Script {
         // 同时进行一次颜色引导，防止引导结束后，本关不会通关会点错
         let currentColor = this.gameControl.clickOrderArr[0];
         this.ballonAndTaskMask(currentColor);
+
+        /**道具执行动画提示关闭*/
+        this.PropsNode['Props'].aniSwitch = false;
     }
 
     /**

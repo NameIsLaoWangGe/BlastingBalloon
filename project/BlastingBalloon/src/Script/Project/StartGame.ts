@@ -61,7 +61,6 @@ export default class StartGame extends Laya.Script {
 
         // 通用放大缩小动画的开关
         this.startSwitch = false;
-        OnUpdateAni.magnify_shrink_change = 'magnify';
 
         Adaptive.interface_Center(this.self);
         Adaptive.child_Center(this.anti_addiction, this.self, Laya.stage.height * 9 / 10);
@@ -195,7 +194,7 @@ export default class StartGame extends Laya.Script {
     }
 
     onUpdate(): void {
-        OnUpdateAni.magnify_shrink(this.startSwitch, this.btn_start, 0.003, 0.003, 1, 1.05);
+        OnUpdateAni.magnify_shrink_start(this.startSwitch, this.btn_start, 0.003, 0.003, 1, 1.05);
     }
 
     onDisable(): void {

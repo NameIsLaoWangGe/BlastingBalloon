@@ -548,16 +548,62 @@
         }
     }
 
+    var OnUpdateAni;
+    (function (OnUpdateAni) {
+        OnUpdateAni.magnify_shrink_change_start = 'magnify';
+        function magnify_shrink_start(aniSwitch, node, shrinkScale, magnifyScale, minScale, maxScale) {
+            if (aniSwitch) {
+                if (OnUpdateAni.magnify_shrink_change_start === 'magnify') {
+                    node.scaleX += magnifyScale;
+                    node.scaleY += magnifyScale;
+                    if (node.scaleX > maxScale) {
+                        OnUpdateAni.magnify_shrink_change_start = 'shrink';
+                    }
+                }
+                else if (OnUpdateAni.magnify_shrink_change_start === 'shrink') {
+                    node.scaleX -= shrinkScale;
+                    node.scaleY -= shrinkScale;
+                    if (node.scaleX < minScale) {
+                        OnUpdateAni.magnify_shrink_change_start = 'magnify';
+                    }
+                }
+            }
+        }
+        OnUpdateAni.magnify_shrink_start = magnify_shrink_start;
+        OnUpdateAni.magnify_shrink_change_Prop = 'magnify';
+        function magnify_shrink_Prop(aniSwitch, node, shrinkScale, magnifyScale, minScale, maxScale) {
+            if (aniSwitch) {
+                if (OnUpdateAni.magnify_shrink_change_Prop === 'magnify') {
+                    node.scaleX += magnifyScale;
+                    node.scaleY += magnifyScale;
+                    if (node.scaleX > maxScale) {
+                        OnUpdateAni.magnify_shrink_change_Prop = 'shrink';
+                    }
+                }
+                else if (OnUpdateAni.magnify_shrink_change_Prop === 'shrink') {
+                    node.scaleX -= shrinkScale;
+                    node.scaleY -= shrinkScale;
+                    if (node.scaleX < minScale) {
+                        OnUpdateAni.magnify_shrink_change_Prop = 'magnify';
+                    }
+                }
+            }
+        }
+        OnUpdateAni.magnify_shrink_Prop = magnify_shrink_Prop;
+    })(OnUpdateAni || (OnUpdateAni = {}));
+
     class Props extends Laya.Script {
         constructor() { super(); }
         onEnable() {
             this.self = this.owner;
             this.self['Props'] = this;
             this.gameControl = this.self.scene['GameControl'];
+            this.Levels = this.gameControl.Levels;
             this.guidanceControl = this.self.scene['Guidance'];
             this.prop_skeleton = this.self.getChildByName('prop_skeleton');
             this.beetleParent = this.gameControl.beetleParent;
             this.createBoneAni();
+            this.aniSwitch = false;
         }
         createBoneAni() {
             this.templet = new Laya.Templet();
@@ -588,8 +634,9 @@
                 beetle['Beetle'].clicksOffBtn();
                 Animation.drop(beetle, beetle.y + 1600, 0, 1000, 0, f => {
                     beetle.removeSelf();
-                    if (Number(this.gameControl.Levels.value) === 2) {
+                    if (Number(this.Levels.value) === 2) {
                         this.guidanceControl.createTimeGuidance();
+                        this.gameControl.timeSwicth = true;
                     }
                 });
             }
@@ -617,7 +664,6 @@
         up(event) {
             event.currentTarget.scale(1, 1);
             let number = Number(this.propNum.value.substring(1, 3));
-            console.log(number);
             if (number > 0) {
                 this.prop_skeleton.play('attack', false);
                 this.prop_skeleton.playbackRate(3);
@@ -633,6 +679,9 @@
                 this.gameControl.createHint();
             }
         }
+        onUpdate() {
+            OnUpdateAni.magnify_shrink_start(this.aniSwitch, this.self, 0.004, 0.004, 1, 1.1);
+        }
         onDisable() {
         }
     }
@@ -641,7 +690,7 @@
     (function (WXDataManager) {
         WXDataManager._gameData = {
             _levels: 1,
-            _propNum: 5,
+            _propNum: 10,
         };
         WXDataManager.wx = Laya.Browser.window.wx;
         function WXcheckSession() {
@@ -750,6 +799,12 @@
                         }
                     }
                     else if (type === 'haveLogin') {
+                        try {
+                            add_GameData();
+                        }
+                        catch (error) {
+                            console.log(error);
+                        }
                         try {
                             get_GameData();
                         }
@@ -969,8 +1024,6 @@
             SkTemplete.createBaoolonTemplet();
             Data.dataLoading_Levels();
             WXDataManager.normalWXLogin();
-        }
-        guideBalloonCollection() {
         }
         watchAdsFunc(type) {
             if (type === 'yes') {
@@ -1270,11 +1323,16 @@
                             this.self['Guidance'].createBalloonGuidance(Enum.BalloonName[1]);
                         }
                         else if (levels === 2) {
+                            if (this.propNum.value === 'x0') {
+                                this.propNum.value = 'x1';
+                            }
                             this.createBeetle();
                             this.timeSwicth = true;
                         }
                         else {
+                            this.createBeetle();
                             this.clicksAllOn();
+                            this.PropsNode['Props'].clicksOnBtn();
                             this.timeSwicth = true;
                         }
                     }
@@ -1337,7 +1395,9 @@
             }
         }
         createGameOver(type) {
-            let gameOver = Laya.Pool.getItemByCreateFun('gameOver', this.gameOver.create, this.gameOver);
+            if (this.self['Guidance'].guideContainer) {
+                this.self['Guidance'].guideContainer.removeSelf();
+            }
             WXDataManager.wxPostData(this.Levels.value);
             if (type === 'defeated') {
                 WXDataManager._gameData._levels = Number(this.Levels.value);
@@ -1350,6 +1410,7 @@
             this.clicksAllOff();
             this.PropsNode['Props'].clicksOffBtn();
             this.timeSwicth = false;
+            let gameOver = Laya.Pool.getItemByCreateFun('gameOver', this.gameOver.create, this.gameOver);
             let len = this.BeetleParent._children.length;
             if (len === 0) {
                 this.self.addChild(gameOver);
@@ -1496,6 +1557,7 @@
             let y = this.PropsNode.y + (this.Tip.y - this.Tip.height / 2);
             let radius = 80;
             this.createCircleMask(x, y, radius);
+            this.PropsNode['Props'].aniSwitch = true;
             this.PropsNode['Props'].clicksOnBtn();
             this.createTipSet('beetle');
         }
@@ -1509,6 +1571,7 @@
             this.createTipSet('time');
             let currentColor = this.gameControl.clickOrderArr[0];
             this.ballonAndTaskMask(currentColor);
+            this.PropsNode['Props'].aniSwitch = false;
         }
         createTipSet(type) {
             if (type === Enum.BalloonName[1]) {
@@ -1581,6 +1644,7 @@
             this.self['Balloon'] = this;
             this.gameControl = this.self.scene['GameControl'];
             this.guidanceControl = this.self.scene['Guidance'];
+            this.guidanceControl.cilksNum = 0;
             this.Levels = this.gameControl.Levels;
         }
         skeletoninit() {
@@ -1694,6 +1758,11 @@
             this.speed = this.gameControl.beetleSpeed;
         }
         birthLocation() {
+            if (this.gameControl.Levels.value === '2') {
+                this.self.x = this.BalloonVessel.x + this.BalloonVessel.width / 2 - 800;
+                this.self.y = this.BalloonVessel.y + (Math.random() * 1) * this.BalloonVessel.height;
+                return;
+            }
             let direction = Math.floor(Math.random() * 2);
             if (direction === 1) {
                 this.self.x = this.BalloonVessel.x + this.BalloonVessel.width / 2 + 800;
@@ -1704,6 +1773,11 @@
             this.self.y = this.BalloonVessel.y + (Math.random() * 1) * this.BalloonVessel.height;
         }
         movePos() {
+            if (this.gameControl.Levels.value === '2') {
+                this.moveX = Laya.stage.width / 3;
+                this.moveY = Laya.stage.height / 3;
+                return;
+            }
             let shrink = 80;
             this.moveX = this.BalloonVessel.x - this.BalloonVessel.width / 2 + 50 + (this.BalloonVessel.width - shrink * 2) * (Math.random() * 1);
             this.moveY = this.BalloonVessel.y + shrink + (this.BalloonVessel.height - shrink * 2) * (Math.random() * 1);
@@ -2274,9 +2348,9 @@
             let time2 = 80;
             let delayed = 200;
             Animation.fade_out(this.background, 0, 0.8, 200, 0, null);
-            Animation.bombs_Appear(this.hintBox, 0, 1, scale - 0.2, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 0, null);
-            Animation.bombs_Appear(this.btn_not, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 1, null);
-            Animation.bombs_Appear(this.btn_watch, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 2, f => {
+            Animation.bombs_Appear(this.hintBox, 0, 1, scale - 0.2, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 0, null, null);
+            Animation.bombs_Appear(this.btn_not, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 1, null, null);
+            Animation.bombs_Appear(this.btn_watch, 0, 1, scale, Math.floor(Math.random() * 2) === 1 ? 5 : -5, time1, time2, delayed * 2, null, f => {
                 this.appaerFunc();
             });
         }
@@ -2370,29 +2444,6 @@
         }
     }
 
-    var OnUpdateAni;
-    (function (OnUpdateAni) {
-        function magnify_shrink(aniSwitch, node, shrinkScale, magnifyScale, minScale, maxScale) {
-            if (aniSwitch) {
-                if (OnUpdateAni.magnify_shrink_change === 'magnify') {
-                    node.scaleX += magnifyScale;
-                    node.scaleY += magnifyScale;
-                    if (node.scaleX > maxScale) {
-                        OnUpdateAni.magnify_shrink_change = 'shrink';
-                    }
-                }
-                else if (OnUpdateAni.magnify_shrink_change === 'shrink') {
-                    node.scaleX -= shrinkScale;
-                    node.scaleY -= shrinkScale;
-                    if (node.scaleX < minScale) {
-                        OnUpdateAni.magnify_shrink_change = 'magnify';
-                    }
-                }
-            }
-        }
-        OnUpdateAni.magnify_shrink = magnify_shrink;
-    })(OnUpdateAni || (OnUpdateAni = {}));
-
     class StartGame extends Laya.Script {
         constructor() { super(); }
         onEnable() {
@@ -2402,7 +2453,6 @@
             this.gameControl = this.self.scene['GameControl'];
             this.LevelsNode = this.gameControl.LevelsNode;
             this.startSwitch = false;
-            OnUpdateAni.magnify_shrink_change = 'magnify';
             Adaptive.interface_Center(this.self);
             Adaptive.child_Center(this.anti_addiction, this.self, Laya.stage.height * 9 / 10);
             this.timer = 0;
@@ -2492,7 +2542,7 @@
             }
         }
         onUpdate() {
-            OnUpdateAni.magnify_shrink(this.startSwitch, this.btn_start, 0.003, 0.003, 1, 1.05);
+            OnUpdateAni.magnify_shrink_start(this.startSwitch, this.btn_start, 0.003, 0.003, 1, 1.05);
         }
         onDisable() {
         }

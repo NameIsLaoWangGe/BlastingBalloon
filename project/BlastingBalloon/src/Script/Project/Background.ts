@@ -23,7 +23,7 @@ export default class backGround extends Laya.Script {
     constructor() { super(); }
 
     onEnable(): void {
-        this.self = this.owner as Laya.Sprite;
+        this.self = this.owner as Laya.Image;
         this.timer = 0;
         this.selectSwitch = true;
         this.blinkSwicth = false;

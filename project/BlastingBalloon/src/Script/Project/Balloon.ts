@@ -40,6 +40,7 @@ export default class Balloon extends Laya.Script {
         this.self['Balloon'] = this;
         this.gameControl = this.self.scene['GameControl'];
         this.guidanceControl = this.self.scene['Guidance'];
+        this.guidanceControl.cilksNum = 0;
         this.Levels = this.gameControl.Levels as Laya.FontClip;
     }
 

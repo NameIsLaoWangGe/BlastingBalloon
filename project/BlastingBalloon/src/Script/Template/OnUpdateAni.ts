@@ -5,10 +5,10 @@
 */
 export module OnUpdateAni {
 
-    /**放大和缩小动画的初始状态*/ 
-    export let magnify_shrink_change;
+    /**主界面的放大和缩小动画的初始状态*/
+    export let magnify_shrink_change_start = 'magnify';
     /**
-     * 放大和缩小动画
+     * 主界面开始按钮的放大和缩小动画
      * @param aniSwitch 开关，定义节点所在脚本上，方便控制
      * @param node 节点
      * @param change 放大缩小的初始状态包括'magnify'和'shrink'，决定先放大还是缩小
@@ -16,23 +16,55 @@ export module OnUpdateAni {
      * @param magnifyScale 每次放大的值
      * @param minScale 最小所放量
      * @param maxScale 最大所放量
-     */ 
-    export function magnify_shrink(aniSwitch, node, shrinkScale, magnifyScale, minScale, maxScale): void {
+     */
+    export function magnify_shrink_start(aniSwitch, node, shrinkScale, magnifyScale, minScale, maxScale): void {
         if (aniSwitch) {
-            if (magnify_shrink_change === 'magnify') {
+            if (magnify_shrink_change_start === 'magnify') {
                 node.scaleX += magnifyScale;
                 node.scaleY += magnifyScale;
                 if (node.scaleX > maxScale) {
-                    magnify_shrink_change = 'shrink';
+                    magnify_shrink_change_start = 'shrink';
                 }
-            } else if (magnify_shrink_change === 'shrink') {
+            } else if (magnify_shrink_change_start === 'shrink') {
                 node.scaleX -= shrinkScale;
                 node.scaleY -= shrinkScale;
                 if (node.scaleX < minScale) {
-                    magnify_shrink_change = 'magnify';
+                    magnify_shrink_change_start = 'magnify';
                 }
             }
         }
     }
+
+
+    /**主界面的放大和缩小动画的初始状态*/
+    export let magnify_shrink_change_Prop = 'magnify';
+    /**
+     * 道具放大和缩小动画
+     * @param aniSwitch 开关，定义节点所在脚本上，方便控制
+     * @param node 节点
+     * @param change 放大缩小的初始状态包括'magnify'和'shrink'，决定先放大还是缩小
+     * @param shrinkScale 每次减小的值
+     * @param magnifyScale 每次放大的值
+     * @param minScale 最小所放量
+     * @param maxScale 最大所放量
+     */
+    export function magnify_shrink_Prop(aniSwitch, node, shrinkScale, magnifyScale, minScale, maxScale): void {
+        if (aniSwitch) {
+            if (magnify_shrink_change_Prop === 'magnify') {
+                node.scaleX += magnifyScale;
+                node.scaleY += magnifyScale;
+                if (node.scaleX > maxScale) {
+                    magnify_shrink_change_Prop = 'shrink';
+                }
+            } else if (magnify_shrink_change_Prop === 'shrink') {
+                node.scaleX -= shrinkScale;
+                node.scaleY -= shrinkScale;
+                if (node.scaleX < minScale) {
+                    magnify_shrink_change_Prop = 'magnify';
+                }
+            }
+        }
+    }
+
 }
 export default OnUpdateAni;

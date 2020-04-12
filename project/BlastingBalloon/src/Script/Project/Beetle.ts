@@ -73,6 +73,12 @@ export default class Beetle extends Laya.Script {
      * 甲虫随机出生位置
      * */
     birthLocation(): void {
+        // 如果是新手引导的时候，给与固定位置
+        if (this.gameControl.Levels.value === '2') {
+            this.self.x = this.BalloonVessel.x + this.BalloonVessel.width / 2 - 800;
+            this.self.y = this.BalloonVessel.y + (Math.random() * 1) * this.BalloonVessel.height;
+            return;
+        }
         // 先随机从两边哪个方向出生,然后确定x的位置
         let direction = Math.floor(Math.random() * 2);
         if (direction === 1) {
@@ -88,6 +94,12 @@ export default class Beetle extends Laya.Script {
      * 随机位置计算
      * */
     movePos(): void {
+        // 如果是新手引导的时候，给与固定位置
+        if (this.gameControl.Levels.value === '2') {
+            this.moveX = Laya.stage.width / 3;
+            this.moveY = Laya.stage.height / 3;
+            return;
+        }
         let shrink = 80;//向内部缩放
         this.moveX = this.BalloonVessel.x - this.BalloonVessel.width / 2 + 50 + (this.BalloonVessel.width - shrink * 2) * (Math.random() * 1);
         this.moveY = this.BalloonVessel.y + shrink + (this.BalloonVessel.height - shrink * 2) * (Math.random() * 1);

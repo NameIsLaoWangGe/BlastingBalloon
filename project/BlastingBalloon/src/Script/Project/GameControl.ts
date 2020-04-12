@@ -150,11 +150,6 @@ export default class GameControl extends Laya.Script {
 
     }
 
-    /**新手引导创建的气球*/
-    guideBalloonCollection(): void {
-
-    }
-
     /**
    * 看完广告后的回调
    * 没看完不给奖励
@@ -523,7 +518,6 @@ export default class GameControl extends Laya.Script {
         }
     }
 
-
     /**
      * 任务位置的气球提示
      */
@@ -571,13 +565,19 @@ export default class GameControl extends Laya.Script {
                         this.self['Guidance'].guidanceInit();
                         this.self['Guidance'].createBalloonGuidance(Enum.BalloonName[1]);
                     }
-                    //第二关有甲虫和时间引导
+                    //第二关有甲虫和时间引导,如果此时没有道具了，要增加一个
                     else if (levels === 2) {
+                        if (this.propNum.value === 'x0') {
+                            this.propNum.value = 'x1';
+                        }
                         this.createBeetle();
+                        // 有一个气球不可点击，否则新手引导无法进行
                         this.timeSwicth = true;
                     } else {
                         // 第二关以后方可点击
+                        this.createBeetle();
                         this.clicksAllOn();
+                        this.PropsNode['Props'].clicksOnBtn();
                         this.timeSwicth = true;
                     }
                 }
@@ -588,9 +588,6 @@ export default class GameControl extends Laya.Script {
         this.TaskBalloonParent.pivotX = this.TaskBalloonParent.width / 2;
         this.TaskBalloonParent.x = 375;
     }
-
-    /**创建新手引导遮罩*/
-
 
     /**
      * 点击指引提示现在应该点击哪个气球
@@ -676,7 +673,10 @@ export default class GameControl extends Laya.Script {
      * */
     createGameOver(type): void {
 
-        let gameOver = Laya.Pool.getItemByCreateFun('gameOver', this.gameOver.create, this.gameOver) as Laya.Sprite;
+        // 如果第二关没有过关需要清除引导节点
+        if (this.self['Guidance'].guideContainer) {
+            this.self['Guidance'].guideContainer.removeSelf();
+        }
 
         // 微信上传关卡
         WXDataManager.wxPostData(this.Levels.value);
@@ -695,7 +695,10 @@ export default class GameControl extends Laya.Script {
         this.PropsNode['Props'].clicksOffBtn();
         // 停止计时
         this.timeSwicth = false;
-        // 小甲虫离开游戏
+
+        // 创建结束界面
+        let gameOver = Laya.Pool.getItemByCreateFun('gameOver', this.gameOver.create, this.gameOver) as Laya.Sprite;
+        // 小甲虫离开游戏后才会出现结束界面
         let len = this.BeetleParent._children.length;
         if (len === 0) {
             this.self.addChild(gameOver);

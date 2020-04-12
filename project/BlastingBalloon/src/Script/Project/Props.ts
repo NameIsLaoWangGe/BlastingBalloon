@@ -1,5 +1,6 @@
 import { Clicks } from "../Template/Clicks";
 import { Animation } from "../Template/Animation";
+import { OnUpdateAni } from "../Template/OnUpdateAni";
 
 export default class Props extends Laya.Script {
     /** @prop {name:propNum, tips:"道具数量", type:Node}*/
@@ -14,14 +15,20 @@ export default class Props extends Laya.Script {
     private prop_skeleton: Laya.Skeleton
 
     /**指代this.ower*/
-    private self: Laya.Sprite;
+    private self: Laya.Sprite
     /**主场景脚本*/
     private gameControl;
     /**引导控制脚本*/
-    private guidanceControl;
+    private guidanceControl
+
+    /**当前等级*/
+    private Levels: Laya.FontClip
 
     /**小甲虫父节点*/
-    private beetleParent;
+    private beetleParent: Laya.Sprite
+
+    /**道具放大缩小动画开关*/
+    private aniSwitch: boolean
 
 
     constructor() { super(); }
@@ -30,10 +37,17 @@ export default class Props extends Laya.Script {
         this.self = this.owner as Laya.Sprite;
         this.self['Props'] = this;
         this.gameControl = this.self.scene['GameControl'];
+        this.Levels = this.gameControl.Levels as Laya.FontClip;
+
         this.guidanceControl = this.self.scene['Guidance'];
+
         this.prop_skeleton = this.self.getChildByName('prop_skeleton') as Laya.Skeleton;
+
         this.beetleParent = this.gameControl.beetleParent as Laya.Sprite;
         this.createBoneAni();
+        this.aniSwitch = false;
+
+        // 如果第二关总是没有过去，并且没有了道具，就+1个，防止驱虫的新手引导出问题
     }
 
     /**创建骨骼动画皮肤*/
@@ -75,13 +89,11 @@ export default class Props extends Laya.Script {
             Animation.drop(beetle, beetle.y + 1600, 0, 1000, 0, f => {
                 beetle.removeSelf();
                 // 如果是第二关的话，需要关闭新手引导
-                if (Number(this.gameControl.Levels.value) === 2) {
-                    // (this.guidanceControl.guideContainer as Laya.Sprite).removeSelf();
+                if (Number(this.Levels.value) === 2) {
                     this.guidanceControl.createTimeGuidance();
+                    this.gameControl.timeSwicth = true;
                 }
             });
-
-
         }
     }
 
@@ -119,7 +131,6 @@ export default class Props extends Laya.Script {
         // 如果小喇叭没有了，才能看广告
         // 如果还有小喇叭，那么发动攻击后，小喇叭减一
         let number = Number(this.propNum.value.substring(1, 3));
-        console.log(number);
         if (number > 0) {
             // 播放攻击动画
             this.prop_skeleton.play('attack', false);
@@ -137,10 +148,14 @@ export default class Props extends Laya.Script {
             // 发射特效
             this.prorAttack();
         } else {
+            // 如果小于或者等于0那么弹出看广告界面
             this.gameControl.createHint();
         }
     }
 
+    onUpdate(): void {
+        OnUpdateAni.magnify_shrink_start(this.aniSwitch, this.self, 0.004, 0.004, 1, 1.1);
+    }
 
     onDisable(): void {
     }
