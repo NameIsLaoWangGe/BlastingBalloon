@@ -13,6 +13,10 @@ export default class Balloon extends Laya.Script {
      */
     private gameControl
     /**
+     * 场景新手引导脚本组件
+     */
+    private guidanceControl
+    /**
      * 指代当前挂载脚本的节点
      */
     private self: Laya.Sprite
@@ -23,7 +27,9 @@ export default class Balloon extends Laya.Script {
     private skeleton: Laya.Skeleton
 
     /**加载完成开关*/
-    private loadOnOff;
+    private loadOnOff
+    /**当前关卡*/
+    private Levels
 
     constructor() {
         super();
@@ -33,6 +39,8 @@ export default class Balloon extends Laya.Script {
         this.self = this.owner as Laya.Sprite;
         this.self['Balloon'] = this;
         this.gameControl = this.self.scene['GameControl'];
+        this.guidanceControl = this.self.scene['Guidance'];
+        this.Levels = this.gameControl.Levels as Laya.FontClip;
     }
 
     /**骨骼动画设置*/
@@ -95,6 +103,34 @@ export default class Balloon extends Laya.Script {
         Clicks.clicksOff('balloon', this.self, this, null, null, this.up, null);
     }
 
+    /**新手引导相关的判定*/
+    guidedJudgment(): void {
+
+        let guideContainer = this.guidanceControl.guideContainer as Laya.Sprite;
+        // 记录第一关新手引导时的点击次数
+        if (Number(this.Levels.value) === 1) {
+            this.guidanceControl.cilksNum++;
+            if (this.guidanceControl.cilksNum === 5) {
+                console.log('执行第二步引导');
+                this.guidanceControl.createBalloonGuidance(Enum.BalloonName[0]);
+            } else if (this.guidanceControl.cilksNum === 9) {
+                // 第一关之后删掉指引层
+                guideContainer.removeSelf();
+                this.guidanceControl.cilksNum = 0;
+            }
+        }
+
+        // 第二关的新手引导
+        else if (Number(this.Levels.value) === 2) {
+            this.guidanceControl.cilksNum++;
+            if (this.guidanceControl.cilksNum === 5) {
+                // 删掉新手引导，让玩家自己点击，打开点击事件
+                guideContainer.removeSelf();
+                this.gameControl.clicksAllOn();
+            }
+        }
+    }
+
     /**抬起*/
     up(event): void {
         // 无论点错点对时间都停止
@@ -104,6 +140,7 @@ export default class Balloon extends Laya.Script {
             this.gameControl.explodeAni(this.gameControl.BalloonVessel, this.self.x + (1 - Clicks.balloonScale) * this.self.pivotX / 2, this.self.y + (1 - Clicks.balloonScale) * this.self.pivotY / 2, this.self.name, 20, 10)
             PalyAudio.playSound(Enum.AudioName.balloonRight, 1);
             this.clickRight();
+            this.guidedJudgment();
         } else {
             this.clickError();
             PalyAudio.playSound(Enum.AudioName.balloonError, 1);

@@ -104,6 +104,14 @@
             AudioName["commonPopup"] = "\u97F3\u6548/\u901A\u7528\u5F39\u51FA.mp3";
             AudioName["commonShake"] = "\u97F3\u6548/\u6296\u52A8.mp3";
         })(AudioName = Enum.AudioName || (Enum.AudioName = {}));
+        let GuidanceTiptype;
+        (function (GuidanceTiptype) {
+            GuidanceTiptype["colorOrder"] = "\u5F15\u5BFC/\u5F15\u5BFC_\u989C\u8272\u987A\u5E8F.png";
+            GuidanceTiptype["color_01"] = "\u5F15\u5BFC/\u5F15\u5BFC_\u989C\u82721.png";
+            GuidanceTiptype["color_02"] = "\u5F15\u5BFC/\u5F15\u5BFC_\u989C\u82722.png";
+            GuidanceTiptype["time"] = "\u5F15\u5BFC/\u5F15\u5BFC_\u65F6\u95F4.png";
+            GuidanceTiptype["expelBeetle"] = "\u5F15\u5BFC/\u5F15\u5BFC_\u9A71\u866B.png";
+        })(GuidanceTiptype = Enum.GuidanceTiptype || (Enum.GuidanceTiptype = {}));
     })(Enum || (Enum = {}));
 
     var Animation;
@@ -398,7 +406,6 @@
             this.timer = 0;
             this.selectSwitch = true;
             this.blinkSwicth = false;
-            console.log('11');
             for (let index = 0; index < this.self._children.length; index++) {
                 const element = this.self._children[index];
                 element.alpha = 0;
@@ -547,6 +554,7 @@
             this.self = this.owner;
             this.self['Props'] = this;
             this.gameControl = this.self.scene['GameControl'];
+            this.guidanceControl = this.self.scene['Guidance'];
             this.prop_skeleton = this.self.getChildByName('prop_skeleton');
             this.beetleParent = this.gameControl.beetleParent;
             this.createBoneAni();
@@ -580,6 +588,9 @@
                 beetle['Beetle'].clicksOffBtn();
                 Animation.drop(beetle, beetle.y + 1600, 0, 1000, 0, f => {
                     beetle.removeSelf();
+                    if (Number(this.gameControl.Levels.value) === 2) {
+                        this.guidanceControl.createTimeGuidance();
+                    }
                 });
             }
         }
@@ -630,7 +641,7 @@
     (function (WXDataManager) {
         WXDataManager._gameData = {
             _levels: 1,
-            _propNum: 3,
+            _propNum: 5,
         };
         WXDataManager.wx = Laya.Browser.window.wx;
         function WXcheckSession() {
@@ -1054,7 +1065,6 @@
             let parentBoard = this.BalloonVessel.getChildByName('parentBoard');
             Animation.bombs_Appear(parentBoard, 0, 1, scale1, 0, time1, time2, delayed * 1, 'common', f => {
                 this.createBalloonCollection();
-                PalyAudio.playMusic(Enum.AudioName.bgm, 0, 0);
             });
             let scale2 = 1.2;
             let tipboard = this.Tip.getChildByName('tipboard');
@@ -1103,6 +1113,14 @@
             Animation.deform_Move(plug_02, firstX_02, -800, scaleX3, scaleY3, time2, delayed, null);
         }
         createBalloonCollection() {
+            let levelsData = Number(this.Levels.value);
+            let guideColor;
+            if (levelsData === 1) {
+                guideColor = this.self['Guidance'].guideColor_Lv_01;
+            }
+            else if (levelsData === 2) {
+                guideColor = this.self['Guidance'].guideColor_Lv_02;
+            }
             let widthP = this.BalloonParent.width;
             let heightP = this.BalloonParent.height;
             let delayed = 0;
@@ -1112,9 +1130,8 @@
                     let x = widthP / this.row * (i + 1) - widthP / (this.row * 2);
                     let y = heightP / this.line * (j + 1) - heightP / (this.line * 2);
                     let balloon;
-                    if (Number(this.Levels.value) === 1) {
-                        let guideBalloonColor = this.self['Guidance'].guideBalloonColor;
-                        balloon = this.createBallon(x, y, guideBalloonColor[i][j]);
+                    if (levelsData === 1 || levelsData === 2) {
+                        balloon = this.createBallon(x, y, guideColor[i][j]);
                     }
                     else {
                         balloon = this.createBallon(x, y, null);
@@ -1127,7 +1144,6 @@
                     Animation.bombs_Appear(balloon, 0, scale, scale + 0.1, 0, 200, 100, delayed, null, f => {
                         this.explodeAni(this.BalloonVessel, balloon.x + (1 - scale) * balloon.pivotX / 2, balloon.y + (1 - scale) * balloon.pivotY / 2, 'vanish', 6, 10);
                         if (i === this.row - 1 && j === this.line - 1) {
-                            this.createBeetle();
                             this.TaskBalloonParentSet();
                             this.taskTipShake(0);
                         }
@@ -1154,7 +1170,7 @@
             let time1 = 300;
             let time2 = 100;
             let delayed = 250;
-            this.pligAni(delayed);
+            this.pligAni(0);
             Animation.bombs_Vanish(this.LevelsNode, 0, 0, 0, 100, delayed, f => {
                 this.readyStart('nextLevel');
                 this.clearAllBallon('restartAndNextLevel');
@@ -1171,7 +1187,7 @@
             let time1 = 200;
             let time2 = 100;
             let delayed = 250;
-            this.pligAni(delayed);
+            this.pligAni(0);
             Animation.swell_shrink(this.LevelsNode, 1, 1.3, time1 * 0.5, 0, f => {
                 Animation.swell_shrink(this.LevelsNode, 1, 1.3, time1 * 0.5, 0, f => {
                 });
@@ -1245,16 +1261,20 @@
                 let ballon_Icon = this.createBallon_Icon(x, y, colorSkin, name);
                 Animation.bombs_Appear(ballon_Icon, 0, 1, 1.1, 0, 200, 200, delayed, 'common', f => {
                     if (j === len - 1) {
-                        this.PropsNode['Props'].clicksOnBtn();
                         this.balloonCount();
                         this.balloonClickOrder();
-                        this.clicksAllOn();
-                        if (Number(this.Levels.value) === 1) {
+                        let levels = Number(this.Levels.value);
+                        if (levels === 1) {
                             this.timeSwicth = false;
                             this.self['Guidance'].guidanceInit();
-                            this.self['Guidance'].createGuidanceMask(Enum.BalloonName[1]);
+                            this.self['Guidance'].createBalloonGuidance(Enum.BalloonName[1]);
+                        }
+                        else if (levels === 2) {
+                            this.createBeetle();
+                            this.timeSwicth = true;
                         }
                         else {
+                            this.clicksAllOn();
                             this.timeSwicth = true;
                         }
                     }
@@ -1330,14 +1350,14 @@
             this.clicksAllOff();
             this.PropsNode['Props'].clicksOffBtn();
             this.timeSwicth = false;
-            let len = this.beetleParent._children.length;
+            let len = this.BeetleParent._children.length;
             if (len === 0) {
                 this.self.addChild(gameOver);
                 gameOver['GameOver'].gameOverType(type);
                 return;
             }
             for (let index = 0; index < len; index++) {
-                const beetle = this.beetleParent._children[index];
+                const beetle = this.BeetleParent._children[index];
                 beetle['Beetle'].moveSwitch = false;
                 beetle['Beetle'].remainTime = -20000;
                 beetle['Beetle'].clicksOffBtn();
@@ -1372,7 +1392,7 @@
         }
         createBeetle() {
             let beetle = Laya.Pool.getItemByCreateFun('beetle', this.beetle.create, this.beetle);
-            this.beetleParent.addChild(beetle);
+            this.BeetleParent.addChild(beetle);
         }
         explodeAni(parent, x, y, type, number, zOrder) {
             for (let i = 0; i < number; i++) {
@@ -1405,49 +1425,148 @@
     class Guidance extends Laya.Script {
         constructor() {
             super();
-            this.guideSteps = [
-                { x: 375, y: 575, radius: 150, tip: "UI/重来按钮.png", tipx: 375, tipy: 250 },
-                { x: 375, y: 620, radius: 100, tip: "UI/重来按钮.png", tipx: 375, tipy: 500 },
-                { x: 375, y: 583, radius: 110, tip: "UI/重来按钮.png", tipx: 375, tipy: 800 }
-            ];
-            this.guideStep = 0;
         }
         onEnable() {
             console.log('我是新手引导脚本');
             this.self = this.owner;
             this.self['Guidance'] = this;
             this.gameControl = this.self['GameControl'];
-            this.guideBalloonColor = [[1, 0, 1], [1, 0, 0], [1, 1, 0]];
+            this.guideColor_Lv_01 = [[1, 0, 1], [1, 0, 0], [1, 1, 0]];
+            this.guideColor_Lv_02 = [[0, 1, 1, 1], [1, 0, 0, 1], [1, 1, 0, 0]];
+            this.cilksNum = 0;
         }
         guidanceInit() {
             this.guideContainer = new Laya.Sprite();
             this.guideContainer.cacheAs = "bitmap";
             Laya.stage.addChild(this.guideContainer);
+        }
+        newGuidanceSet() {
+            this.guideContainer.removeChildren(0, this.guideContainer._children.length - 1);
             var maskArea = new Laya.Sprite();
             maskArea.alpha = 0.5;
             maskArea.graphics.drawRect(0, 0, Laya.stage.width, Laya.stage.height, "#000000");
+            maskArea.name = 'bg';
             this.guideContainer.addChild(maskArea);
+            Animation.fade_out(maskArea, 0, 0.5, 100, 0, null);
+            this.tipParent = new Laya.Sprite();
+            this.guideContainer.addChild(this.tipParent);
+            this.tipParent.pos(0, 0);
+            this.tipParent.zOrder = 100;
         }
-        createGuidanceMask(type) {
-            let BalloonParent = this.gameControl.BalloonParent;
-            let BalloonVessel = this.gameControl.BalloonVessel;
-            let TaskBalloonParent = this.gameControl.TaskBalloonParent;
-            for (let index = 0; index < BalloonParent._children.length; index++) {
-                const balloon = BalloonParent._children[index];
-                console.log(balloon.name, type);
+        createBalloonGuidance(type) {
+            this.newGuidanceSet();
+            this.ballonAndTaskMask(type);
+            this.createTipSet(type);
+        }
+        ballonAndTaskMask(type) {
+            for (let index = 0; index < this.BalloonParent._children.length; index++) {
+                const balloon = this.BalloonParent._children[index];
                 if (balloon.name === type) {
-                    this.interactionArea = new Laya.Sprite();
-                    this.interactionArea.name = 'reverseMask';
-                    this.interactionArea.blendMode = "destination-out";
-                    this.guideContainer.addChild(this.interactionArea);
-                    let x = balloon.x + (BalloonParent.x - BalloonParent.width / 2) + (BalloonVessel.x - BalloonVessel.width / 2);
-                    let y = balloon.y + BalloonParent.y + BalloonVessel.y;
-                    this.interactionArea.graphics.drawCircle(x, y - balloon.height * 0.05, balloon.height / 2 - 30, "#000000");
+                    let x = balloon.x + (this.BalloonParent.x - this.BalloonParent.width / 2) + (this.BalloonVessel.x - this.BalloonVessel.width / 2);
+                    let y = (balloon.y + this.BalloonParent.y + this.BalloonVessel.y) - balloon.height * 0.05;
+                    let radius = balloon.height / 2 - 30;
+                    this.createCircleMask(x, y, radius);
+                    balloon['Balloon'].balloonClicksOn();
                 }
                 else {
                     balloon['Balloon'].balloonClicksOff();
                 }
+                for (let index = 0; index < this.TaskBalloonParent._children.length; index++) {
+                    const taskBalloon = this.TaskBalloonParent._children[index];
+                    if (taskBalloon.name === type) {
+                        let x = taskBalloon.x + (this.TaskBalloonParent.x - this.TaskBalloonParent.width / 2) + (this.Tip.x - this.Tip.width / 2);
+                        let y = taskBalloon.y + (this.TaskBalloonParent.y - this.TaskBalloonParent.height / 2) + (this.Tip.y - this.Tip.height / 2);
+                        let radius = taskBalloon.height / 2 + 10;
+                        this.createCircleMask(x, y, radius);
+                    }
+                }
             }
+        }
+        createBeetleGuidance() {
+            this.newGuidanceSet();
+            for (let index = 0; index < this.BeetleParent._children.length; index++) {
+                const beetle = this.BeetleParent._children[index];
+                let x = beetle.x + this.BeetleParent.x;
+                let y = beetle.y + this.BeetleParent.x;
+                let radius = beetle.height / 2 + 50;
+                this.createCircleMask(x, y, radius);
+                beetle['Beetle'].clicksOffBtn();
+            }
+            let x = this.PropsNode.x + (this.Tip.x - this.Tip.width / 2);
+            let y = this.PropsNode.y + (this.Tip.y - this.Tip.height / 2);
+            let radius = 80;
+            this.createCircleMask(x, y, radius);
+            this.PropsNode['Props'].clicksOnBtn();
+            this.createTipSet('beetle');
+        }
+        createTimeGuidance() {
+            this.newGuidanceSet();
+            let width = 450;
+            let height = 80;
+            let x = this.TimeNode.x - width / 2;
+            let y = this.TimeNode.y + (this.Tip.y - this.Tip.height / 2) - height / 2;
+            this.createRectleMask(x, y, width, height);
+            this.createTipSet('time');
+            let currentColor = this.gameControl.clickOrderArr[0];
+            this.ballonAndTaskMask(currentColor);
+        }
+        createTipSet(type) {
+            if (type === Enum.BalloonName[1]) {
+                for (let index = 0; index < 2; index++) {
+                    let skin;
+                    let x;
+                    let y;
+                    let delay;
+                    if (index === 0) {
+                        skin = Enum.GuidanceTiptype.colorOrder;
+                        x = 110;
+                        y = Laya.stage.height * 0.028;
+                        delay = 100;
+                    }
+                    else {
+                        skin = Enum.GuidanceTiptype.color_01;
+                        x = 387;
+                        y = Laya.stage.height * 0.142;
+                        delay = 200;
+                    }
+                    this.tip(skin, x, y, delay);
+                }
+            }
+            else if (type === Enum.BalloonName[0]) {
+                this.tip(Enum.GuidanceTiptype.color_02, 550, Laya.stage.height * 0.45, 100);
+            }
+            else if (type === 'beetle') {
+                let x = this.PropsNode.x + (this.Tip.x - this.Tip.width / 2);
+                let y = this.PropsNode.y + (this.Tip.y - this.Tip.height / 2);
+                this.tip(Enum.GuidanceTiptype.expelBeetle, x - 200, y - 100, 100);
+            }
+            else if (type === 'time') {
+                this.tip(Enum.GuidanceTiptype.time, 509, 118, 100);
+            }
+        }
+        tip(skin, x, y, delay) {
+            let tip = new Laya.Image();
+            tip.skin = skin;
+            this.tipParent.addChild(tip);
+            tip.x = x;
+            tip.y = y;
+            tip.pivotX = tip.width / 2;
+            tip.pivotY = tip.height / 2;
+            Animation.bombs_Appear(tip, 0, 1, 1.1, 0, 150, 50, delay, null, null);
+        }
+        createCircleMask(x, y, radius) {
+            this.interactionArea = new Laya.Sprite();
+            this.interactionArea.name = 'reverseMask';
+            this.interactionArea.blendMode = "destination-out";
+            this.guideContainer.addChild(this.interactionArea);
+            this.interactionArea.graphics.drawCircle(x, y, radius, "#000000");
+        }
+        createRectleMask(x, y, width, height) {
+            this.interactionArea = new Laya.Sprite();
+            this.interactionArea.name = 'reverseMask';
+            this.interactionArea.blendMode = "destination-out";
+            this.guideContainer.addChild(this.interactionArea);
+            this.interactionArea.graphics.drawRect(x, y, width, height, "#000000");
         }
         onDisable() {
         }
@@ -1461,6 +1580,8 @@
             this.self = this.owner;
             this.self['Balloon'] = this;
             this.gameControl = this.self.scene['GameControl'];
+            this.guidanceControl = this.self.scene['Guidance'];
+            this.Levels = this.gameControl.Levels;
         }
         skeletoninit() {
             this.skeleton = SkTemplete.baoolonTemplet.buildArmature(0);
@@ -1500,12 +1621,34 @@
         balloonClicksOff() {
             Clicks.clicksOff('balloon', this.self, this, null, null, this.up, null);
         }
+        guidedJudgment() {
+            let guideContainer = this.guidanceControl.guideContainer;
+            if (Number(this.Levels.value) === 1) {
+                this.guidanceControl.cilksNum++;
+                if (this.guidanceControl.cilksNum === 5) {
+                    console.log('执行第二步引导');
+                    this.guidanceControl.createBalloonGuidance(Enum.BalloonName[0]);
+                }
+                else if (this.guidanceControl.cilksNum === 9) {
+                    guideContainer.removeSelf();
+                    this.guidanceControl.cilksNum = 0;
+                }
+            }
+            else if (Number(this.Levels.value) === 2) {
+                this.guidanceControl.cilksNum++;
+                if (this.guidanceControl.cilksNum === 5) {
+                    guideContainer.removeSelf();
+                    this.gameControl.clicksAllOn();
+                }
+            }
+        }
         up(event) {
             event.currentTarget.scale(Clicks.balloonScale, Clicks.balloonScale);
             if (this.self.name === this.gameControl.clickOrderArr[0]) {
                 this.gameControl.explodeAni(this.gameControl.BalloonVessel, this.self.x + (1 - Clicks.balloonScale) * this.self.pivotX / 2, this.self.y + (1 - Clicks.balloonScale) * this.self.pivotY / 2, this.self.name, 20, 10);
                 PalyAudio.playSound(Enum.AudioName.balloonRight, 1);
                 this.clickRight();
+                this.guidedJudgment();
             }
             else {
                 this.clickError();
@@ -1543,12 +1686,12 @@
             this.self = this.owner;
             this.self['Beetle'] = this;
             this.gameControl = this.self.scene['GameControl'];
+            this.guidanceControl = this.self.scene['Guidance'];
             this.BalloonVessel = this.gameControl.BalloonVessel;
             this.skeleton = this.self.getChildByName('skeleton');
             this.createBoneAni();
             this.birthLocation();
             this.speed = this.gameControl.beetleSpeed;
-            this.clicksOnBtn();
         }
         birthLocation() {
             let direction = Math.floor(Math.random() * 2);
@@ -1577,6 +1720,15 @@
         parseComplete() {
             this.moveSwitch = true;
             this.posSwitch = true;
+            if (Number(this.gameControl.Levels.value) === 2) {
+                this.guideMove = true;
+                this.guidanceSwitch = true;
+            }
+            else {
+                this.clicksOnBtn();
+                this.guideMove = false;
+                this.guidanceSwitch = false;
+            }
             this.playSkeletonAni(1, 'move');
         }
         playSkeletonAni(speed, type) {
@@ -1632,9 +1784,18 @@
             }
             else {
                 this.remainTime++;
-                if (this.remainTime > 200) {
+                if (this.remainTime > 200 && !this.guideMove) {
                     this.moveSwitch = true;
                     this.posSwitch = true;
+                }
+                else {
+                    if (this.guidanceSwitch) {
+                        this.guidanceControl.guidanceInit();
+                        this.guidanceControl.createBeetleGuidance();
+                        this.gameControl.timeSwicth = false;
+                        console.log('新手引导出现');
+                        this.guidanceSwitch = false;
+                    }
                 }
             }
         }
@@ -1999,13 +2160,13 @@
                 this.btn_again.loadImage('UI/下一关按钮.png');
                 this.settlementType = 'victory';
                 this.logo.loadImage('UI/闯关成功logo.png');
-                PalyAudio.playMusic(Enum.AudioName.victory, 1, 0);
+                PalyAudio.playSound(Enum.AudioName.victory, 1);
             }
             else if (type === 'defeated') {
                 this.btn_again.loadImage('UI/重来按钮.png');
                 this.settlementType = 'defeated';
                 this.logo.loadImage('UI/闯关失败logo.png');
-                PalyAudio.playMusic(Enum.AudioName.defeated, 1, 0);
+                PalyAudio.playSound(Enum.AudioName.defeated, 1);
             }
             let score = this.scoreNode.getChildByName('score');
             score.value = this.Levels.value;
@@ -2058,7 +2219,6 @@
                 }
             }
             this.self.removeSelf();
-            PalyAudio.playMusic(Enum.AudioName.bgm, 0, 0);
         }
         clicksOnBtn() {
             Clicks.clicksOn('largen', '音效/按钮点击.mp3', this.btn_again, this, null, null, this.up, null);
@@ -2210,6 +2370,29 @@
         }
     }
 
+    var OnUpdateAni;
+    (function (OnUpdateAni) {
+        function magnify_shrink(aniSwitch, node, shrinkScale, magnifyScale, minScale, maxScale) {
+            if (aniSwitch) {
+                if (OnUpdateAni.magnify_shrink_change === 'magnify') {
+                    node.scaleX += magnifyScale;
+                    node.scaleY += magnifyScale;
+                    if (node.scaleX > maxScale) {
+                        OnUpdateAni.magnify_shrink_change = 'shrink';
+                    }
+                }
+                else if (OnUpdateAni.magnify_shrink_change === 'shrink') {
+                    node.scaleX -= shrinkScale;
+                    node.scaleY -= shrinkScale;
+                    if (node.scaleX < minScale) {
+                        OnUpdateAni.magnify_shrink_change = 'magnify';
+                    }
+                }
+            }
+        }
+        OnUpdateAni.magnify_shrink = magnify_shrink;
+    })(OnUpdateAni || (OnUpdateAni = {}));
+
     class StartGame extends Laya.Script {
         constructor() { super(); }
         onEnable() {
@@ -2219,18 +2402,19 @@
             this.gameControl = this.self.scene['GameControl'];
             this.LevelsNode = this.gameControl.LevelsNode;
             this.startSwitch = false;
-            this.startChange = 'appear';
+            OnUpdateAni.magnify_shrink_change = 'magnify';
             Adaptive.interface_Center(this.self);
             Adaptive.child_Center(this.anti_addiction, this.self, Laya.stage.height * 9 / 10);
             this.timer = 0;
             this.appaer();
             this.createBoneAni();
+            PalyAudio.playMusic(Enum.AudioName.bgm, 0, 0);
         }
         createBoneAni() {
             this.templet = new Laya.Templet();
             this.templet.on(Laya.Event.COMPLETE, this, this.parseComplete);
             this.templet.on(Laya.Event.ERROR, this, this.onError);
-            this.templet.loadAni("Skeleton/beetle_01.sk");
+            this.templet.loadAni("Skeleton/logoBallon.sk");
         }
         onError() {
             console.log('装饰气球加载错误！');
@@ -2308,22 +2492,7 @@
             }
         }
         onUpdate() {
-            if (this.startSwitch) {
-                if (this.startChange === 'appear') {
-                    this.btn_start.scaleX += 0.003;
-                    this.btn_start.scaleY += 0.003;
-                    if (this.btn_start.scaleX > 1.05) {
-                        this.startChange = 'vanish';
-                    }
-                }
-                else if (this.startChange === 'vanish') {
-                    this.btn_start.scaleX -= 0.003;
-                    this.btn_start.scaleY -= 0.003;
-                    if (this.btn_start.scaleX < 1) {
-                        this.startChange = 'appear';
-                    }
-                }
-            }
+            OnUpdateAni.magnify_shrink(this.startSwitch, this.btn_start, 0.003, 0.003, 1, 1.05);
         }
         onDisable() {
         }

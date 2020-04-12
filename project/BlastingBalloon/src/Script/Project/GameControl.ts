@@ -65,8 +65,8 @@ export default class GameControl extends Laya.Script {
     /** @prop {name:hint, tips:"提示", type:Prefab}*/
     public hint: Laya.Prefab;
 
-    /** @prop {name:beetleParent, tips:"小甲虫父节点", type:Node}*/
-    public beetleParent: Laya.Sprite;
+    /** @prop {name:BeetleParent, tips:"小甲虫父节点", type:Node}*/
+    public BeetleParent: Laya.Sprite;
 
     /** @prop {name:beetle, tips:"小甲虫", type:Prefab}*/
     public beetle: Laya.Prefab;
@@ -287,8 +287,7 @@ export default class GameControl extends Laya.Script {
         let parentBoard = this.BalloonVessel.getChildByName('parentBoard') as Laya.Image;
         Animation.bombs_Appear(parentBoard, 0, 1, scale1, 0, time1, time2, delayed * 1, 'common', f => {
             this.createBalloonCollection();
-            // 播放背景音乐
-            PalyAudio.playMusic(Enum.AudioName.bgm, 0, 0);
+
         });
         // 任务栏的动画
         let scale2 = 1.2;
@@ -357,7 +356,6 @@ export default class GameControl extends Laya.Script {
 
         let plug_02 = this.Tip.getChildByName('plug_02') as Laya.Image;
         let firstX_02 = plug_02.x;
-
         Animation.deform_Move(plug_02, firstX_02, -800, scaleX3, scaleY3, time2, delayed, null);
     }
 
@@ -365,6 +363,14 @@ export default class GameControl extends Laya.Script {
      * 创建气球集合
      */
     createBalloonCollection(): void {
+        // 获取化引导的气球颜色
+        let levelsData = Number(this.Levels.value);
+        let guideColor;
+        if (levelsData === 1) {
+            guideColor = this.self['Guidance'].guideColor_Lv_01;
+        } else if (levelsData === 2) {
+            guideColor = this.self['Guidance'].guideColor_Lv_02;
+        }
         // 父节点的宽和高
         let widthP = this.BalloonParent.width;
         let heightP = this.BalloonParent.height;
@@ -377,15 +383,13 @@ export default class GameControl extends Laya.Script {
                 let y = heightP / this.line * (j + 1) - heightP / (this.line * 2);
 
                 let balloon;
-                // 第一关需要引导
-                if (Number(this.Levels.value) === 1) {
+                // 第一关第二关是定死的气球样式，因为需要进行气球引导
+                if (levelsData === 1 || levelsData === 2) {
                     // 初始化气球节点的个数和颜色
-                    let guideBalloonColor = this.self['Guidance'].guideBalloonColor;
-                    balloon = this.createBallon(x, y, guideBalloonColor[i][j]);
+                    balloon = this.createBallon(x, y, guideColor[i][j]);
                 } else {
                     balloon = this.createBallon(x, y, null);
                 }
-
                 // 缩放大小,目前取决spacing
                 let scale = (widthP / this.row - this.spacing * 2) / balloon.width;
                 balloon.scale(scale, scale);
@@ -396,7 +400,6 @@ export default class GameControl extends Laya.Script {
                 Animation.bombs_Appear(balloon, 0, scale, scale + 0.1, 0, 200, 100, delayed, null, f => {
                     this.explodeAni(this.BalloonVessel, balloon.x + (1 - scale) * balloon.pivotX / 2, balloon.y + (1 - scale) * balloon.pivotY / 2, 'vanish', 6, 10)
                     if (i === this.row - 1 && j === this.line - 1) {
-                        this.createBeetle();
                         this.TaskBalloonParentSet();
                         this.taskTipShake(0);
                     }
@@ -437,7 +440,7 @@ export default class GameControl extends Laya.Script {
         let time2 = 100;
         let delayed = 250;
 
-        this.pligAni(delayed);
+        this.pligAni(0);
 
         Animation.bombs_Vanish(this.LevelsNode, 0, 0, 0, 100, delayed, f => {
             this.readyStart('nextLevel');
@@ -460,12 +463,11 @@ export default class GameControl extends Laya.Script {
         let time1 = 200;
         let time2 = 100;
         let delayed = 250;
-        this.pligAni(delayed);
+        this.pligAni(0);
         Animation.swell_shrink(this.LevelsNode, 1, 1.3, time1 * 0.5, 0, f => {
             Animation.swell_shrink(this.LevelsNode, 1, 1.3, time1 * 0.5, 0, f => {
             })
         })
-
         Animation.bombs_Vanish(this.TimeNode, 0, 0, 0, time1, delayed * 2, f => {
             this.time.value = 1;
             Animation.bombs_Appear(this.TimeNode, 0, 1, 1.1, 0, time1, time2, delayed * 5, 'common', f => {
@@ -559,18 +561,23 @@ export default class GameControl extends Laya.Script {
             Animation.bombs_Appear(ballon_Icon, 0, 1, 1.1, 0, 200, 200, delayed, 'common', f => {
                 if (j === len - 1) {
                     // 喇叭只有动画完成之后才能点击
-                    this.PropsNode['Props'].clicksOnBtn();
                     this.balloonCount();
                     this.balloonClickOrder();
-                    this.clicksAllOn();
-
-                    if (Number(this.Levels.value) === 1) {
+                    let levels = Number(this.Levels.value)
+                    if (levels === 1) {
                         // 第一关不打开倒计时
                         this.timeSwicth = false;
                         // 创建新手引导遮罩
                         this.self['Guidance'].guidanceInit();
-                        this.self['Guidance'].createGuidanceMask(Enum.BalloonName[1]);
+                        this.self['Guidance'].createBalloonGuidance(Enum.BalloonName[1]);
+                    }
+                    //第二关有甲虫和时间引导
+                    else if (levels === 2) {
+                        this.createBeetle();
+                        this.timeSwicth = true;
                     } else {
+                        // 第二关以后方可点击
+                        this.clicksAllOn();
                         this.timeSwicth = true;
                     }
                 }
@@ -689,14 +696,14 @@ export default class GameControl extends Laya.Script {
         // 停止计时
         this.timeSwicth = false;
         // 小甲虫离开游戏
-        let len = this.beetleParent._children.length;
+        let len = this.BeetleParent._children.length;
         if (len === 0) {
             this.self.addChild(gameOver);
             gameOver['GameOver'].gameOverType(type);
             return;
         }
         for (let index = 0; index < len; index++) {
-            const beetle = this.beetleParent._children[index];
+            const beetle = this.BeetleParent._children[index];
             // 通过类型判断是闯关成功还是失败，，失败小甲虫往上走，成功小甲虫往下掉
             beetle['Beetle'].moveSwitch = false;//移动关闭
             beetle['Beetle'].remainTime = -20000;//停止时间无限大
@@ -742,13 +749,12 @@ export default class GameControl extends Laya.Script {
         this.timeSwicth = false;
     }
 
-
     /**
       * 创建小甲虫
       * */
     createBeetle(): void {
         let beetle = Laya.Pool.getItemByCreateFun('beetle', this.beetle.create, this.beetle) as Laya.Sprite;
-        this.beetleParent.addChild(beetle);
+        this.BeetleParent.addChild(beetle);
     }
 
     /**爆炸动画

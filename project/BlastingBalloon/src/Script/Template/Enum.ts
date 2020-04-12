@@ -118,6 +118,15 @@ export module Enum {
     }
 
 
+    export enum GuidanceTiptype {
+        colorOrder = '引导/引导_颜色顺序.png',
+        color_01 = '引导/引导_颜色1.png',
+        color_02 = '引导/引导_颜色2.png',
+        time = '引导/引导_时间.png',
+        expelBeetle = '引导/引导_驱虫.png',
+    }
+
+
 }
 
 export default Enum;

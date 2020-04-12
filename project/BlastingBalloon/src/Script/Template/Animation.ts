@@ -334,12 +334,13 @@ export module Animation {
      * 类似气球弹出并且回弹，第一个阶段弹到空中，这个阶段可以给个角度，第二阶段落下变为原始状态，第三阶段再次放大一次，这次放大小一点，第四阶段回到原始状态，三、四个阶段是回弹一次，根据第一个阶段参数进行调整
      * @param node 节点
      * @param firstAlpha 初始透明度
-    * @param  firstScale 初始大小，因为有些节点可能初始Scale并不是1
+     * @param  firstScale 最终大小，因为有些节点可能初始Scale并不是1
      * @param scale1 第一阶段放大比例
      * @param rotation 第一阶段角度 
      * @param time1 第一阶段花费时间
      * @param time2 第二阶段花费时间
      * @param delayed 延时时间
+     * @param audioType 音效类型
      * @param func 完成后的回调
      */
     export function bombs_Appear(node, firstAlpha, firstScale, scale1, rotation, time1, time2, delayed, audioType, func): void {

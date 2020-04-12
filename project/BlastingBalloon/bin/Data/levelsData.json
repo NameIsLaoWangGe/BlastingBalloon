@@ -8,7 +8,7 @@
     "line": 3,
     "beetleSpeed": 10,
     "beetleQuantity": 1,
-    "timeVelocity": 0.001
+    "timeVelocity": 0.0009
   },
   {
     "levels": 2,
@@ -17,7 +17,7 @@
     "line": 4,
     "beetleSpeed": 10.5,
     "beetleQuantity": 1,
-    "timeVelocity": 0.0010125
+    "timeVelocity": 0.000906
   },
   {
     "levels": 3,
@@ -26,7 +26,7 @@
     "line": 4,
     "beetleSpeed": 10.5,
     "beetleQuantity": 1,
-    "timeVelocity": 0.001025
+    "timeVelocity": 0.00091
   },
   {
     "levels": 4,
@@ -35,7 +35,7 @@
     "line": 5,
     "beetleSpeed": 11,
     "beetleQuantity": 1,
-    "timeVelocity": 0.0010375
+    "timeVelocity": 0.000915
   },
   {
     "levels": 5,
@@ -44,7 +44,7 @@
     "line": 5,
     "beetleSpeed": 11.5,
     "beetleQuantity": 1,
-    "timeVelocity": 0.00105
+    "timeVelocity": 0.00092
   },
   {
     "levels": 6,
@@ -53,7 +53,7 @@
     "line": 6,
     "beetleSpeed": 12,
     "beetleQuantity": 1,
-    "timeVelocity": 0.0010625
+    "timeVelocity": 0.000925
   },
   {
     "levels": 7,
@@ -62,7 +62,7 @@
     "line": 6,
     "beetleSpeed": 12.5,
     "beetleQuantity": 1,
-    "timeVelocity": 0.001075
+    "timeVelocity": 0.00093
   },
   {
     "levels": 8,
@@ -71,7 +71,7 @@
     "line": 7,
     "beetleSpeed": 13,
     "beetleQuantity": 1,
-    "timeVelocity": 0.0010875
+    "timeVelocity": 0.000935
   },
   {
     "levels": 9,
@@ -80,7 +80,7 @@
     "line": 7,
     "beetleSpeed": 13.5,
     "beetleQuantity": 1,
-    "timeVelocity": 0.0011
+    "timeVelocity": 0.00094
   },
   {
     "levels": 10,
@@ -89,7 +89,7 @@
     "line": 8,
     "beetleSpeed": 14,
     "beetleQuantity": 1,
-    "timeVelocity": 0.0011125
+    "timeVelocity": 0.000945
   },
   {
     "levels": 11,
@@ -98,7 +98,7 @@
     "line": 4,
     "beetleSpeed": 15,
     "beetleQuantity": 1,
-    "timeVelocity": 0.001125
+    "timeVelocity": 0.00095
   },
   {
     "levels": 12,
@@ -107,7 +107,7 @@
     "line": 5,
     "beetleSpeed": 15.5,
     "beetleQuantity": 1,
-    "timeVelocity": 0.0011375
+    "timeVelocity": 0.000955
   },
   {
     "levels": 13,
@@ -116,7 +116,7 @@
     "line": 5,
     "beetleSpeed": 16,
     "beetleQuantity": 1,
-    "timeVelocity": 0.00115
+    "timeVelocity": 0.00096
   },
   {
     "levels": 14,
@@ -125,7 +125,7 @@
     "line": 6,
     "beetleSpeed": 16.5,
     "beetleQuantity": 1,
-    "timeVelocity": 0.0011625
+    "timeVelocity": 0.000965
   },
   {
     "levels": 15,
@@ -134,7 +134,7 @@
     "line": 6,
     "beetleSpeed": 17,
     "beetleQuantity": 1,
-    "timeVelocity": 0.001175
+    "timeVelocity": 0.00097
   },
   {
     "levels": 16,
@@ -143,7 +143,7 @@
     "line": 7,
     "beetleSpeed": 17.5,
     "beetleQuantity": 1,
-    "timeVelocity": 0.0011875
+    "timeVelocity": 0.000975
   },
   {
     "levels": 17,
@@ -152,7 +152,7 @@
     "line": 7,
     "beetleSpeed": 18,
     "beetleQuantity": 1,
-    "timeVelocity": 0.0012
+    "timeVelocity": 0.00098
   },
   {
     "levels": 18,
@@ -161,7 +161,7 @@
     "line": 8,
     "beetleSpeed": 18.5,
     "beetleQuantity": 1,
-    "timeVelocity": 0.0012125
+    "timeVelocity": 0.000985
   },
   {
     "levels": 19,
@@ -170,7 +170,7 @@
     "line": 8,
     "beetleSpeed": 19,
     "beetleQuantity": 1,
-    "timeVelocity": 0.001225
+    "timeVelocity": 0.00099
   },
   {
     "levels": 20,
@@ -179,7 +179,7 @@
     "line": 9,
     "beetleSpeed": 19.5,
     "beetleQuantity": 1,
-    "timeVelocity": 0.0012375
+    "timeVelocity": 0.000995
   },
   {
     "levels": 21,
@@ -188,7 +188,7 @@
     "line": 4,
     "beetleSpeed": 20,
     "beetleQuantity": 1,
-    "timeVelocity": 0.00125
+    "timeVelocity": 0.001
   },
   {
     "levels": 22,
@@ -197,7 +197,7 @@
     "line": 5,
     "beetleSpeed": 20.5,
     "beetleQuantity": 1,
-    "timeVelocity": 0.0012625
+    "timeVelocity": 0.001005
   },
   {
     "levels": 23,
@@ -206,7 +206,7 @@
     "line": 5,
     "beetleSpeed": 21,
     "beetleQuantity": 1,
-    "timeVelocity": 0.001275
+    "timeVelocity": 0.00101
   },
   {
     "levels": 24,
@@ -215,7 +215,7 @@
     "line": 6,
     "beetleSpeed": 21.5,
     "beetleQuantity": 1,
-    "timeVelocity": 0.0012875
+    "timeVelocity": 0.001015
   },
   {
     "levels": 25,
@@ -224,7 +224,7 @@
     "line": 6,
     "beetleSpeed": 22,
     "beetleQuantity": 1,
-    "timeVelocity": 0.0013
+    "timeVelocity": 0.00102
   },
   {
     "levels": 26,
@@ -233,7 +233,7 @@
     "line": 7,
     "beetleSpeed": 22.5,
     "beetleQuantity": 1,
-    "timeVelocity": 0.0013125
+    "timeVelocity": 0.001025
   },
   {
     "levels": 27,
@@ -242,7 +242,7 @@
     "line": 7,
     "beetleSpeed": 23,
     "beetleQuantity": 1,
-    "timeVelocity": 0.001325
+    "timeVelocity": 0.00103
   },
   {
     "levels": 28,
@@ -251,7 +251,7 @@
     "line": 8,
     "beetleSpeed": 23.5,
     "beetleQuantity": 1,
-    "timeVelocity": 0.0013375
+    "timeVelocity": 0.001035
   },
   {
     "levels": 29,
@@ -260,7 +260,7 @@
     "line": 8,
     "beetleSpeed": 24,
     "beetleQuantity": 1,
-    "timeVelocity": 0.00135
+    "timeVelocity": 0.00104
   },
   {
     "levels": 30,
@@ -269,7 +269,7 @@
     "line": 9,
     "beetleSpeed": 24.5,
     "beetleQuantity": 1,
-    "timeVelocity": 0.0013625
+    "timeVelocity": 0.001045
   },
   {
     "levels": 31,
@@ -278,7 +278,7 @@
     "line": 4,
     "beetleSpeed": 25,
     "beetleQuantity": 1,
-    "timeVelocity": 0.001375
+    "timeVelocity": 0.00105
   },
   {
     "levels": 32,
@@ -287,7 +287,7 @@
     "line": 5,
     "beetleSpeed": 25.5,
     "beetleQuantity": 1,
-    "timeVelocity": 0.0013875
+    "timeVelocity": 0.001055
   },
   {
     "levels": 33,
@@ -296,7 +296,7 @@
     "line": 5,
     "beetleSpeed": 26,
     "beetleQuantity": 1,
-    "timeVelocity": 0.0014
+    "timeVelocity": 0.00106
   },
   {
     "levels": 34,
@@ -305,7 +305,7 @@
     "line": 6,
     "beetleSpeed": 26.5,
     "beetleQuantity": 1,
-    "timeVelocity": 0.0014125
+    "timeVelocity": 0.001065
   },
   {
     "levels": 35,
@@ -314,7 +314,7 @@
     "line": 6,
     "beetleSpeed": 27,
     "beetleQuantity": 1,
-    "timeVelocity": 0.001425
+    "timeVelocity": 0.00107
   },
   {
     "levels": 36,
@@ -323,7 +323,7 @@
     "line": 7,
     "beetleSpeed": 27.5,
     "beetleQuantity": 1,
-    "timeVelocity": 0.0014375
+    "timeVelocity": 0.001075
   },
   {
     "levels": 37,
@@ -332,7 +332,7 @@
     "line": 7,
     "beetleSpeed": 28,
     "beetleQuantity": 1,
-    "timeVelocity": 0.00145
+    "timeVelocity": 0.00108
   },
   {
     "levels": 38,
@@ -341,7 +341,7 @@
     "line": 8,
     "beetleSpeed": 28.5,
     "beetleQuantity": 1,
-    "timeVelocity": 0.0014625
+    "timeVelocity": 0.001085
   },
   {
     "levels": 39,
@@ -350,7 +350,7 @@
     "line": 8,
     "beetleSpeed": 29,
     "beetleQuantity": 1,
-    "timeVelocity": 0.001475
+    "timeVelocity": 0.00109
   },
   {
     "levels": 40,
@@ -359,7 +359,7 @@
     "line": 9,
     "beetleSpeed": 29.5,
     "beetleQuantity": 1,
-    "timeVelocity": 0.0014875
+    "timeVelocity": 0.001095
   }
 ]
 }

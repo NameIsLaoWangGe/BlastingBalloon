@@ -34,18 +34,39 @@ export default class Beetle extends Laya.Script {
     /**移动速度*/
     private speed: number
 
+    /**移动了多少次记录*/
+    private nobileNumber
+
+    /**是否属于引导*/
+    private guideMove: boolean
+
+    /**
+     * 场景新手引导脚本组件
+     */
+    private guidanceControl
+
+    /**
+     * 新手引导出现开关，不会出现第二次
+     * */
+    private guidanceSwitch: boolean
+
+
     constructor() { super(); }
 
     onEnable(): void {
         this.self = this.owner as Laya.Sprite;
         this.self['Beetle'] = this;
         this.gameControl = this.self.scene['GameControl'];
+        this.guidanceControl = this.self.scene['Guidance'];
+
         this.BalloonVessel = this.gameControl.BalloonVessel as Laya.Sprite;
+
         this.skeleton = this.self.getChildByName('skeleton') as Laya.Skeleton;
+
         this.createBoneAni();
         this.birthLocation();
         this.speed = this.gameControl.beetleSpeed;
-        this.clicksOnBtn();
+
     }
 
     /**
@@ -88,13 +109,23 @@ export default class Beetle extends Laya.Script {
     parseComplete(): void {
         this.moveSwitch = true;
         this.posSwitch = true;
+        // 第而关的时候需要进行驱虫的新手引导
+        if (Number(this.gameControl.Levels.value) === 2) {
+            this.guideMove = true;
+            this.guidanceSwitch = true;
+        } else {
+            // 第二关的时候甲虫不可点击
+            this.clicksOnBtn();
+            this.guideMove = false;
+            this.guidanceSwitch = false;
+        }
         this.playSkeletonAni(1, 'move');
     }
 
     /**播放骨骼动画
-   * @param speed 播放速度
-   * @param type 播放动画类型
-   */
+    * @param speed 播放速度
+    * @param type 播放动画类型
+    */
     playSkeletonAni(speed: number, type: string): void {
         this.skeleton.play(type, true);
         this.skeleton.rotation = 0;
@@ -168,9 +199,20 @@ export default class Beetle extends Laya.Script {
         } else {
             // 停止移动后，计时开始，到一定时间后，继续移动
             this.remainTime++;
-            if (this.remainTime > 200) {
+            if (this.remainTime > 200 && !this.guideMove) {
                 this.moveSwitch = true;
                 this.posSwitch = true;
+            } else {
+                //新手引导阶段，停着不动并且，第二关的虫子是必须被驱赶
+                // 时间也会停止
+                // 时间走一段路程
+                if (this.guidanceSwitch) {
+                    this.guidanceControl.guidanceInit();
+                    this.guidanceControl.createBeetleGuidance();
+                    this.gameControl.timeSwicth = false;
+                    console.log('新手引导出现');
+                    this.guidanceSwitch = false;
+                }
             }
         }
     }

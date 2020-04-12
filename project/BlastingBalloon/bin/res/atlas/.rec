@@ -41,8 +41,8 @@ P 01BAE7F5 vslider.png
 D Skeleton
 R A76BD817 balloon.png
 R 8E8527AB balloon.sk
-R E69E2D62 beetle_01.png
-R 65F25644 beetle_01.sk
+R 7CE45C90 beetle_01.png
+R D086F39F beetle_01.sk
 R 53232328 logoBallon.png
 R 3F9617D1 logoBallon.sk
 R BA1F5F9B trumpet.png
@@ -101,6 +101,12 @@ P 639397BE 闯关失败logo.png
 P 68FE20CB 闯关成功logo.png
 R 129BD0E2 防沉迷文字.png
 P 2668466B 黑色遮罩.png
+D 引导
+P CE24189A 引导_时间.png
+P D4890058 引导_颜色1.png
+P 4B8DCE12 引导_颜色2.png
+P E05E1094 引导_颜色顺序.png
+P 6EC6310E 引导_驱虫.png
 D 特效
 P 76D1EA92 effect_淡黄1.png
 P 3234BCC3 effect_淡黄2.png

@@ -13,7 +13,7 @@ export module WXDataManager {
     /**需要上传的信息*/
     export let _gameData = {
         _levels: 1,
-        _propNum: 3,//初始化3个道具
+        _propNum: 5,//首次登陆给与的道具数量
     }
 
     /**Laya中的微信引用，在当前模块可以直接使用，在其他模块需要加上模块名*/

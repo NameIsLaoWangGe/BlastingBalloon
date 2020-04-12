@@ -4,6 +4,7 @@ import { PalyAudio } from "../Template/PlayAudio";
 import { Adaptive } from "../Template/Adaptive";
 import { WXDataManager } from "../Template/WXDataManager";
 import { Enum } from "../Template/Enum";
+import { OnUpdateAni } from "../Template/OnUpdateAni";
 
 export default class StartGame extends Laya.Script {
     /** @prop {name:logo, tips:"游戏结束标题", type:Node}*/
@@ -33,7 +34,6 @@ export default class StartGame extends Laya.Script {
 
     /**开始游戏按别扭的渐隐动画开关*/
     private startSwitch: boolean;
-    private startChange: string;
 
     /**计时器*/
     private timer: number
@@ -59,8 +59,9 @@ export default class StartGame extends Laya.Script {
         this.gameControl = this.self.scene['GameControl'];
         this.LevelsNode = this.gameControl.LevelsNode as Laya.Sprite;
 
+        // 通用放大缩小动画的开关
         this.startSwitch = false;
-        this.startChange = 'appear';
+        OnUpdateAni.magnify_shrink_change = 'magnify';
 
         Adaptive.interface_Center(this.self);
         Adaptive.child_Center(this.anti_addiction, this.self, Laya.stage.height * 9 / 10);
@@ -68,6 +69,8 @@ export default class StartGame extends Laya.Script {
 
         this.appaer();
         this.createBoneAni();
+        // 播放背景音乐
+        PalyAudio.playMusic(Enum.AudioName.bgm, 0, 0);
     }
 
     /**创建骨骼动画皮肤*/
@@ -76,7 +79,7 @@ export default class StartGame extends Laya.Script {
         this.templet = new Laya.Templet();
         this.templet.on(Laya.Event.COMPLETE, this, this.parseComplete);
         this.templet.on(Laya.Event.ERROR, this, this.onError);
-        this.templet.loadAni("Skeleton/beetle_01.sk");
+        this.templet.loadAni("Skeleton/logoBallon.sk");
     }
 
     onError(): void {
@@ -87,7 +90,6 @@ export default class StartGame extends Laya.Script {
         this.balloon_skeleton.play('rock', true);
         console.log('装饰气球加载成功！');
     }
-
 
     /**出现动画*/
     appaer(): void {
@@ -123,6 +125,7 @@ export default class StartGame extends Laya.Script {
 
     /**出现动画回调函数*/
     appaerFunc(): void {
+
         this.startSwitch = true;
         this.clicksOnBtn();
     }
@@ -192,22 +195,7 @@ export default class StartGame extends Laya.Script {
     }
 
     onUpdate(): void {
-        if (this.startSwitch) {
-            if (this.startChange === 'appear') {
-                this.btn_start.scaleX += 0.003;
-                this.btn_start.scaleY += 0.003;
-                if (this.btn_start.scaleX > 1.05) {
-                    this.startChange = 'vanish';
-                }
-            } else if (this.startChange === 'vanish') {
-                this.btn_start.scaleX -= 0.003;
-                this.btn_start.scaleY -= 0.003;
-
-                if (this.btn_start.scaleX < 1) {
-                    this.startChange = 'appear';
-                }
-            }
-        }
+        OnUpdateAni.magnify_shrink(this.startSwitch, this.btn_start, 0.003, 0.003, 1, 1.05);
     }
 
     onDisable(): void {

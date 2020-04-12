@@ -27,7 +27,6 @@ export default class backGround extends Laya.Script {
         this.timer = 0;
         this.selectSwitch = true;
         this.blinkSwicth = false;
-        console.log('11');
 
         for (let index = 0; index < this.self._children.length; index++) {
             const element = this.self._children[index] as Laya.Sprite;

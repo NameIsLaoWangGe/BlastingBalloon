@@ -17,6 +17,8 @@ export default class Props extends Laya.Script {
     private self: Laya.Sprite;
     /**主场景脚本*/
     private gameControl;
+    /**引导控制脚本*/
+    private guidanceControl;
 
     /**小甲虫父节点*/
     private beetleParent;
@@ -28,9 +30,9 @@ export default class Props extends Laya.Script {
         this.self = this.owner as Laya.Sprite;
         this.self['Props'] = this;
         this.gameControl = this.self.scene['GameControl'];
+        this.guidanceControl = this.self.scene['Guidance'];
         this.prop_skeleton = this.self.getChildByName('prop_skeleton') as Laya.Skeleton;
         this.beetleParent = this.gameControl.beetleParent as Laya.Sprite;
-        // this.clicksOnBtn();
         this.createBoneAni();
     }
 
@@ -72,7 +74,14 @@ export default class Props extends Laya.Script {
             beetle['Beetle'].clicksOffBtn()//点击事件关闭
             Animation.drop(beetle, beetle.y + 1600, 0, 1000, 0, f => {
                 beetle.removeSelf();
+                // 如果是第二关的话，需要关闭新手引导
+                if (Number(this.gameControl.Levels.value) === 2) {
+                    // (this.guidanceControl.guideContainer as Laya.Sprite).removeSelf();
+                    this.guidanceControl.createTimeGuidance();
+                }
             });
+
+
         }
     }
 

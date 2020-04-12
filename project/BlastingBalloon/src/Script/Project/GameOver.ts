@@ -30,7 +30,7 @@ export default class GameOver extends Laya.Script {
     /**时间卡牌节点*/
     private line: Laya.Sprite
 
-    /**logo的渐隐动画开关*/
+    /**logo的放大动画开关*/
     private logoSwitch: boolean
     private logoChange: string
 
@@ -62,13 +62,13 @@ export default class GameOver extends Laya.Script {
             this.btn_again.loadImage('UI/下一关按钮.png');
             this.settlementType = 'victory';
             this.logo.loadImage('UI/闯关成功logo.png');
-            PalyAudio.playMusic(Enum.AudioName.victory, 1, 0);
+            PalyAudio.playSound(Enum.AudioName.victory, 1);
 
         } else if (type === 'defeated') {
             this.btn_again.loadImage('UI/重来按钮.png');
             this.settlementType = 'defeated';
             this.logo.loadImage('UI/闯关失败logo.png');
-            PalyAudio.playMusic(Enum.AudioName.defeated, 1, 0);
+            PalyAudio.playSound(Enum.AudioName.defeated, 1);
         }
         let score = this.scoreNode.getChildByName('score') as Laya.FontClip;
         score.value = this.Levels.value;
@@ -145,13 +145,13 @@ export default class GameOver extends Laya.Script {
             if (this.settlementType === 'victory') {
                 // 下一关
                 this.gameControl.moveToNextLevel();
+                // PalyAudio.playMusic(Enum.AudioName.bgm, 0, 0);
             } else if (this.settlementType === 'defeated') {
                 // 重来
                 this.gameControl.againCurrentlevel();
             }
         }
         this.self.removeSelf();
-        PalyAudio.playMusic(Enum.AudioName.bgm, 0, 0);
     }
 
     /**两个按钮的点击事件*/
